@@ -38,5 +38,4 @@ composer.lock
 **/.DS_Store
 storage/framework/laravel-excel/*
 /nbproject
-/public/firebase-service-account.json
 .env

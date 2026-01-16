@@ -39,7 +39,7 @@ trait UploadTrait {
 
               // Handle image files
               if ($imageCheck[0] == 'image') {
-                  $allowedImagesMimeTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                  $allowedImagesMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml'];
                   if (!in_array($fileMimeType, $allowedImagesMimeTypes)) {
                       Log::warning("Unsupported image type: {$fileMimeType}");
                       return 'default.png';
