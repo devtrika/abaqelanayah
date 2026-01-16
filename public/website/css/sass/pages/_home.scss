@@ -1,0 +1,20 @@
+.categories-section {
+  margin: 60px 0;
+}
+
+.specials-section {
+  background-color: #fff9f9;
+  padding: 43px 0 59px;
+  margin: 60px 0 43px;
+  @include xs {
+    padding: 40px 0;
+  }
+}
+
+.brands-section {
+  margin: 43px 0 70px;
+}
+
+.lattest-section {
+  margin: 43px 0 60px;
+}

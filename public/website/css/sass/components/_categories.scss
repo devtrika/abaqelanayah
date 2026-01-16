@@ -1,0 +1,30 @@
+.category-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+  width: 120px;
+  .item-img {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fbf9f8;
+    border-radius: 5px;
+    padding: 15px;
+    overflow: hidden;
+  }
+  .item-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: $primaryColor;
+    margin: 0;
+    a {
+      @include focus(inherit);
+      &:hover {
+        color: $secondaryColor;
+      }
+    }
+  }
+}

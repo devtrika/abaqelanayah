@@ -1,0 +1,129 @@
+.account-table-wrapper {
+  overflow: hidden;
+  width: 100%;
+
+  &:not(.no-scroll) {
+    @include sm {
+      padding-bottom: 8px;
+      max-width: 100%;
+      overflow-x: auto;
+      .account-table {
+        min-width: 800px;
+      }
+    }
+  }
+}
+
+.account-table {
+  width: 100%;
+  &.fixed {
+    table-layout: fixed;
+    td {
+      max-width: none;
+    }
+  }
+  th {
+    background-color: $primaryColor;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.5;
+    padding: 22px 30px;
+    padding-inline-end: 0;
+    white-space: nowrap;
+    @include md {
+      padding: 20px;
+      padding-inline-end: 0;
+    }
+  }
+  td {
+    border-bottom: 1px solid #ececec;
+    min-height: 65px;
+    padding: 21px 30px;
+    font-size: 14px;
+    color: $textColor;
+    line-height: 1.5;
+    font-weight: 400;
+    padding-inline-end: 0;
+    vertical-align: baseline;
+    max-width: 130px;
+    @include md {
+      padding: 20px;
+      padding-inline-end: 0;
+    }
+  }
+  &.less-padding {
+    th,
+    td {
+      padding-inline: 15px;
+    }
+  }
+  .table-contact {
+    display: inline-flex;
+    direction: ltr;
+    @include focus(inherit);
+    &:hover {
+      color: $primaryColor;
+    }
+  }
+  .table-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+  }
+  .table-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    padding: 0;
+    @include focus(#878787);
+    &:hover {
+      color: $primaryColor;
+    }
+  }
+  .table-price {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 3px;
+  }
+  .table-status {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: fit-content;
+    padding: 0 12px;
+    height: 24px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    overflow: hidden;
+    color: var(--color);
+    position: relative;
+    transform: perspective(1px);
+    overflow: hidden;
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: 0.2;
+      background-color: var(--color);
+    }
+  }
+  .table-download {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    margin: 0 auto;
+    text-decoration: underline;
+    @include focus(#e13612);
+    &:hover {
+      color: $primaryColor;
+      text-decoration: none;
+    }
+  }
+}

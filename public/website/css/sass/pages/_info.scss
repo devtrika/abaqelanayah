@@ -1,0 +1,56 @@
+.info-content {
+  color: $textColor;
+  line-height: 1.65;
+  h3 {
+    font-size: 16px;
+    line-height: 1.65;
+    font-weight: 700;
+    margin: 0;
+  }
+  p {
+    font-size: 16px;
+    line-height: 1.65;
+    font-weight: 400;
+    margin: 0;
+  }
+  ol,
+  ul {
+    font-size: 16px;
+    line-height: 1.65;
+    font-weight: 400;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    padding-inline-start: 40px;
+  }
+  ul {
+    list-style-type: disc;
+  }
+  ol {
+    list-style-type: decimal;
+  }
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 30px;
+  @include xs {
+    grid-template-columns: 1fr;
+  }
+  .about-img {
+    width: 100%;
+    max-width: 553px;
+    aspect-ratio: 553/450;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
+    background-color: #ebe2db;
+    margin: 8px auto;
+    overflow: hidden;
+    @include xs {
+      max-width: 100%;
+    }
+  }
+}

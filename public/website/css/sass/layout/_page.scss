@@ -1,0 +1,6 @@
+.page-content {
+  margin: 50px 0 100px;
+  @include xs {
+    margin: 40px 0 60px;
+  }
+}

@@ -1,0 +1,99 @@
+/* General Resets */
+* {
+  outline: 0 !important;
+}
+input::placeholder {
+  color: inherit;
+}
+a,
+a:hover,
+a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+button {
+  border: none;
+  background: none;
+  outline: 0;
+}
+a,
+img,
+button,
+input,
+select {
+  -webkit-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+[role="button"] {
+  cursor: pointer;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+input {
+  -moz-appearance: textfield;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  &::-ms-clear {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  &::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    display: none;
+  }
+  &::-webkit-inner-spin-button,
+  &::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+  }
+}
+
+select {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="%23343434"><path d="M297.4 438.6C309.9 451.1 330.2 451.1 342.7 438.6L502.7 278.6C515.2 266.1 515.2 245.8 502.7 233.3C490.2 220.8 469.9 220.8 457.4 233.3L320 370.7L182.6 233.4C170.1 220.9 149.8 220.9 137.3 233.4C124.8 245.9 124.8 266.2 137.3 278.7L297.3 438.7z" /></svg>');
+  background-repeat: no-repeat;
+  background-size: 12px;
+  appearance: none;
+  background-position: left 25px top 50%;
+  @include ltr {
+    background-position: right 25px top 50%;
+  }
+}
+.fa-linkedin {
+  &::before {
+    content: "\f0e1";
+  }
+}
+
+.fa-twitter {
+  &::before {
+    content: "\e61b";
+  }
+}
+
+.fa-facebook {
+  &::before {
+    content: "\f39e";
+  }
+}
+
+a,
+button {
+  cursor: pointer;
+}

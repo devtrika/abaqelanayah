@@ -1,0 +1,36 @@
+.breadcrumb-section {
+  margin: 40px 0 50px;
+  @include xs {
+    display: none;
+  }
+}
+.breadcrumb-list {
+  display: flex;
+  align-items: center;
+}
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 400;
+  color: #a1a1a1;
+  &::before {
+    display: none;
+  }
+  &::after {
+    content: "/";
+    margin-inline: 10px;
+  }
+  &:last-of-type {
+    pointer-events: none;
+    &::after {
+      display: none;
+    }
+  }
+}
+.breadcrumb-link {
+  @include focus(#a1a1a1);
+  &:hover {
+    color: $primaryColor;
+  }
+}

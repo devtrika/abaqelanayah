@@ -1,0 +1,37 @@
+<svg id="Group_14853" data-name="Group 14853" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="12.884" height="14.831" viewBox="0 0 12.884 14.831">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_843" data-name="Rectangle 843" width="12.884" height="14.831" fill="#f75d1b"/>
+    </clipPath>
+    <clipPath id="clip-path-2">
+      <rect id="Rectangle_842" data-name="Rectangle 842" width="12.883" height="14.831" fill="#f75d1b"/>
+    </clipPath>
+    <clipPath id="clip-path-3">
+      <rect id="Rectangle_840" data-name="Rectangle 840" width="6.442" height="11.123" fill="#f75d1b"/>
+    </clipPath>
+    <clipPath id="clip-path-4">
+      <rect id="Rectangle_841" data-name="Rectangle 841" width="12.883" height="7.415" fill="#f75d1b"/>
+    </clipPath>
+  </defs>
+  <g id="Group_14852" data-name="Group 14852" clip-path="url(#clip-path)">
+    <g id="Group_14851" data-name="Group 14851" transform="translate(0 0)">
+      <g id="Group_14850" data-name="Group 14850" clip-path="url(#clip-path-2)">
+        <g id="Group_14846" data-name="Group 14846" transform="translate(6.442 3.708)" opacity="0.8">
+          <g id="Group_14845" data-name="Group 14845">
+            <g id="Group_14844" data-name="Group 14844" clip-path="url(#clip-path-3)">
+              <path id="Path_354" data-name="Path 354" d="M10.149,16.965l6.442-3.708V5.842L10.149,9.549Z" transform="translate(-10.149 -5.842)" fill="#f75d1b" fill-rule="evenodd"/>
+            </g>
+          </g>
+        </g>
+        <g id="Group_14849" data-name="Group 14849" transform="translate(0 0)" opacity="0.6">
+          <g id="Group_14848" data-name="Group 14848" transform="translate(0 0)">
+            <g id="Group_14847" data-name="Group 14847" clip-path="url(#clip-path-4)">
+              <path id="Path_355" data-name="Path 355" d="M0,3.708,6.442,7.415l6.442-3.708L6.442,0Z" transform="translate(0 0)" fill="#f75d1b" fill-rule="evenodd"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <path id="Path_356" data-name="Path 356" d="M0,13.257l1.9,1.095L.62,16.58,4.426,15.8l2.015,1.16V9.549L0,5.842Z" transform="translate(0 -2.134)" fill="#f75d1b"/>
+  </g>
+</svg>

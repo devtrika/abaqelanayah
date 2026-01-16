@@ -1,0 +1,50 @@
+ body{
+     direction: ltr;
+     text-align: left;
+ }
+
+
+.img_owl_index {
+    left: unset;
+    right: -105px;
+    transform: rotate(60deg);
+}
+
+
+.ads_wol{margin-left: 0}
+
+
+.ads_wol ul{justify-content: flex-start !important}
+
+.ads_wol .links li{
+    margin-inline-start: 0px;
+    margin-inline-end: 15px;
+}
+
+.img_info_JM img:last-of-type{
+    right: 0;
+    left: unset
+}
+
+
+.box-servess:after{
+    left: 30px;
+    right: unset
+}
+
+
+
+ @media (max-width: 991.98px) {
+
+
+
+     .nav_bar {
+         right: unset;
+         left: 0;
+         transform: translateX(-100%);
+     }
+
+     .nav_bar.active {
+         transform: translateX(0);
+     }
+}

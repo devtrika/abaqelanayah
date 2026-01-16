@@ -1,0 +1,148 @@
+.auth_form-body {
+  height: 100dvh;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  overflow: hidden;
+  gap: 0;
+}
+.auth_form_responsive-content {
+  max-height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+.auth_form-content {
+  background-color: #fff;
+  position: relative;
+  width: 100%;
+  padding: min(13dvh, 75px) 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 100%;
+  height: auto;
+  :has(.auth-header) & {
+    padding: min(20dvh, 150px) 20px;
+  }
+}
+
+.auth_form-form {
+  width: 100%;
+  max-width: 315px;
+  &:has(.form-grid) {
+    max-width: 651px;
+  }
+  .submit-btn {
+    width: 100%;
+    max-width: 315px;
+    margin: 0 auto;
+  }
+}
+.auth_form-btns {
+  width: 100%;
+  margin: 20px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 10px;
+  .submit-btn {
+    width: 100%;
+  }
+}
+.back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: fit-content;
+  font-size: 12px;
+  margin: 12px auto 0;
+  @include focus(#a7a7a7);
+  i {
+    font-size: 14px;
+  }
+  &:hover {
+    color: $primaryColor;
+  }
+}
+.auth_form-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  gap: 10px;
+  margin: 0 auto 20px;
+  &:has(.auth_form-desc) {
+    margin: 0 auto 30px;
+  }
+}
+.auth_form-logo {
+  width: 111px;
+  aspect-ratio: 111/76;
+  display: flex;
+  align-items: center;
+  margin: 0 0 28px;
+  @include xs {
+    width: 70px;
+    margin: 0 0 10px;
+  }
+}
+.auth_form-icon{
+  font-size: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9DBCEA;
+  margin: 0 0 10px;
+  @include xs {
+    font-size: 65px;
+    margin: 0 0;
+  }
+}
+.auth_form-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: $primaryColor;
+  margin: 0 0;
+}
+.auth_form-desc {
+  font-size: 14px;
+  font-weight: 500;
+  color: $primaryColor;
+  margin: 0 0;
+}
+.auth_form-img {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  @include xs {
+    display: none;
+  }
+}
+
+.password-link {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 20px auto;
+  @include focus($primaryColor);
+
+  &:hover {
+    color: $primaryColor;
+    text-decoration: underline;
+  }
+}
+
+.terms-group {
+  margin: 30px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

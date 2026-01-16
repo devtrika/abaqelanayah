@@ -1,0 +1,135 @@
+.account-main {
+  .account-header {
+    &:has(.wallet-actions) {
+      flex-wrap: wrap;
+    }
+  }
+  .wallet-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .wallet-btn {
+    flex-shrink: 0;
+    width: fit-content;
+    min-width: 126px;
+    height: 36px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #cea3cd;
+    @include focus(#fff);
+    &:nth-of-type(2) {
+      background-color: #9dbcea;
+    }
+    &:hover {
+      background-color: $primaryColor;
+      color: #fff;
+    }
+  }
+}
+
+.wallet-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  padding-bottom: 40px;
+  @include md {
+    gap: 15px;
+  }
+  @include xs {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+  }
+  .wallet-item {
+    border: 2px solid #eaf2f5;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 19px;
+    @include md {
+      gap: 10px;
+      padding: 10px;
+    }
+    @include xs {
+      padding: 15px;
+      gap: 15px;
+    }
+    .item-icon {
+      flex-shrink: 0;
+      background-color: rgba($secondaryColor, 0.15);
+      width: 50px;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: $secondaryColor;
+      font-size: 24px;
+      @include md {
+        width: 35px;
+        font-size: 16px;
+      }
+      @include sm {
+        width: 40px;
+        font-size: 18px;
+      }
+      @include xs {
+        width: 50px;
+        font-size: 24px;
+      }
+    }
+    .item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .total {
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      gap: 5px;
+      color: $textColor;
+      font-size: 24px;
+      font-weight: 700;
+      @include md {
+        font-size: 16px;
+      }
+      @include sm {
+        font-size: 24px;
+      }
+    }
+    .curreny {
+      font-size: 16px;
+      @include md {
+        font-size: 14px;
+      }
+      @include sm {
+        font-size: 16px;
+      }
+    }
+    .title {
+      font-size: 14px;
+      line-height: 19px;
+      color: $textColor;
+      @include md {
+        font-size: 12px;
+        line-height: 15px;
+      }
+      @include sm {
+        font-size: 14px;
+        line-height: 19px;
+      }
+    }
+  }
+}
+
+.wallet-tables {
+  .account-title {
+    margin: 0 0 15px;
+  }
+}

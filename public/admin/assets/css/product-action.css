@@ -1,0 +1,25 @@
+/* Default state: show all actions */
+.product-action span {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.product-action .actions-dropdown {
+    display: none;
+}
+
+/* Responsive state: hide actions and show dropdown */
+@media (max-width: 768px) {
+    .product-action > span:not(.actions-dropdown) {
+        display: none;
+    }
+
+    .product-action .actions-dropdown {
+        display: inline-block;
+        position: relative;
+    }
+
+    .product-action .dropdown-menu {
+        min-width: 120px;
+    }
+} 

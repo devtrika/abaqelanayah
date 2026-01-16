@@ -1,0 +1,11 @@
+{
+  "config": {
+    "apiKey": "AIzaSyBTqszgCPShswQmoP4NpqoyY0II-CYCfqw",
+    "authDomain": "lia-project-228c5.firebaseapp.com",
+    "projectId": "lia-project-228c5",
+    "storageBucket": "lia-project-228c5.firebasestorage.app",
+    "messagingSenderId": "80014472128",
+    "appId": "1:80014472128:web:646f95f38739819cf84e25"
+  },
+  "vapidKey": "BFWSfohaWR5av3LSTQPchMJw5_NZ2e9Fjk7euatsg7dfn6MXiEiEGT-IMvTxuY925V4nY7-ZeRifzm_acOnaha4"
+}

@@ -1,0 +1,54 @@
+@mixin xl {
+  @media (min-width: 1400px) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (min-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (max-width: 1199px) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (max-width: 991px) {
+    @content;
+  }
+}
+
+@mixin xs {
+  @media (max-width: 767px) {
+    @content;
+  }
+}
+
+@mixin xxs {
+  @media (max-width: 400px) {
+    @content;
+  }
+}
+
+@mixin ltr {
+  html[dir="ltr"] & {
+    @content;
+  }
+}
+@mixin rtl {
+  html[dir="rtl"] & {
+    @content;
+  }
+}
+
+@mixin focus($color) {
+  color: $color;
+  transition: all 0.3s ease-in-out;
+  &:focus {
+    color: $color;
+  }
+}

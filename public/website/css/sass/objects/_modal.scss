@@ -1,0 +1,149 @@
+.modal {
+  .modal-dialog {
+    @media (min-width: 400px) {
+      --bs-modal-width: 375px;
+      margin-inline: auto;
+      width: var(--bs-modal-width);
+    }
+
+    &.modal-lg {
+      @media (min-width: 992px) {
+        --bs-modal-width: 600px;
+      }
+    }
+  }
+  .modal-content {
+    border-radius: 10px;
+    border: none;
+    padding: 0;
+    position: relative;
+    max-height: min(600px, calc(100dvh - 30px));
+    overflow-y: auto;
+    scrollbar-width: unset;
+    scrollbar-color: unset;
+    &:has([type="tel"][intlTelInput]) {
+      overflow: unset;
+    }
+    &::-webkit-scrollbar {
+      background-color: #f0f0f0;
+      width: 0;
+      border-radius: 0;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #d0d0d0;
+      border-radius: 2px;
+    }
+    > :last-child {
+      margin-bottom: 0;
+    }
+    @include xs {
+      padding: 10px 20px 30px;
+    }
+  }
+  .modal-dialog {
+    .modal-content {
+      padding: 34px 30px 30px;
+      @include xs {
+        padding: 20px 20px 30px;
+      }
+    }
+    &.modal-lg {
+      .modal-content {
+        padding: 34px 35px 55px;
+        @include xs {
+          padding: 20px 20px 30px;
+        }
+      }
+      .modal-btn {
+        width: calc(50% - 10px);
+        max-width: 195px;
+        margin: 0;
+      }
+    }
+  }
+  .modal-header {
+    border: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    justify-content: center;
+  }
+  .modal-close {
+    position: absolute;
+    inset: unset;
+    top: 12px;
+    inset-inline-end: 13px;
+    margin-inline-start: auto;
+    font-size: 22px;
+    color: #9093a3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+    transition: all 0.3s ease-in-out;
+    &:hover {
+      color: $primaryColor;
+    }
+  }
+  .modal-body {
+    padding: 0;
+    margin-bottom: 0;
+    &:has([type="tel"][intlTelInput]) {
+      overflow: unset;
+    }
+    :last-child {
+      margin-bottom: 0;
+    }
+    @include xs {
+      padding: 0 0;
+    }
+  }
+  .modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 0 0;
+    margin: 15px 0 0;
+    border: none;
+    @include xs {
+      padding: 5px 0 0;
+    }
+  }
+}
+.modal-head {
+  font-size: 16px;
+  font-weight: 700;
+  color: $primaryColor;
+  text-align: center;
+  line-height: 1.65;
+  margin: 0 0 15px;
+  #termsModal & {
+    margin: 0 0 20px;
+    text-align: start;
+  }
+}
+.modal-desc {
+  font-size: 16px;
+  font-weight: 400;
+  color: $primaryColor;
+  text-align: center;
+  line-height: 1.65;
+  margin: 0 0 20px;
+}
+.terms_modal-desc {
+  font-size: 14px;
+  font-weight: 400;
+  color: $textColor;
+  margin: 0;
+}
+
+.modal-footer {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
+}

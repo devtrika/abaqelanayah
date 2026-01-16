@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Notifications;
+
+use App\Traits\Firebase;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
+
+class UnBlockUser extends Notification
+{
+    use Queueable;
+    use Firebase;
+
+    private $MessageData;
+   
+    public function __construct($request)
+    {
+        $this->MessageData = [
+            'type'          => 'unblock' ,
+        ];
+    }
+
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function via($notifiable)
+    {
+        // Respect delivery users' notification preference
+        if ($notifiable instanceof \App\Models\User && $notifiable->type === 'delivery' && !$notifiable->is_notify) {
+            return [];
+        }
+        return ['database'];
+    }
+    public function toArray($notifiable)
+    {
+        return $this->MessageData ;
+    }
+}

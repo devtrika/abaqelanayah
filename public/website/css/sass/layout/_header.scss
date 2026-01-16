@@ -1,0 +1,98 @@
+.main-header {
+  @include xs {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  }
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 40px;
+  padding: 13px 0 12px;
+  @include sm {
+    gap: 15px;
+  }
+  @include xs {
+    padding: 10px 0;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+.logo {
+  width: 111px;
+  aspect-ratio: 111/76;
+  display: flex;
+  align-items: center;
+  @include xs {
+    order: 1;
+    width: 70px;
+    flex-shrink: 0;
+  }
+}
+
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-inline-start: auto;
+  @include sm {
+    gap: 20px;
+  }
+  @include xs {
+    order: 2;
+    max-width: calc(100% - 80px);
+  }
+}
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  @include sm {
+    gap: 15px;
+  }
+}
+.header-icon {
+  width: 40px;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  position: relative;
+  border: 1.5px solid #eeeeee;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  @include focus($primaryColor);
+  .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 16px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background-color: $secondaryColor;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0;
+  }
+  &:hover {
+    border-color: $primaryColor;
+    background-color: $primaryColor;
+    color: #fff;
+  }
+
+  @include sm {
+    &.notifications-icon {
+      display: none;
+    }
+  }
+  &.menu-icon {
+    display: none;
+    @include xs {
+      display: grid;
+    }
+  }
+}

@@ -1,0 +1,99 @@
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
+  @include xs {
+    &:not(:has(.section-link)) {
+      text-align: center;
+      justify-content: center;
+    }
+    &:has(.archive-tools) {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+}
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: $primaryColor;
+  margin: 0;
+  @include xs {
+    font-size: 20px;
+  }
+}
+.section-link {
+  display: flex;
+  flex-shrink: 0;
+  font-size: 18px;
+  font-weight: 500;
+  @include focus($secondaryColor);
+  &:hover {
+    color: $primaryColor;
+  }
+  @include xs {
+    font-size: 16px;
+  }
+}
+
+.archive-sort {
+  position: relative;
+  @include xs {
+    width: 100%;
+  }
+  span {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    inset-inline-start: 25px;
+    font-size: 14px;
+    color: #9b9b9b;
+    font-weight: 400;
+    pointer-events: none;
+    @include xs {
+      display: none;
+    }
+  }
+  .form-control {
+    width: 288px;
+    font-size: 14px;
+    color: #9b9b9b;
+    font-weight: 400;
+    padding-inline-start: 100px;
+    @include xs {
+      width: 100%;
+      padding-inline-start: 25px;
+    }
+  }
+}
+
+.archive-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  @include xs {
+    width: 100%;
+  }
+}
+
+.filter-trigger {
+  width: 48px;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background-color: $primaryColor;
+  border-radius: 50%;
+  font-size: 16px;
+  @include focus(#fff);
+  &:hover {
+    background-color: $secondaryColor;
+    color: $primaryColor;
+  }
+  @include sm {
+    display: flex;
+  }
+}

@@ -1,0 +1,15 @@
+.lang-content {
+  position: relative;
+  @include xs {
+    display: none;
+  }
+}
+.lang-link {
+  font-size: 14px;
+  font-weight: 400;
+  display: flex;
+  @include focus(#4b5256);
+  &:hover {
+    color: $primaryColor;
+  }
+}

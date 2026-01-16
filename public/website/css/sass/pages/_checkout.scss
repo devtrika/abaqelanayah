@@ -1,0 +1,124 @@
+.delivery_type-content {
+  padding-top: 30px;
+
+  .delivery_type-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: $primaryColor;
+    margin: 0 0 12px;
+  }
+  .delivery_type-desc {
+    font-size: 14px;
+    font-weight: 400;
+    color: $textColor;
+    margin: 0 0 6px;
+  }
+  .delivery_type-hint {
+    font-size: 14px;
+    font-weight: 400;
+    color: #ff0000;
+    display: block;
+    margin: 0 0 20px;
+  }
+}
+
+.coupon-content {
+  width: 100%;
+  position: relative;
+  .coupon-input {
+    width: 100%;
+    height: 48px;
+    background-color: #fff;
+    border: 1px solid #ececec;
+    border-radius: 24px;
+    padding: 0 110px 0 25px;
+    font-size: 14px;
+    font-weight: 500;
+    color: $textColor;
+    resize: none;
+    text-transform: none;
+    transition: all 0.3s ease-in-out;
+    &::placeholder {
+      font-size: 14px;
+      font-weight: 400;
+      color: #9b9b9b;
+    }
+    &:focus {
+      box-shadow: none;
+      outline: none;
+      border-color: $secondaryColor;
+      background-color: #fff;
+    }
+  }
+  .coupon-btn {
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    inset-inline-end: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 25px;
+    width: fit-content;
+    font-size: 14px;
+    font-weight: 700;
+    background-color: $secondaryColor;
+    @include focus(#fff);
+    border-radius: 24px;
+    &:hover {
+      background-color: $primaryColor;
+    }
+  }
+}
+
+.success-content {
+  width: 100%;
+  max-width: 315px;
+  text-align: center;
+  margin: 0 auto;
+  .success-icon {
+    font-size: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9dbcea;
+    margin: 0 0 20px;
+    @include xs {
+      font-size: 65px;
+      margin: 0 0 10px;
+    }
+  }
+  .success-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: $primaryColor;
+    margin: 0 0 10px;
+  }
+  .success-order {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 16px;
+    font-weight: 500;
+    color: $primaryColor;
+    margin: 0 0 12px;
+    strong {
+      color: $secondaryColor;
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
+  .success-desc {
+    font-size: 16px;
+    font-weight: 500;
+    color: $primaryColor;
+    margin: 0 0 30px;
+  }
+  .submit-btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  :last-child {
+    margin: 0;
+  }
+}
