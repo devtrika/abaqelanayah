@@ -2437,7 +2437,7 @@ html[dir=ltr] .date-content .form-control {
     justify-content: space-between;
     font-size: 16px;
     font-weight: 500;
-    color: #ffdd04;
+    /*color: #ffdd04;*/
     transition: all 0.3s ease-in-out;
     white-space: normal;
     max-width: none;
