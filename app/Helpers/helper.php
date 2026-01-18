@@ -41,8 +41,8 @@ function Translate($text,$lang){
     if (!is_string($text) || $text === '' || $lang === 'ar') {
         return is_string($text) ? $text : '';
     }
-
-    $api  = 'trnsl.1.1.20190807T134850Z.8bb6a23ccc48e664.a19f759906f9bb12508c3f0db1c742f281aa8468';
+$api='';
+   // $api  = 'trnsl.1.1.20190807T134850Z.8bb6a23ccc48e664.a19f759906f9bb12508c3f0db1c742f281aa8468';
 
     try {
         $endpoint = 'https://translate.yandex.net/api/v1.5/tr.json/translate?key=' . $api
