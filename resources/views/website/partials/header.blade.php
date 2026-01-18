@@ -4,7 +4,7 @@
     <div class="header">
       <a href="{{ route('website.main') }}" class="logo">
         <img
-          src="{{ asset('website/images/logo.svg') }}"
+          src="{{$settings['logo']}}"
           alt="logo"
           loading="lazy"
           class="img-contain"

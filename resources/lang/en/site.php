@@ -521,7 +521,7 @@ return [
     'terms_agreement' => 'I have read and agree to',
     'terms_and_conditions' => 'Terms and Conditions',
     'register' => 'Register',
-    'copyright' => 'Lia 2025 ©',
+    'copyright' => '©',
 
     // Cart translations
     'cart' => 'Cart',

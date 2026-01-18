@@ -9,7 +9,7 @@
             <div class="footer-logo">
               <img
                 loading="lazy"
-                src="{{ asset('website/images/logo_footer.svg') }}"
+                src="{{$settings['logo']}}"
                 alt="logo"
                 class="img-contain"
               />
@@ -108,10 +108,10 @@
         </div>
       </div>
     </div>
-    
+   
     {{-- Footer Bottom --}}
     <div class="last-footer">
-      <p class="copyrights">{{ __('site.copyright') }}</p>
+      <p class="copyrights">{{ __('site.copyright').$settings['name_'.$currentLocale] }}</p>
       <div class="footer-payments">
         <img
           loading="lazy"

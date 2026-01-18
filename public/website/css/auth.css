@@ -52,7 +52,7 @@ body::-webkit-scrollbar {
   border-radius: 3px;
 }
 body::-webkit-scrollbar-thumb {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   border-radius: 3px;
 }
 html[dir=ltr] body {
@@ -215,7 +215,7 @@ button {
   min-width: 140px;
   height: 48px;
   border-radius: 24px;
-  background-color: #3F132C;
+  background-color: #000000;
   font-size: 16px;
   font-weight: 700;
   color: #fff;
@@ -225,17 +225,17 @@ button {
   color: #fff;
 }
 .submit-btn.second-btn {
-  border: 1px solid #3F132C;
+  border: 1px solid #ffdd04;
   background-color: #fff;
-  color: #3F132C;
+  color: #000000;
   transition: all 0.3s ease-in-out;
 }
 .submit-btn.second-btn:focus {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .submit-btn:hover {
-  background-color: #FF9999;
-  color: #3F132C;
+  background-color: #000000;
+  color: #ffdd04;
 }
 .submit-btn:disabled {
   background-color: #f5f5f5;
@@ -258,7 +258,7 @@ button {
   width: 100%;
   height: 48px;
   border-radius: 24px;
-  background-color: #3F132C;
+  background-color: #ffdd04;
   font-size: 16px;
   font-weight: 700;
   margin: 0;
@@ -269,16 +269,16 @@ button {
   color: #fff;
 }
 .modal-btn.modal_second-btn {
-  background-color: #ebe2db;
-  color: #3F132C;
+  background-color: #000000;
+  color: #ffdd04;
   transition: all 0.3s ease-in-out;
 }
 .modal-btn.modal_second-btn:focus {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .modal-btn:hover {
-  background-color: #FF9999;
-  color: #3F132C;
+  background-color: #000000;
+  color: #ffdd04;
 }
 
 .default-btn {
@@ -289,7 +289,7 @@ button {
   width: 100%;
   height: 55px;
   border-radius: 30px;
-  background-color: #3F132C;
+  background-color: #000000;
   font-size: 18px;
   font-weight: 700;
   margin: 0;
@@ -300,16 +300,16 @@ button {
   color: #fff;
 }
 .default-btn.second-btn {
-  background-color: #ebe2db;
-  color: #3F132C;
+  background-color: #000000;
+  color: #fff;
   transition: all 0.3s ease-in-out;
 }
 .default-btn.second-btn:focus {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .default-btn:hover {
-  background-color: #FF9999;
-  color: #3F132C;
+  background-color: #000000;
+  color: #ffdd04;
 }
 
 /* group */
@@ -451,7 +451,7 @@ button {
 .form-control:focus {
   box-shadow: none;
   outline: none;
-  border-color: #3F132C;
+  border-color: #ffdd04;
   background-color: #f1f1f1;
 }
 .form-control:focus:is(select), .form-control:focus:is([readonly]) {
@@ -544,7 +544,7 @@ html[dir=ltr] .iconed-input .input-icon {
 }
 .intl-tel-input .flag-container .country-list {
   scrollbar-width: thin;
-  scrollbar-color: #3F132C #f1f1f1;
+  scrollbar-color: #ffdd04 #f1f1f1;
   z-index: 99999 !important;
   position: absolute !important;
 }
@@ -588,7 +588,7 @@ html[dir=ltr] .iconed-input .input-icon {
   border-radius: 3px;
 }
 .intl-tel-input .flag-container .country-list::-webkit-scrollbar-thumb {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   border-radius: 3px;
 }
 .intl-tel-input .flag-container .country-list .country {
@@ -627,7 +627,7 @@ html[dir=ltr] .iconed-input .input-icon {
   transition: all 0.3s ease-in-out;
 }
 .password-content .password-toggle.active {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .password-content .password-toggle.active i::before {
   content: "\f070";
@@ -654,7 +654,7 @@ html[dir=ltr] .iconed-input .input-icon {
   transition: all 0.3s ease-in-out;
 }
 .otp-input input:focus {
-  border-color: #3F132C;
+  border-color: #ffdd04;
 }
 .otp-input input:disabled {
   opacity: 0.5;
@@ -674,7 +674,7 @@ html[dir=ltr] .iconed-input .input-icon {
 .otp-timer-section .timer-text {
   font-size: 14px;
   font-weight: 500;
-  color: #3F132C;
+  color: #ffdd04;
   margin: 0;
   display: flex;
   align-items: center;
@@ -683,14 +683,14 @@ html[dir=ltr] .iconed-input .input-icon {
 
 .otp-timer-section #timer-countdown {
   font-weight: 700;
-  color: #3F132C;
+  color: #ffdd04;
   direction: ltr;
 }
 
 .otp-timer-section .resend-code-btn {
   background-color: transparent;
-  border: 2px solid #3F132C;
-  color: #3F132C;
+  border: 2px solid #ffdd04;
+  color: #ffdd04;
   padding: 10px 30px;
   border-radius: 10px;
   font-size: 14px;
@@ -700,7 +700,7 @@ html[dir=ltr] .iconed-input .input-icon {
 }
 
 .otp-timer-section .resend-code-btn:hover:not(:disabled) {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   color: #fff;
 }
 
@@ -839,7 +839,7 @@ html[dir=ltr] .select2-container.select2-container--disabled .select2-selection-
 .select2-container .select2-results__option:hover,
 .select2-container.select2-container--disabled .select2-results__option:hover {
   background-color: transparent;
-  color: #3F132C;
+  color: #ffdd04;
 }
 .select2-container .select2-results__option.select2-results__option--highlighted.select2-results__option--selectable,
 .select2-container.select2-container--disabled .select2-results__option.select2-results__option--highlighted.select2-results__option--selectable {
@@ -877,7 +877,7 @@ html[dir=ltr] .select2-container.select2-container--disabled .select2-selection-
   color: #000000;
 }
 .checkbox label a:hover {
-  color: #3F132C;
+  color: #ffdd04;
   text-decoration: none;
 }
 .checkbox label .mark {
@@ -903,8 +903,8 @@ html[dir=ltr] .select2-container.select2-container--disabled .select2-selection-
   display: none;
 }
 .checkbox label input:checked ~ .mark {
-  background-color: #FF9999;
-  border-color: #FF9999;
+  background-color: #000000;
+  border-color: #000000;
 }
 .checkbox label input:checked ~ .mark i {
   transform: scale(1) rotate(0deg);
@@ -926,7 +926,7 @@ html[dir=ltr] .select2-container.select2-container--disabled .select2-selection-
   cursor: pointer;
 }
 .radio label small {
-  color: #FF9999;
+  color: #000000;
   font-size: 100%;
 }
 .radio label .mark {
@@ -944,7 +944,7 @@ html[dir=ltr] .select2-container.select2-container--disabled .select2-selection-
   content: "";
   width: 10px;
   height: 10px;
-  background-color: #3F132C;
+  background-color: #ffdd04;
   border-radius: 50%;
   display: block;
   visibility: hidden;
@@ -998,7 +998,7 @@ html[dir=ltr] .select2-container.select2-container--disabled .select2-selection-
   background-color: #fff;
 }
 .cart-info .form-control:focus {
-  border-color: #3F132C;
+  border-color: #ffdd04;
   background-color: #fff;
 }
 .cart-info .form-control:focus:is(select), .cart-info .form-control:focus:is([readonly]) {
@@ -1101,7 +1101,7 @@ html[dir=ltr] .date-content .form-control {
   height: 36px;
   border-radius: 20px;
   background-color: rgba(63, 19, 44, 0.1);
-  background-color: #FF9999;
+  background-color: #000000;
   font-size: 14px;
   font-weight: 600;
   flex-shrink: 0;
@@ -1115,7 +1115,7 @@ html[dir=ltr] .date-content .form-control {
   display: none;
 }
 .file-content:hover .file-btn {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   color: #fff;
 }
 
@@ -1232,7 +1232,7 @@ html[dir=ltr] .date-content .form-control {
   transition: all 0.3s ease-in-out;
 }
 .modal .modal-close:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .modal .modal-body {
   padding: 0;
@@ -1267,7 +1267,7 @@ html[dir=ltr] .date-content .form-control {
 .modal-head {
   font-size: 16px;
   font-weight: 700;
-  color: #3F132C;
+  color: #000000;
   text-align: center;
   line-height: 1.65;
   margin: 0 0 15px;
@@ -1280,7 +1280,7 @@ html[dir=ltr] .date-content .form-control {
 .modal-desc {
   font-size: 16px;
   font-weight: 400;
-  color: #3F132C;
+  color: #000000;
   text-align: center;
   line-height: 1.65;
   margin: 0 0 20px;
@@ -1340,7 +1340,7 @@ html[dir=ltr] .date-content .form-control {
   justify-content: end;
   font-size: 14px;
   font-weight: 500;
-  color: #3F132C;
+  color: #ffdd04;
 }
 .auth-header .log-link a {
   text-decoration: underline;
@@ -1351,7 +1351,7 @@ html[dir=ltr] .date-content .form-control {
   color: inherit;
 }
 .auth-header .log-link a:hover {
-  color: #3F132C;
+  color: #ffdd04;
   text-decoration: none;
 }
 
@@ -1445,7 +1445,7 @@ html[dir=ltr] .date-content .form-control {
   font-size: 14px;
 }
 .back-btn:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 
 .auth_form-head {
@@ -1493,14 +1493,14 @@ html[dir=ltr] .date-content .form-control {
 .auth_form-title {
   font-size: 18px;
   font-weight: 700;
-  color: #3F132C;
+  /*color: #ffdd04;*/
   margin: 0 0;
 }
 
 .auth_form-desc {
   font-size: 14px;
   font-weight: 500;
-  color: #3F132C;
+  color: #ffdd04;
   margin: 0 0;
 }
 
@@ -1523,14 +1523,14 @@ html[dir=ltr] .date-content .form-control {
   font-size: 14px;
   font-weight: 500;
   margin: 20px auto;
-  color: #3F132C;
+  /*color: #ffdd04;*/
   transition: all 0.3s ease-in-out;
 }
 .password-link:focus {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .password-link:hover {
-  color: #3F132C;
+  color: #ffdd04;
   text-decoration: underline;
 }
 

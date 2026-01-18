@@ -52,7 +52,7 @@ body::-webkit-scrollbar {
   border-radius: 3px;
 }
 body::-webkit-scrollbar-thumb {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   border-radius: 3px;
 }
 html[dir=ltr] body {
@@ -215,7 +215,7 @@ button {
   min-width: 140px;
   height: 48px;
   border-radius: 24px;
-  background-color: #3F132C;
+  background-color: #ffdd04;
   font-size: 16px;
   font-weight: 700;
   color: #fff;
@@ -225,17 +225,17 @@ button {
   color: #fff;
 }
 .submit-btn.second-btn {
-  border: 1px solid #3F132C;
+  border: 1px solid #ffdd04;
   background-color: #fff;
-  color: #3F132C;
+  color: #ffdd04;
   transition: all 0.3s ease-in-out;
 }
 .submit-btn.second-btn:focus {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .submit-btn:hover {
-  background-color: #FF9999;
-  color: #3F132C;
+  background-color: #000000;
+  color: #ffdd04;
 }
 .submit-btn:disabled {
   background-color: #f5f5f5;
@@ -258,7 +258,7 @@ button {
   width: 100%;
   height: 48px;
   border-radius: 24px;
-  background-color: #3F132C;
+  background-color: #ffdd04;
   font-size: 16px;
   font-weight: 700;
   margin: 0;
@@ -269,16 +269,16 @@ button {
   color: #fff;
 }
 .modal-btn.modal_second-btn {
-  background-color: #ebe2db;
-  color: #3F132C;
+  background-color: #ffdd04;
+  color: #000000;
   transition: all 0.3s ease-in-out;
 }
 .modal-btn.modal_second-btn:focus {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .modal-btn:hover {
-  background-color: #FF9999;
-  color: #3F132C;
+  background-color: #000000;
+  color: #ffdd04;
 }
 
 .default-btn {
@@ -289,7 +289,7 @@ button {
   width: 100%;
   height: 55px;
   border-radius: 30px;
-  background-color: #3F132C;
+  background-color: #ffdd04;
   font-size: 18px;
   font-weight: 700;
   margin: 0;
@@ -300,16 +300,16 @@ button {
   color: #fff;
 }
 .default-btn.second-btn {
-  background-color: #ebe2db;
-  color: #3F132C;
+  background-color: #000000;
+  color: #fff;
   transition: all 0.3s ease-in-out;
 }
 .default-btn.second-btn:focus {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .default-btn:hover {
-  background-color: #FF9999;
-  color: #3F132C;
+  background-color: #000000;
+  color: #ffdd04;
 }
 
 /* group */
@@ -455,7 +455,7 @@ button {
 .form-control:focus {
   box-shadow: none;
   outline: none;
-  border-color: #3F132C;
+  border-color: #ffdd04;
   background-color: #f1f1f1;
 }
 .form-control:focus:is(select), .form-control:focus:is([readonly]) {
@@ -545,7 +545,7 @@ html[dir=ltr] .iconed-input .input-icon {
 }
 .intl-tel-input .flag-container .country-list {
   scrollbar-width: thin;
-  scrollbar-color: #3F132C #f1f1f1;
+  scrollbar-color: #ffdd04 #f1f1f1;
 }
 .intl-tel-input .flag-container .country-list::-webkit-scrollbar {
   background-color: #f1f1f1;
@@ -553,7 +553,7 @@ html[dir=ltr] .iconed-input .input-icon {
   border-radius: 3px;
 }
 .intl-tel-input .flag-container .country-list::-webkit-scrollbar-thumb {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   border-radius: 3px;
 }
 .intl-tel-input .flag-container .country-list .country {
@@ -592,7 +592,7 @@ html[dir=ltr] .iconed-input .input-icon {
   transition: all 0.3s ease-in-out;
 }
 .password-content .password-toggle.active {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .password-content .password-toggle.active i::before {
   content: "\f070";
@@ -619,7 +619,7 @@ html[dir=ltr] .iconed-input .input-icon {
   transition: all 0.3s ease-in-out;
 }
 .otp-input input:focus {
-  border-color: #3F132C;
+  border-color: #ffdd04;
 }
 .otp-input input:disabled {
   opacity: 0.5;
@@ -755,7 +755,7 @@ html[dir=ltr] .select2-container.select2-container--disabled .select2-selection-
 .select2-container .select2-results__option:hover,
 .select2-container.select2-container--disabled .select2-results__option:hover {
   background-color: transparent;
-  color: #3F132C;
+  color: #ffdd04;
 }
 .select2-container .select2-results__option.select2-results__option--highlighted.select2-results__option--selectable,
 .select2-container.select2-container--disabled .select2-results__option.select2-results__option--highlighted.select2-results__option--selectable {
@@ -793,7 +793,7 @@ html[dir=ltr] .select2-container.select2-container--disabled .select2-selection-
   color: #000000;
 }
 .checkbox label a:hover {
-  color: #3F132C;
+  color: #ffdd04;
   text-decoration: none;
 }
 .checkbox label .mark {
@@ -819,8 +819,8 @@ html[dir=ltr] .select2-container.select2-container--disabled .select2-selection-
   display: none;
 }
 .checkbox label input:checked ~ .mark {
-  background-color: #FF9999;
-  border-color: #FF9999;
+  background-color: #000000;
+  border-color: #000000;
 }
 .checkbox label input:checked ~ .mark i {
   transform: scale(1) rotate(0deg);
@@ -842,7 +842,7 @@ html[dir=ltr] .select2-container.select2-container--disabled .select2-selection-
   cursor: pointer;
 }
 .radio label small {
-  color: #FF9999;
+  color: #000000;
   font-size: 100%;
 }
 .radio label .mark {
@@ -860,7 +860,7 @@ html[dir=ltr] .select2-container.select2-container--disabled .select2-selection-
   content: "";
   width: 10px;
   height: 10px;
-  background-color: #3F132C;
+  background-color: #ffdd04;
   border-radius: 50%;
   display: block;
   visibility: hidden;
@@ -914,7 +914,7 @@ html[dir=ltr] .select2-container.select2-container--disabled .select2-selection-
   background-color: #fff;
 }
 .cart-info .form-control:focus {
-  border-color: #3F132C;
+  border-color: #ffdd04;
   background-color: #fff;
 }
 .cart-info .form-control:focus:is(select), .cart-info .form-control:focus:is([readonly]) {
@@ -1017,7 +1017,7 @@ html[dir=ltr] .date-content .form-control {
   height: 36px;
   border-radius: 20px;
   background-color: rgba(63, 19, 44, 0.1);
-  background-color: #FF9999;
+  background-color: #000000;
   font-size: 14px;
   font-weight: 600;
   flex-shrink: 0;
@@ -1031,7 +1031,7 @@ html[dir=ltr] .date-content .form-control {
   display: none;
 }
 .file-content:hover .file-btn {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   color: #fff;
 }
 
@@ -1140,7 +1140,7 @@ html[dir=ltr] .date-content .form-control {
   inset-inline-end: 13px;
   margin-inline-start: auto;
   font-size: 22px;
-  color: #9093a3;
+  color: #000000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1148,7 +1148,7 @@ html[dir=ltr] .date-content .form-control {
   transition: all 0.3s ease-in-out;
 }
 .modal .modal-close:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .modal .modal-body {
   padding: 0;
@@ -1183,7 +1183,7 @@ html[dir=ltr] .date-content .form-control {
 .modal-head {
   font-size: 16px;
   font-weight: 700;
-  color: #3F132C;
+  color: #000000;
   text-align: center;
   line-height: 1.65;
   margin: 0 0 15px;
@@ -1196,7 +1196,7 @@ html[dir=ltr] .date-content .form-control {
 .modal-desc {
   font-size: 16px;
   font-weight: 400;
-  color: #3F132C;
+  color: #000000;
   text-align: center;
   line-height: 1.65;
   margin: 0 0 20px;
@@ -1248,7 +1248,7 @@ html[dir=ltr] .date-content .form-control {
   right: auto;
 }
 .custom-slider .swiper-btn:hover {
-  background-color: #3F132C;
+  background-color: #ffdd04;
 }
 @media (max-width: 1271px) {
   .custom-slider .swiper-btn {
@@ -1287,7 +1287,7 @@ html[dir=ltr] .date-content .form-control {
   transition: all 0.3s ease-in-out;
 }
 .custom-slider .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active:after {
-  background-color: #3F132C;
+  background-color: #ffdd04;
 }
 
 .main-slider .swiper-pagination {
@@ -1340,7 +1340,7 @@ html[dir=ltr] .date-content .form-control {
 .section-title {
   font-size: 24px;
   font-weight: 700;
-  color: #3F132C;
+  color: #000000;
   margin: 0;
 }
 @media (max-width: 767px) {
@@ -1354,14 +1354,14 @@ html[dir=ltr] .date-content .form-control {
   flex-shrink: 0;
   font-size: 18px;
   font-weight: 500;
-  color: #FF9999;
+  /*color: #000000;*/
   transition: all 0.3s ease-in-out;
 }
 .section-link:focus {
-  color: #FF9999;
+  color: #000000;
 }
 .section-link:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 @media (max-width: 767px) {
   .section-link {
@@ -1424,7 +1424,7 @@ html[dir=ltr] .date-content .form-control {
   display: none;
   align-items: center;
   justify-content: center;
-  background-color: #3F132C;
+  background-color: #ffdd04;
   border-radius: 50%;
   font-size: 16px;
   color: #fff;
@@ -1434,8 +1434,8 @@ html[dir=ltr] .date-content .form-control {
   color: #fff;
 }
 .filter-trigger:hover {
-  background-color: #FF9999;
-  color: #3F132C;
+  background-color: #000000;
+  color: #ffdd04;
 }
 @media (max-width: 991px) {
   .filter-trigger {
@@ -1468,8 +1468,8 @@ html[dir=ltr] .date-content .form-control {
   max-width: none;
 }
 .account-table th {
-  background-color: #3F132C;
-  color: #fff;
+  background-color: #ffdd04;
+  color: #000000;
   font-size: 14px;
   font-weight: 700;
   line-height: 1.5;
@@ -1515,7 +1515,7 @@ html[dir=ltr] .date-content .form-control {
   color: inherit;
 }
 .account-table .table-contact:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .account-table .table-actions {
   display: flex;
@@ -1536,7 +1536,7 @@ html[dir=ltr] .date-content .form-control {
   color: #878787;
 }
 .account-table .table-action:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .account-table .table-price {
   display: flex;
@@ -1584,7 +1584,7 @@ html[dir=ltr] .date-content .form-control {
   color: #e13612;
 }
 .account-table .table-download:hover {
-  color: #3F132C;
+  color: #ffdd04;
   text-decoration: none;
 }
 
@@ -1615,8 +1615,8 @@ html[dir=ltr] .date-content .form-control {
   color: #000000;
 }
 .account-tabs button.active {
-  background-color: #FF9999;
-  color: #fff;
+  background-color: #ffdd04;
+  color: #000000;
 }
 @media (max-width: 767px) {
   .account-tabs button {
@@ -1680,7 +1680,7 @@ html[dir=ltr] .date-content .form-control {
 .category-item .item-title {
   font-size: 16px;
   font-weight: 500;
-  color: #3F132C;
+  color: #000000;
   margin: 0;
 }
 .category-item .item-title a {
@@ -1691,7 +1691,7 @@ html[dir=ltr] .date-content .form-control {
   color: inherit;
 }
 .category-item .item-title a:hover {
-  color: #FF9999;
+  color: #ffdd04;
 }
 
 .products-grid {
@@ -1789,7 +1789,7 @@ html[dir=ltr] .date-content .form-control {
 .product-item .item-title {
   font-size: 14px;
   font-weight: 700;
-  color: #3F132C;
+  /*color: #ffdd04;*/
   line-height: 1.393;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -1806,7 +1806,7 @@ html[dir=ltr] .date-content .form-control {
   color: inherit;
 }
 .product-item .item-title a:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .product-item .item-prices {
   display: flex;
@@ -1820,7 +1820,7 @@ html[dir=ltr] .date-content .form-control {
   display: flex;
   align-items: center;
   gap: 3px;
-  color: #3F132C;
+  /*color: #ffdd04;*/
   font-size: 16px;
   font-weight: 700;
 }
@@ -1828,7 +1828,7 @@ html[dir=ltr] .date-content .form-control {
   background-color: #ffeded;
   font-size: 12px;
   font-weight: 700;
-  color: #FF9999;
+  color: #000000;
   border-radius: 3px;
   padding: 0 4px;
   height: 18px;
@@ -1862,7 +1862,7 @@ html[dir=ltr] .date-content .form-control {
   padding: 0 5px;
   text-align: center;
   font-size: 14px;
-  color: #3F132C;
+  color: #000000;
 }
 .product-item .quantity-btn {
   position: absolute;
@@ -1872,18 +1872,18 @@ html[dir=ltr] .date-content .form-control {
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  background-color: #e3e3e3;
+  background-color: #000000;
   border-radius: 50%;
   padding: 0;
-  color: #3F132C;
+  color: #fff;
   transition: all 0.3s ease-in-out;
 }
 .product-item .quantity-btn:focus {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .product-item .quantity-btn:hover {
   color: #fff;
-  background-color: #3F132C;
+  background-color: #ffdd04;
 }
 .product-item .plus-btn {
   inset-inline-start: 5px;
@@ -1894,7 +1894,7 @@ html[dir=ltr] .date-content .form-control {
 .product-item .item-button {
   width: 30px;
   aspect-ratio: 1;
-  background-color: #3F132C;
+  background-color: #000000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1905,11 +1905,11 @@ html[dir=ltr] .date-content .form-control {
   transition: all 0.3s ease-in-out;
 }
 .product-item .item-button:focus {
-  color: #fff;
+  color: #ffdd04;
 }
 .product-item .item-button:hover {
-  color: #3F132C;
-  background-color: #FF9999;
+  color: #fff;
+  background-color: #ffdd04;
 }
 .product-item .item-fav {
   position: absolute;
@@ -1923,11 +1923,11 @@ html[dir=ltr] .date-content .form-control {
   background-color: #fff;
   border-radius: 50%;
   font-size: 16px;
-  color: #3F132C;
+  color: #ffdd04;
   transition: all 0.3s ease-in-out;
 }
 .product-item .item-fav:focus {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .product-item .item-fav:hover {
   color: #fff;
@@ -2030,11 +2030,11 @@ html[dir=ltr] .date-content .form-control {
   border-radius: 50%;
   cursor: pointer;
   font-size: 18px;
-  color: #3F132C;
+  /*color: #ffdd04;*/
   transition: all 0.3s ease-in-out;
 }
 .header-icon:focus {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .header-icon .badge {
   position: absolute;
@@ -2045,15 +2045,15 @@ html[dir=ltr] .date-content .form-control {
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background-color: #FF9999;
+  background-color: #000000;
   color: #fff;
   font-size: 12px;
   font-weight: 500;
   padding: 0;
 }
 .header-icon:hover {
-  border-color: #3F132C;
-  background-color: #3F132C;
+  border-color: #ffdd04;
+  background-color: #ffdd04;
   color: #fff;
 }
 @media (max-width: 991px) {
@@ -2107,7 +2107,7 @@ html[dir=ltr] .date-content .form-control {
   font-weight: 400;
 }
 .search-input:focus {
-  border-color: #3F132C;
+  border-color: #ffdd04;
 }
 
 .search-btn {
@@ -2125,7 +2125,7 @@ html[dir=ltr] .date-content .form-control {
   color: #9b9b9b;
 }
 .search-btn:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 
 .user_header-content {
@@ -2177,7 +2177,7 @@ html[dir=ltr] .date-content .form-control {
 }
 .user_header-content .user_header-list a:hover {
   background-color: rgb(252.7292682927, 247.4707317073, 250.4585365854);
-  color: #3F132C;
+  color: #ffdd04;
 }
 .user_header-content .user_header-list a.logout {
   color: #dc3545;
@@ -2187,8 +2187,8 @@ html[dir=ltr] .date-content .form-control {
   color: #dc3545;
 }
 .user_header-content:hover .user-icon {
-  border-color: #3F132C;
-  background-color: #3F132C;
+  border-color: #ffdd04;
+  background-color: #ffdd04;
   color: #fff;
 }
 .user_header-content:hover .user_header-list {
@@ -2216,11 +2216,11 @@ html[dir=ltr] .date-content .form-control {
   color: #4b5256;
 }
 .lang-link:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 
 .header-nav {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   overflow: visible;
 }
 @media (max-width: 991px) {
@@ -2249,7 +2249,7 @@ html[dir=ltr] .date-content .form-control {
   transition: all 0.3s ease-in-out;
 }
 .close-nav:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 
 .nav-list {
@@ -2285,7 +2285,7 @@ html[dir=ltr] .date-content .form-control {
   justify-content: center;
   gap: 3px;
   font-size: 15px;
-  color: #fff;
+  /*color: #fff;*/
   transition: all 0.3s ease-in-out;
   white-space: nowrap;
   /*max-width: 140px;*/
@@ -2301,7 +2301,7 @@ html[dir=ltr] .date-content .form-control {
   font-size: 10px;
 }
 .nav-link:hover {
-  color: #FF9999;
+  color: #fff;
 }
 @media (max-width: 991px) {
   .nav-link {
@@ -2322,7 +2322,7 @@ html[dir=ltr] .date-content .form-control {
     position: relative;
   }
   .has-children:hover .nav-link {
-    color: #FF9999;
+    color: #000000;
   }
   .has-children:hover .children-list {
     opacity: 1;
@@ -2374,7 +2374,7 @@ html[dir=ltr] .date-content .form-control {
   }
   .children-link:hover {
     background-color: rgb(252.7292682927, 247.4707317073, 250.4585365854);
-    color: #3F132C;
+    color: #ffdd04;
   }
   .children-link.logout {
     color: #dc3545;
@@ -2437,7 +2437,7 @@ html[dir=ltr] .date-content .form-control {
     justify-content: space-between;
     font-size: 16px;
     font-weight: 500;
-    color: #3F132C;
+    color: #ffdd04;
     transition: all 0.3s ease-in-out;
     white-space: normal;
     max-width: none;
@@ -2445,23 +2445,23 @@ html[dir=ltr] .date-content .form-control {
     text-overflow: clip;
   }
   .nav-link:focus {
-    color: #3F132C;
+    color: #ffdd04;
   }
   .nav-link::after {
     font-size: 14px;
     font-weight: 400;
     transition: all 0.3s ease-in-out;
-    color: #3F132C;
+    color: #ffdd04;
     transition: all 0.3s ease-in-out;
   }
   .nav-link::after:focus {
-    color: #3F132C;
+    color: #ffdd04;
   }
   .nav-link:hover, .nav-link.active {
-    color: #3F132C;
+    color: #ffdd04;
   }
   .nav-link:hover::after, .nav-link.active::after {
-    color: #3F132C;
+    color: #ffdd04;
   }
   .nav-link.active::after {
     transform: rotate(180deg);
@@ -2526,7 +2526,7 @@ html[dir=ltr] .date-content .form-control {
   color: #a1a1a1;
 }
 .breadcrumb-link:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 
 .page-content {
@@ -2539,7 +2539,7 @@ html[dir=ltr] .date-content .form-control {
 }
 
 .main-footer {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   margin-top: 100px;
 }
 @media (max-width: 991px) {
@@ -2589,7 +2589,7 @@ html[dir=ltr] .date-content .form-control {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #55203e;
+  background-color: #000000;
   color: #fff;
   font-size: 16px;
   color: #fff;
@@ -2600,7 +2600,7 @@ html[dir=ltr] .date-content .form-control {
 }
 .footer-socials .social-link:hover {
   background-color: #fff;
-  color: #3F132C;
+  color: #ffdd04;
 }
 
 @media (max-width: 991px) {
@@ -2612,7 +2612,7 @@ html[dir=ltr] .date-content .form-control {
 .footer-title {
   font-size: 14px;
   font-weight: 700;
-  color: #fff;
+  /*color: #fff;*/
   margin: 9px 0 23px;
 }
 @media (max-width: 991px) {
@@ -2636,7 +2636,7 @@ html[dir=ltr] .date-content .form-control {
 .footer-list a {
   font-size: 14px;
   display: inline-flex;
-  color: #e3b5cf;
+  /*color: #e3b5cf;*/
   transition: all 0.3s ease-in-out;
 }
 .footer-list a:focus {
@@ -2662,15 +2662,15 @@ html[dir=ltr] .date-content .form-control {
   justify-content: start;
   gap: 15px;
   font-size: 14px;
-  color: #fff;
+  /*color: #fff;*/
   transition: all 0.3s ease-in-out;
   margin: 0;
 }
 .footer-contacts .value:focus {
-  color: #fff;
+  color: hsla(0,0%,100%,.8);
 }
 .footer-contacts .value:is(a):hover {
-  color: #FF9999;
+  color: hsla(0,0%,100%,.8);
 }
 @media (max-width: 767px) {
   .footer-contacts {
@@ -2700,7 +2700,7 @@ html[dir=ltr] .date-content .form-control {
 }
 
 .copyrights {
-  color: #fff;
+  /*color: #fff;*/
   font-weight: 500;
   font-size: 12px;
   margin: 0;
@@ -2750,7 +2750,7 @@ html[dir=ltr] .date-content .form-control {
   width: 12px;
 }
 .tasawk a:hover {
-  color: #FF9999;
+  color: #000000;
 }
 
 .categories-section {
@@ -2827,7 +2827,7 @@ html[dir=ltr] .date-content .form-control {
   width: 6px;
 }
 .search-filters::-webkit-scrollbar-thumb {
-  background-color: #3F132C;
+  background-color: #ffdd04;
 }
 @media (max-width: 991px) {
   .search-filters {
@@ -2846,7 +2846,7 @@ html[dir=ltr] .date-content .form-control {
 .filters-title {
   font-size: 18px;
   font-weight: 700;
-  color: #3F132C;
+  /*color: #ffdd04;*/
   margin: 0;
 }
 
@@ -2863,7 +2863,7 @@ html[dir=ltr] .date-content .form-control {
   color: #9e9e9e;
 }
 .filters-reset:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 
 .filters-list {
@@ -2921,7 +2921,7 @@ html[dir=ltr] .date-content .form-control {
   height: 5px;
 }
 .price-filter .noUi-target .noUi-connect {
-  background-color: #FF9999;
+  background-color: #000000;
   border-radius: 3px;
 }
 .price-filter .noUi-target .noUi-handle {
@@ -2984,7 +2984,7 @@ html[dir=ltr] .date-content .form-control {
   width: 100%;
   height: 48px;
   border-radius: 24px;
-  background-color: #3F132C;
+  background-color: #000000;
   font-size: 16px;
   font-weight: 700;
   color: #fff;
@@ -2994,8 +2994,8 @@ html[dir=ltr] .date-content .form-control {
   color: #fff;
 }
 .filters-btn:hover {
-  background-color: #FF9999;
-  color: #3F132C;
+  /*background-color: #000000;*/
+  color: #ffdd04;
 }
 
 .filters-overlay {
@@ -3080,14 +3080,14 @@ body:has(.product-page) footer {
   height: 21px;
   font-size: 12px;
   font-weight: 500;
-  color: #3F132C;
+  /*color: #ffdd04;*/
   transition: all 0.3s ease-in-out;
 }
 .product-information .product-category:focus {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .product-information .product-category:hover {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   color: #fff;
 }
 .product-information .product-fav {
@@ -3103,11 +3103,11 @@ body:has(.product-page) footer {
   align-items: center;
   justify-content: center;
   font-size: 25px;
-  color: #3F132C;
+  color: #ffdd04;
   transition: all 0.3s ease-in-out;
 }
 .product-information .product-fav:focus {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .product-information .product-fav:hover {
   color: #fff;
@@ -3123,7 +3123,7 @@ body:has(.product-page) footer {
 .product-information .product-title {
   font-size: 24px;
   font-weight: 700;
-  color: #3F132C;
+  /*color: #ffdd04;*/
   margin: 0 0 17px;
   padding-inline-end: 75px;
 }
@@ -3147,7 +3147,7 @@ body:has(.product-page) footer {
 .product-information .title {
   font-size: 14px;
   font-weight: 500;
-  color: #3F132C;
+  color: #ffdd04;
 }
 .product-information .product-features {
   width: -moz-fit-content;
@@ -3172,6 +3172,7 @@ body:has(.product-page) footer {
 }
 .product-information .product-feature .title {
   width: 150px;
+  color:#000000;
 }
 .product-information .product-feature .status {
   display: flex;
@@ -3231,7 +3232,7 @@ body:has(.product-page) footer {
   color: #8a8a8a;
 }
 .product-information .product-share .share-link:hover {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   color: #fff;
 }
 .product-information :last-child {
@@ -3275,7 +3276,7 @@ body:has(.product-page) footer {
   }
 }
 .product_sticky-section .product-prices strong {
-  color: #3F132C;
+  /*color: #ffdd04;*/
   font-size: 24px;
   font-weight: 700;
   display: flex;
@@ -3292,7 +3293,7 @@ body:has(.product-page) footer {
   background-color: #ffeded;
   font-size: 12px;
   font-weight: 700;
-  color: #FF9999;
+  color: #000000;
   border-radius: 3px;
   padding: 0 4px;
   height: 18px;
@@ -3369,7 +3370,7 @@ body:has(.product-page) footer {
 }
 .product_sticky-section .product-quantity .quantity-btn:hover {
   color: #fff;
-  background-color: #3F132C;
+  background-color: #ffdd04;
 }
 @media (max-width: 767px) {
   .product_sticky-section .product-quantity .quantity-btn {
@@ -3401,7 +3402,7 @@ body:has(.product-page) footer {
   align-items: center;
   justify-content: center;
   gap: 5px;
-  background-color: #3F132C;
+  background-color: #000000;
   border-radius: 25px;
   font-size: 18px;
   font-weight: 700;
@@ -3415,8 +3416,8 @@ body:has(.product-page) footer {
   font-size: 22px;
 }
 .product_sticky-section .product-button:hover {
-  background-color: #FF9999;
-  color: #3F132C;
+  /*background-color: #000000;*/
+  color: #ffdd04;
 }
 @media (max-width: 767px) {
   .product_sticky-section .product-button {
@@ -3462,14 +3463,14 @@ body:has(.product-page) footer {
 .cart-info .cart_info-title {
   font-size: 18px;
   font-weight: 700;
-  color: #3F132C;
+  color: #000000;
   display: flex;
   align-items: center;
   gap: 9px;
   margin: 0 0 15px;
 }
 .cart-info .cart_info-title span {
-  color: #FF9999;
+  color: #000000;
   display: flex;
   gap: 3px;
 }
@@ -3527,8 +3528,8 @@ body:has(.product-page) footer {
   }
 }
 .cart-info .cart_address-tabs button.active {
-  border-color: #FF9999;
-  color: #FF9999;
+  border-color: #000000;
+  color: #000000;
 }
 .cart-info .tab-content {
   padding: 18px 0 0;
@@ -3551,7 +3552,7 @@ body:has(.product-page) footer {
   position: relative;
   font-size: 14px;
   font-weight: 500;
-  color: #3F132C;
+  color: #000000;
   cursor: pointer;
   width: 100%;
   background-color: #ececec;
@@ -3572,7 +3573,7 @@ body:has(.product-page) footer {
   content: "";
   width: 12px;
   height: 12px;
-  background-color: #3F132C;
+  background-color: #ffdd04;
   border-radius: 50%;
   display: block;
   visibility: hidden;
@@ -3612,7 +3613,7 @@ body:has(.product-page) footer {
   padding: 4px 0 15px;
   font-size: 24px;
   font-weight: 700;
-  color: #3F132C;
+  color: #000000;
   border-bottom: 2px solid #ececec;
   margin: 0;
 }
@@ -3641,7 +3642,7 @@ body:has(.product-page) footer {
 .cart-product .cart_product-title {
   font-size: 14px;
   font-weight: 500;
-  color: #3F132C;
+  color: #000000;
   padding-inline-end: 35px;
   margin: 0 0 9px;
 }
@@ -3653,7 +3654,7 @@ body:has(.product-page) footer {
   color: inherit;
 }
 .cart-product .cart_product-title a:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .cart-product .cart_product-hint {
   font-size: 13px;
@@ -3678,7 +3679,7 @@ body:has(.product-page) footer {
   padding: 0 5px;
   text-align: center;
   font-size: 14px;
-  color: #3F132C;
+  color: #000000;
 }
 .cart-product .cart_product-quantity .quantity-btn {
   position: absolute;
@@ -3688,18 +3689,18 @@ body:has(.product-page) footer {
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  background-color: #e3e3e3;
+  background-color: #000000;
   border-radius: 50%;
   padding: 0;
-  color: #3F132C;
+  color: #ffdd04;
   transition: all 0.3s ease-in-out;
 }
 .cart-product .cart_product-quantity .quantity-btn:focus {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .cart-product .cart_product-quantity .quantity-btn:hover {
   color: #fff;
-  background-color: #3F132C;
+  background-color: #ffdd04;
 }
 .cart-product .cart_product-quantity .plus-btn {
   inset-inline-start: 5px;
@@ -3711,7 +3712,7 @@ body:has(.product-page) footer {
   display: flex;
   align-items: center;
   gap: 3px;
-  color: #3F132C;
+  color: #000000;
   font-size: 14px;
   font-weight: 700;
 }
@@ -3742,12 +3743,12 @@ body:has(.product-page) footer {
 .cart-final_total .title {
   font-size: 14px;
   font-weight: 400;
-  color: #3F132C;
+  color: #000000;
 }
 .cart-final_total .value {
   font-size: 24px;
   font-weight: 700;
-  color: #3F132C;
+  color: #000000;
   display: flex;
   align-items: center;
   gap: 3px;
@@ -3776,7 +3777,7 @@ body:has(.product-page) footer {
 .cart-totals .title {
   font-size: 14px;
   font-weight: 500;
-  color: #3F132C;
+  color: #000000;
 }
 .cart-totals .value {
   display: flex;
@@ -3784,7 +3785,7 @@ body:has(.product-page) footer {
   gap: 3px;
   font-size: 14px;
   font-weight: 700;
-  color: #3F132C;
+  color: #000000;
 }
 
 .delivery_type-content {
@@ -3793,7 +3794,7 @@ body:has(.product-page) footer {
 .delivery_type-content .delivery_type-title {
   font-size: 14px;
   font-weight: 700;
-  color: #3F132C;
+  color: #000000;
   margin: 0 0 12px;
 }
 .delivery_type-content .delivery_type-desc {
@@ -3841,7 +3842,7 @@ body:has(.product-page) footer {
 .coupon-content .coupon-input:focus {
   box-shadow: none;
   outline: none;
-  border-color: #FF9999;
+  border-color: #000000;
   background-color: #fff;
 }
 .coupon-content .coupon-btn {
@@ -3857,7 +3858,7 @@ body:has(.product-page) footer {
   width: fit-content;
   font-size: 14px;
   font-weight: 700;
-  background-color: #FF9999;
+  background-color: #000000;
   color: #fff;
   transition: all 0.3s ease-in-out;
   border-radius: 24px;
@@ -3866,7 +3867,7 @@ body:has(.product-page) footer {
   color: #fff;
 }
 .coupon-content .coupon-btn:hover {
-  background-color: #3F132C;
+  background-color: #ffdd04;
 }
 
 .success-content {
@@ -3892,7 +3893,7 @@ body:has(.product-page) footer {
 .success-content .success-title {
   font-size: 16px;
   font-weight: 700;
-  color: #3F132C;
+  color: #ffdd04;
   margin: 0 0 10px;
 }
 .success-content .success-order {
@@ -3901,18 +3902,18 @@ body:has(.product-page) footer {
   gap: 2px;
   font-size: 16px;
   font-weight: 500;
-  color: #3F132C;
+  color: #ffdd04;
   margin: 0 0 12px;
 }
 .success-content .success-order strong {
-  color: #FF9999;
+  color: #000000;
   font-size: 20px;
   font-weight: 700;
 }
 .success-content .success-desc {
   font-size: 16px;
   font-weight: 500;
-  color: #3F132C;
+  color: #ffdd04;
   margin: 0 0 30px;
 }
 .success-content .submit-btn {
@@ -3956,7 +3957,7 @@ body:has(.product-page) footer {
   border-end-end-radius: 5px;
   border-start-end-radius: 5px;
   font-size: 20px;
-  color: #3F132C;
+  color: #ffdd04;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1607843137);
   z-index: 11;
   transition: all 0.3s ease-in-out;
@@ -4036,10 +4037,10 @@ body:has(.product-page) footer {
   transition: all 0.3s ease-in-out;
 }
 .account-list .account-item:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .account-list .account-item:hover i {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .account-list .account-item.active {
   color: #9dbcea;
@@ -4095,7 +4096,7 @@ body:has(.product-page) footer {
 .account-main .account-title {
   font-size: 20px;
   font-weight: 700;
-  color: #3F132C;
+  color: #000000;
   margin: 0 0;
 }
 .account-main .account-btn {
@@ -4110,15 +4111,15 @@ body:has(.product-page) footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #FF9999;
-  color: #fff;
+  background-color: #ffdd04;
+  color: #000000;
   transition: all 0.3s ease-in-out;
 }
 .account-main .account-btn:focus {
   color: #fff;
 }
 .account-main .account-btn:hover {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   color: #fff;
 }
 @media (max-width: 767px) {
@@ -4146,7 +4147,7 @@ body:has(.product-page) footer {
   color: #a2a2a2;
 }
 .account-main .notifications-btn:hover {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   color: #fff;
 }
 @media (max-width: 767px) {
@@ -4204,7 +4205,7 @@ body:has(.product-page) footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #3F132C;
+  background-color: #ffdd04;
 }
 @media (max-width: 1199px) {
   .notification-item .item-icon {
@@ -4244,7 +4245,7 @@ body:has(.product-page) footer {
 
 /* Read/Unread visual states */
 .notification-item.unread {
-  border-color: #3F132C;
+  border-color: #ffdd04;
   background-color: #f7f3f6;
 }
 .notification-item.read {
@@ -4283,7 +4284,7 @@ body:has(.product-page) footer {
   background-color: #9dbcea;
 }
 .account-main .wallet-btn:hover {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   color: #fff;
 }
 
@@ -4332,7 +4333,7 @@ body:has(.product-page) footer {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  color: #FF9999;
+  color: #000000;
   font-size: 24px;
 }
 @media (max-width: 1199px) {
@@ -4415,7 +4416,7 @@ body:has(.product-page) footer {
 .contact-title {
   font-size: 16px;
   font-weight: 700;
-  color: #3F132C;
+  color: #ffdd04;
   margin: 0 0 15px;
 }
 @media (max-width: 767px) {
@@ -4461,17 +4462,17 @@ body:has(.product-page) footer {
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  color: #FF9999;
+  color: #000000;
   border-radius: 50%;
   background-color: rgba(255, 153, 153, 0.15);
   transition: all 0.3s ease-in-out;
 }
 .contact-list a:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .contact-list a:hover i {
-  background-color: #FF9999;
-  color: #3F132C;
+  background-color: #000000;
+  color: #ffdd04;
 }
 
 .contact-form .contact-title {
@@ -4538,7 +4539,7 @@ body:has(.product-page) footer {
   align-items: center;
   justify-content: center;
   border-radius: 25px;
-  background-color: #ebe2db;
+  background-color: #000000;
   margin: 8px auto;
   overflow: hidden;
 }
@@ -4609,7 +4610,7 @@ body:has(.product-page) footer {
   background-color: #9dbcea;
 }
 .order-header .order_header-btn:hover {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   color: #fff;
 }
 .order-header .order-date {
@@ -4719,7 +4720,7 @@ body:has(.product-page) footer {
   color: inherit;
 }
 .order-invoice .order_product-name a:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 @media (max-width: 767px) {
   .order-invoice .order_product-name {
@@ -4820,7 +4821,7 @@ body:has(.product-page) footer {
 .order-information .order_info-title {
   font-size: 20px;
   font-weight: 700;
-  color: #3F132C;
+  color: #ffdd04;
   margin: 0 0 20px;
 }
 .order-information .order_info-list {
@@ -4870,7 +4871,7 @@ body:has(.product-page) footer {
   color: #e13612;
 }
 .order-information .order_info-item a:hover {
-  color: #3F132C;
+  color: #ffdd04;
   text-decoration: none;
 }
 .order-information .order_info-stars {
@@ -4930,7 +4931,7 @@ body:has(.product-page) footer {
   color: #000000;
 }
 .order-information .order_info-products .order_info-product-name a:hover {
-  color: #3F132C;
+  color: #ffdd04;
 }
 .order-information .order_info-products .order_info-product-price {
   font-size: 14px;
@@ -4972,7 +4973,7 @@ body:has(.product-page) footer {
   color: #a2a2a2;
 }
 .order-buttons .order-btn:hover {
-  background-color: #3F132C;
+  background-color: #ffdd04;
   color: #fff;
 }/*# sourceMappingURL=main.css.map */
 /* Sticky header: keep header fixed at top with background */

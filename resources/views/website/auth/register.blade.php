@@ -15,7 +15,7 @@
           <a href="{{ route('website.home') }}" class="logo">
             <img
               loading="lazy"
-              src="{{ asset('website/images/logo.svg') }}"
+              src="{{$settings['logo']}}"
               alt="auth_form-logo"
               class="img-contain"
             />

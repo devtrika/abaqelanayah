@@ -11,13 +11,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta name="description" content="@yield('meta_description', 'هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق.')" />
   <meta name="keywords" content="@yield('meta_keywords', '')" />
-  <meta name="author" content="@yield('meta_author', 'Lia')" />
+  <meta name="author" content="@yield('meta_author', 'Mohammed Reda Trika +201007869353')" />
   @yield('meta_og')
 
   <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <title>@yield('title', 'Lia')</title>
+  <title>@yield('title',$settings['name_'.$currentLocale])</title>
 
-  <link rel="shortcut icon" type="img/png" href="{{ asset('website/images/favicon.png') }}" />
+  <link rel="shortcut icon" type="img/png" href="{{$settings['fav_icon']}}" />
   @if($isRtl)
     <link rel="stylesheet" href="{{ asset('website/css/bootstrap.rtl.min.css') }}" />
   @else

@@ -531,7 +531,7 @@ return [
     'terms_agreement' => 'لقد قرأت وأوافق على',
     'terms_and_conditions' => 'الشروط والأحكام',
     'register' => 'تسجيل',
-    'copyright' => 'ليا 2025 ©',
+    'copyright' => '©',
 
     // Cart translations
     'cart' => 'السلة',
