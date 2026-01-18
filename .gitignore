@@ -1,41 +1,48 @@
+# Node
 /node_modules
 /nodeServer/node_modules
 /nodeServer/package-lock.json
+
+# Laravel public
 /public/hot
 /public/storage
 /public/assets/uploads
+
+# Vendor
+/vendor
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Storage keys
 /storage/*.key
+
+# Storage app
 /storage/app/*
 !/storage/app/.gitkeep
-!/storage/app/public/
+!/storage/app/public
 /storage/app/public/*
 !/storage/app/public/.gitkeep
 
+# Storage images
+/storage/images/*
 !/storage/images/.gitkeep
 !/storage/images/*/default.png
+
+# Framework cache
 /storage/framework/cache/*
 !/storage/framework/cache/.gitkeep
+
+# Framework sessions
 /storage/framework/sessions/*
 !/storage/framework/sessions/.gitkeep
+
+# Framework testing
 /storage/framework/testing/*
 !/storage/framework/testing/.gitkeep
+
+# Framework views
 /storage/framework/views/*
-!/storage/framework/views/.gitkeep
-/storage/logs/*
-!/storage/logs/.gitkeep
-/vendor
-.env
-.env.backup
-.phpunit.result.cache
-docker-compose.override.yml
-Homestead.json
-Homestead.yaml
-npm-debug.log
-yarn-error.log
-/.idea
-/.vscode
-composer.lock   
-**/.DS_Store
-storage/framework/laravel-excel/*
-/nbproject
-.env
+!/storage/framework/views/.g
