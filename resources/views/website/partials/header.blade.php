@@ -53,6 +53,8 @@
                 <a href="{{ route('website.addresses.index') }}"> {{ __('site.addresses') }} </a>
                 <a href="{{ route('website.wallet.index') }}"> {{ __('site.wallet') }} </a>
                 <a href="{{ route('website.refunds.index') }}"> {{ __('site.refunds') }} </a>
+                 <a href="{{ route('website.about') }}">{{ __('site.about') }}</a>
+                   <a href="{{ route('website.contact') }}">{{ __('site.contact_us') }}</a>
                 <a
                   data-bs-toggle="modal"
                   data-bs-target="#logoutModal"
