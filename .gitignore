@@ -19,7 +19,17 @@
 # Storage keys
 /storage/*.key
 
+# Storage app
+/storage/app/*
+!/storage/app/.gitkeep
+!/storage/app/public
+/storage/app/public/*
+!/storage/app/public/.gitkeep
 
+# Storage images
+/storage/images/*
+!/storage/images/.gitkeep
+!/storage/images/*/default.png
 
 # Framework cache
 /storage/framework/cache/*
