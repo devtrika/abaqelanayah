@@ -1,31 +1,28 @@
 <?php
-use Illuminate\Support\Facades\App;
 
+use Illuminate\Support\Facades\App;
 use App\Models\Seo;
 use App\Models\SiteSetting;
 
-function seo($key){
-    return Seo::where('key' , $key)->first() ;
+function seo($key) {
+    return Seo::where('key', $key)->first();
 }
 
-function appInformations(){
+function appInformations() {
     $result = SiteSetting::pluck('value', 'key');
     return $result;
 }
 
-
-function convert2english( $string )
-{
-    $newNumbers = range( 0, 9 );
-    $arabic     = array( '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩' );
-    $string     = str_replace( $arabic, $newNumbers, $string );
+function convert2english($string) {
+    $newNumbers = range(0, 9);
+    $arabic = array('٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩');
+    $string = str_replace($arabic, $newNumbers, $string);
     return $string;
 }
 
-function fixPhone( $string = null )
-{
-    if(!$string){
-      return null;
+function fixPhone($string = null) {
+    if (!$string) {
+        return null;
     }
 
     $result = convert2english($string);
@@ -35,18 +32,17 @@ function fixPhone( $string = null )
     return $result;
 }
 
-function Translate($text,$lang){
+function Translate($text, $lang) {
 
     // Short-circuit if empty text or same language
     if (!is_string($text) || $text === '' || $lang === 'ar') {
         return is_string($text) ? $text : '';
     }
-$api='';
-   // $api  = 'trnsl.1.1.20190807T134850Z.8bb6a23ccc48e664.a19f759906f9bb12508c3f0db1c742f281aa8468';
+    $api = config('services.yandex.translate_key');
 
     try {
         $endpoint = 'https://translate.yandex.net/api/v1.5/tr.json/translate?key=' . $api
-            . '&lang=ar-' . urlencode($lang) . '&text=' . urlencode($text);
+                . '&lang=ar-' . urlencode($lang) . '&text=' . urlencode($text);
 
         $response = @file_get_contents($endpoint);
         if ($response === false) {
@@ -77,48 +73,42 @@ $api='';
     }
 }
 
-
-function generateReferralCode($length = 8)
-{
+function generateReferralCode($length = 8) {
     $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     $code = '';
-    
+
     for ($i = 0; $i < $length; $i++) {
         $code .= $characters[rand(0, strlen($characters) - 1)];
     }
-    
+
     return $code;
 }
 
-
-function getYoutubeVideoId( $youtubeUrl )
-{
-    preg_match( "/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/",
-        $youtubeUrl, $videoId );
-    return $youtubeVideoId = isset( $videoId[ 1 ] ) ? $videoId[ 1 ] : "";
+function getYoutubeVideoId($youtubeUrl) {
+    preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/",
+            $youtubeUrl, $videoId);
+    return $youtubeVideoId = isset($videoId[1]) ? $videoId[1] : "";
 }
 
-function toggleBooleanView($model, $url, $switch = 'is_active' , $open = 1 , $close = 0)
-{
+function toggleBooleanView($model, $url, $switch = 'is_active', $open = 1, $close = 0) {
     $path = parse_url($url, PHP_URL_PATH);
     $path = trim($path, '/');
     $pathComponents = explode('/', $path);
-     $switch = $pathComponents[4] ;
+    $switch = $pathComponents[4];
 
-    return view('components.admin.toggle-boolean-view', compact('model', 'url', 'switch','open','close'))->render();
+    return view('components.admin.toggle-boolean-view', compact('model', 'url', 'switch', 'open', 'close'))->render();
 }
 
-function toggleBoolean($model, $name = 'is_active' , $open = 1 , $close = 0)
-{
+function toggleBoolean($model, $name = 'is_active', $open = 1, $close = 0) {
     if ($model->$name == $open) {
         $model->$name = $close;
         $model->save();
         return true;
-    } elseif($model->$name == $close) {
+    } elseif ($model->$name == $close) {
         $model->$name = $open;
         $model->save();
         return true;
-    }else{
+    } else {
         $model->$name = $close;
         $model->save();
         return false;
@@ -127,53 +117,60 @@ function toggleBoolean($model, $name = 'is_active' , $open = 1 , $close = 0)
     return true;
 }
 
-function lang(){
-    return App() -> getLocale();
+function lang() {
+    return App()->getLocale();
 }
 
-function generateRandomCode(){
+function generateRandomCode() {
     return '12345';
-    return rand(1111,4444);
+    return rand(1111, 4444);
 }
 
 if (!function_exists('languages')) {
-  function languages() {
-    $setting = SiteSetting::where(['key'=>'locales'])->get()->first()??[];
-    return json_decode($setting->value??['ar', 'en']);
-  }
+
+    function languages() {
+        $setting = SiteSetting::where(['key' => 'locales'])->get()->first() ?? [];
+        return json_decode($setting->value ?? ['ar', 'en']);
+    }
+
 }
 
-function generatePaddedRandomCode($length = 7)
-{
+function generatePaddedRandomCode($length = 7) {
     $max = pow(10, $length) - 1;
     $random = random_int(0, $max);
     return str_pad($random, $length, '0', STR_PAD_LEFT);
 }
 
 if (!function_exists('defaultLang')) {
-  function defaultLang() {
-    return SiteSetting::where(['key'=>'default_locale'])->get()->first()->value??'ar';
-  }
+
+    function defaultLang() {
+        return SiteSetting::where(['key' => 'default_locale'])->get()->first()->value ?? 'ar';
+    }
+
 }
 
 if (!function_exists('getSiteSetting')) {
+
     function getSiteSetting($key, $default = null) {
         $setting = SiteSetting::where('key', $key)->first();
         return $setting ? $setting->value : $default;
     }
+
 }
 
 if (!function_exists('categoriesTree')) {
-    function categoriesTree($categories, $margin = 0,$selected_cat_id=null){
+
+    function categoriesTree($categories, $margin = 0, $selected_cat_id = null) {
         foreach ($categories as $category) {
-            $selected = $category->id == $selected_cat_id? 'selected':'';
-            echo '<option value="'.$category->id.'"  '.$selected.'>'.str_repeat('ـــ ', $margin).$category->name .'</option>';
-    
+            $selected = $category->id == $selected_cat_id ? 'selected' : '';
+            echo '<option value="' . $category->id . '"  ' . $selected . '>' . str_repeat('ـــ ', $margin) . $category->name . '</option>';
+
             if (count($category->childes)) {
-                categoriesTree($category->childes, $margin + 1,$selected_cat_id);
+                categoriesTree($category->childes, $margin + 1, $selected_cat_id);
             }
         }
     }
+
 }
 
 /**
@@ -183,8 +180,8 @@ if (!function_exists('categoriesTree')) {
  * @return bool
  */
 if (!function_exists('adminCan')) {
-    function adminCan($routeName)
-    {
+
+    function adminCan($routeName) {
         // Super admin (role_id = 1) has all permissions
         if (auth()->guard('admin')->check() && auth()->guard('admin')->user()->role_id == 1) {
             return true;
@@ -197,9 +194,10 @@ if (!function_exists('adminCan')) {
 
         // Get admin's permissions
         $permissions = \App\Models\Permission::where('role_id', auth()->guard('admin')->user()->role_id)
-            ->pluck('permission')
-            ->toArray();
+                ->pluck('permission')
+                ->toArray();
 
         return in_array($routeName, $permissions);
     }
+
 }
