@@ -19,13 +19,6 @@
 # Storage keys
 /storage/*.key
 
-# Storage app
-/storage/app/*
-!/storage/app/.gitkeep
-!/storage/app/public
-/storage/app/public/*
-!/storage/app/public/.gitkeep
-
 
 
 # Framework cache
