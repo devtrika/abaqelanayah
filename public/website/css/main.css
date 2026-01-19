@@ -3893,7 +3893,7 @@ body:has(.product-page) footer {
 .success-content .success-title {
   font-size: 16px;
   font-weight: 700;
-  color: #ffdd04;
+  /*color: #ffdd04;*/
   margin: 0 0 10px;
 }
 .success-content .success-order {
@@ -3902,7 +3902,7 @@ body:has(.product-page) footer {
   gap: 2px;
   font-size: 16px;
   font-weight: 500;
-  color: #ffdd04;
+  /*color: #ffdd04;*/
   margin: 0 0 12px;
 }
 .success-content .success-order strong {
@@ -3913,7 +3913,7 @@ body:has(.product-page) footer {
 .success-content .success-desc {
   font-size: 16px;
   font-weight: 500;
-  color: #ffdd04;
+  /*color: #ffdd04;*/
   margin: 0 0 30px;
 }
 .success-content .submit-btn {
