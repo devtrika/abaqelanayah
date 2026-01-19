@@ -73,14 +73,14 @@
           <p class="auth_form-copyrights">{{ __('site.copyright') }}</p>
         </div>
       </div>
-      <div class="auth_form-img">
+<!--      <div class="auth_form-img">
         <img
           loading="lazy"
           src="{{ asset('website/images/auth/1.jpg') }}"
           alt="auth_form-img"
           class="img-cover"
         />
-      </div>
+      </div>-->
     </main>
 @endsection
 
