@@ -4822,7 +4822,7 @@ body:has(.product-page) footer {
 .order-information .order_info-title {
   font-size: 20px;
   font-weight: 700;
-  color: #ffdd04;
+  /*color: #ffdd04;*/
   margin: 0 0 20px;
 }
 .order-information .order_info-list {
