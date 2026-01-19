@@ -1,11 +1,5 @@
 <div class="position-relative">
-    {{-- table loader  --}}
-    {{-- <div class="table_loader" >
-        {{__('admin.loading')}}
-    </div> --}}
-    {{-- table loader  --}}
-    
-    {{-- table content --}}
+   
     <table class="table " id="tab">
         <thead>
             <tr>

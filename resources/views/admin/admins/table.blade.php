@@ -1,10 +1,5 @@
 <div class="position-relative" style="overflow: auto">
-    {{-- table loader  --}}
-    {{-- <div class="table_loader" >
-        {{__('admin.loading')}}
-    </div> --}}
-    {{-- table loader  --}}
-    {{-- table content --}}
+ 
     <table class="table " id="tab">
         <thead>
             <tr>

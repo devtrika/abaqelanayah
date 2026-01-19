@@ -7,11 +7,7 @@
 
 <div class="position-relative">
 
-    {{-- table loader  --}}
-  
-    {{-- table loader  --}}
-    
-    {{-- table content --}}
+   
     <table class="table " id="tab">
         <thead>
             <tr>

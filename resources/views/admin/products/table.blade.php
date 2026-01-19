@@ -1,11 +1,5 @@
 <div class="position-relative">
-    {{-- table loader  --}}
-    {{-- <div class="table_loader" >
-        {{__('admin.loading')}}
-    </div> --}}
-    {{-- table loader  --}}
-
-    {{-- table content --}}
+   
     <table class="table " id="tab">
         <thead>
             <tr>
@@ -17,14 +11,14 @@
                 </th>
                 <th>{{__('admin.created_at')}}</th>
                 <th>{{ __('admin.id_num') }}</th>
-                {{-- <th>{{__('admin.image')}}</th> --}}
+<!--                {{-- <th>{{__('admin.image')}}</th> --}}-->
                 <th>{{__('admin.product_name')}}</th>
                 <th>{{__('admin.Subcategory')}}</th>
                 <th>{{__('admin.base_price')}}</th>
                 <th>{{__('admin.discount_percentage')}}</th>
                 <th>{{__('admin.final_price')}}</th>
-                {{-- <th>{{__('admin.quantity')}}</th> --}}
-                {{-- <th>{{__('admin.options_count')}}</th> --}}
+                <!--{{-- <th>{{__('admin.quantity')}}</th> --}}-->
+                <!--{{-- <th>{{__('admin.options_count')}}</th> --}}-->
                 @if (auth()->guard('admin')->user()->role_id == 1)
                 <th>{{__('admin.status')}}</th>
                @endif
@@ -42,13 +36,13 @@
                     </td>
                     <td>{{$product->created_at->format('Y-m-d H:i:s')}}</td>
                     <td>{{ $product->id }}</td>
-                    {{-- <td>
+<!--                    {{-- <td>
                         @if($product->getFirstMediaUrl('product-images'))
                             <img src="{{$product->getFirstMediaUrl('product-images')}}" width="30px" height="30px" alt="{{$product->display_name}}">
                         @else
                             <img src="{{asset('storage/images/default.png')}}" width="30px" height="30px" alt="No Image">
                         @endif
-                    </td> --}}
+                    </td> --}}-->
                     <td>{{$product->name}}</td>
                     <td>
                         @if($product->category)
@@ -70,12 +64,12 @@
                         @endif
                     </td>
                     <td>{{number_format($product->final_price, 2)}} {{__('admin.sar')}}</td>
-                    {{-- <td>
+<!--                    {{-- <td>
                         {{-- @php
                             $displayQty = $product->qty ?? 0;
                         @endphp --}}
                         <span class="badge badge-{{ $product->qty > 0 ? 'success' : 'danger' }}">{{ $product->qty }}</span>
-                    </td> --}}
+                    </td> --}}-->
                     {{-- <td>
                         @if($product->options->count() > 0)
                             <span class="badge badge-info">{{$product->options->count()}}</span>
