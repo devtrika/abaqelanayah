@@ -1340,15 +1340,15 @@ html[dir=ltr] .date-content .form-control {
   justify-content: end;
   font-size: 14px;
   font-weight: 500;
-  color: #ffdd04;
+  /*color: #ffdd04;*/
 }
 .auth-header .log-link a {
   text-decoration: underline;
-  color: inherit;
+  /*color: inherit;*/
   transition: all 0.3s ease-in-out;
 }
 .auth-header .log-link a:focus {
-  color: inherit;
+  color: #ffdd04;
 }
 .auth-header .log-link a:hover {
   color: #ffdd04;

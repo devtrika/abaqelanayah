@@ -1,6 +1,6 @@
 @extends('website.layouts.app')
 
-@section('title', __('site.return_policy') . ' - Lia')
+@section('title', __('site.return_policy') )
 
 @section('meta_description', __('site.return_policy'))
 @section('content')

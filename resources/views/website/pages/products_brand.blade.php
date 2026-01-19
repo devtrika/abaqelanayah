@@ -1,6 +1,6 @@
 @extends('website.layouts.app')
 
-@section('title', $brand->name . ' - Lia')
+@section('title', $brand->name )
 
 @section('meta_description', __('site.browse_products') . ' ' . $brand->name)
 

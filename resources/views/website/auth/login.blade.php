@@ -1,6 +1,8 @@
 @extends('website.auth.layouts.master')
-
-@section('title', 'Lia | ' . __('site.login_title'))
+@php
+  $currentLocale = app()->getLocale();
+@endphp
+@section('title', __('site.login_title'))
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('website/css/intlTelInput.min.css') }}" />
@@ -70,17 +72,17 @@
               </div>
             </form>
           </div>
-          <p class="auth_form-copyrights">{{ __('site.copyright') }}</p>
+          <p class="auth_form-copyrights">{{ __('site.copyright').$settings['name_'.$currentLocale] }}</p>
         </div>
       </div>
-      <div class="auth_form-img">
+<!--      <div class="auth_form-img">
         <img
           loading="lazy"
           src="{{ asset('website/images/auth/1.jpg') }}"
           alt="auth_form-img"
           class="img-cover"
         />
-      </div>
+      </div>-->
     </main>
 @endsection
 

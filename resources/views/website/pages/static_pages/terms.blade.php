@@ -1,6 +1,6 @@
 @extends('website.layouts.app')
 
-@section('title', __('site.terms_and_conditions') . ' - Lia')
+@section('title', __('site.terms_and_conditions') )
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 @endpush    

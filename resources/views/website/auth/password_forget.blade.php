@@ -1,6 +1,6 @@
 @extends('website.auth.layouts.master')
 
-@section('title', 'Lia | ' . __('site.forgot_password_title'))
+@section('title',  __('site.forgot_password_title'))
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('website/css/intlTelInput.min.css') }}" />

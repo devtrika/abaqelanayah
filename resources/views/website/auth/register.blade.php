@@ -1,7 +1,9 @@
 @extends('website.auth.layouts.master')
 
-@section('title', 'Lia | ' . __('site.register_title'))
-
+@section('title', __('site.register_title'))
+@php
+  $currentLocale = app()->getLocale();
+@endphp
 @push('styles')
 <link rel="stylesheet" href="{{ asset('website/css/intlTelInput.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('website/css/select2.min.css') }}" />
@@ -144,7 +146,7 @@
               <button type="submit" class="submit-btn">{{ __('site.register') }}</button>
             </form>
           </div>
-          <p class="auth_form-copyrights">{{ __('site.copyright') }}</p>
+          <p class="auth_form-copyrights">{{ __('site.copyright').$settings['name_'.$currentLocale] }}</p>
         </div>
       </div>
     </main>
