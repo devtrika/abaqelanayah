@@ -3,7 +3,6 @@ namespace App\Services;
 
 use App\Enums\PaymentMethod;
 use App\Models\Admin;
-use App\Models\BranchProduct;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -50,7 +49,7 @@ class OrderService
     public function getUserOrder(User $user, int $orderId)
     {
         $order = $user->orders()
-            ->with(['items.item', 'address', 'branch', 'problem', 'coupon', 'cancelReason', 'refundOrder'])
+            ->with(['items.item', 'address', 'problem', 'coupon', 'cancelReason', 'refundOrder'])
             ->find($orderId)
         ;
         if (! $order) {
@@ -77,9 +76,7 @@ class OrderService
             // Step 2: Calculate delivery details
             $deliveryDetails = $this->calculateDeliveryDetails($user, $data);
 
-            // Step 2.5: Validate branch stock for items
-            $this->validateBranchQuantities($cart, $deliveryDetails['branch_id'] ?? null, $data['order_type'] ?? null);
-
+           
             // Step 3: Create order from cart data
 
             $order = $this->createOrderFromCartData($user, $cart, $data, $deliveryDetails);
@@ -97,7 +94,7 @@ class OrderService
     }
 
     /**
-     * Create an order request with dynamic branch selection based on location
+     * Create an order request
      *
      * @param \App\Models\User $user
      * @param array $data (validated request)
@@ -112,219 +109,54 @@ class OrderService
                 throw new \Exception(__('cart.cart_is_empty'));
             }
 
-            // Step 2: Determine coordinates and branch using dynamic selection
-            $locationData = $this->determineLocationAndBranch($user, $data);
+            // Step 2: Calculate delivery details (Fixed fee)
+            $deliveryDetails = $this->calculateDeliveryDetails($user, $data);
 
-            // Step 3: Calculate delivery details with the selected branch (if available)
-            if (! empty($locationData['branch'])) {
-                $deliveryDetails = $this->calculateDeliveryDetailsForBranch(
-                    $locationData['latitude'],
-                    $locationData['longitude'],
-                    $locationData['branch']
-                );
-            } else {
-                // No branch found (possible for gift orders) -> zero fees and no branch
-                $deliveryDetails = [
-                    'delivery_fee' => 0,
-                    'branch_id'    => null,
-                    'distance'     => 0,
-                ];
-            }
-
-            // Step 4: Create order from cart data
+            // Step 3: Create order from cart data
             $order = $this->createOrderFromCartData($user, $cart, array_merge($data, [
-                'branch_id'  => $locationData['branch']->id ?? null,
-                'address_id' => $locationData['address_id'] ?? null,
+                'branch_id'  => null,
+                'address_id' => $data['address_id'] ?? null,
             ]), $deliveryDetails);
 
-            // Step 5: Process payment
+            // Step 4: Process payment
             $paymentResult = $this->processOrderPayment($order, $user, $data, $deliveryDetails);
 
             return $paymentResult;
         });
     }
     /**
-     * Determine location coordinates and appropriate branch using dynamic selection
+     * Determine location coordinates
      *
      * @param \App\Models\User $user
      * @param array $data
-     * @return array ['latitude' => float, 'longitude' => float, 'branch' => Branch, 'address_id' => int|null]
+     * @return array ['latitude' => float, 'longitude' => float, 'address_id' => int|null]
      * @throws \Exception
      */
-    private function determineLocationAndBranch($user, array $data)
+    private function determineLocation($user, array $data)
     {
         $latitude  = null;
         $longitude = null;
         $addressId = null;
 
-        // If this is a gift order, prefer recipient coordinates or recipient address
-        if (! empty($data['order_type']) && $data['order_type'] === 'gift') {
-            // Use provided gift coordinates first (gift_latitude/gift_longitude or gift_lat/gift_lng)
-            if (! empty($data['gift_latitude']) && ! empty($data['gift_longitude'])) {
-                $latitude  = (float) $data['gift_latitude'];
-                $longitude = (float) $data['gift_longitude'];
-            } elseif (! empty($data['gift_lat']) && ! empty($data['gift_lng'])) {
-                $latitude  = (float) $data['gift_lat'];
-                $longitude = (float) $data['gift_lng'];
-            }
-
-            // If no gift coordinates provided, fallback to regular address or coordinates
-            if ($latitude === null || $longitude === null) {
-                // Try address_id
-                if (! empty($data['address_id'])) {
-                    $address = $user->addresses()->find($data['address_id']);
-                    if ($address) {
-                        $latitude  = $address->latitude;
-                        $longitude = $address->longitude;
-                        $addressId = $address->id;
-                    }
-                }
-                // Try direct coordinates (latitude/longitude or lat/lng)
-                elseif (! empty($data['latitude']) && ! empty($data['longitude'])) {
-                    $latitude  = (float) $data['latitude'];
-                    $longitude = (float) $data['longitude'];
-                } elseif (! empty($data['lat']) && ! empty($data['lng'])) {
-                    $latitude  = (float) $data['lat'];
-                    $longitude = (float) $data['lng'];
-                }
-            }
-
-            // If still no coordinates, allow the order to proceed without a branch.
-            // The admin can assign a branch/delivery later.
-            if ($latitude === null || $longitude === null) {
-                // Return early with null branch/address so caller can handle zero-fee flow
-                return [
-                    'latitude'   => null,
-                    'longitude'  => null,
-                    'branch'     => null,
-                    'address_id' => null,
-                ];
-            }
-        }
-        // Approach 1: Address-based selection (regular orders)
-        elseif (! empty($data['address_id'])) {
+        // Logic to extract coordinates kept for reference or other uses
+        if (! empty($data['address_id'])) {
             $address = $user->addresses()->find($data['address_id']);
-            if (! $address) {
-                throw new \Exception(__('apis.invalid_address'));
-            }
-
-            $latitude  = $address->latitude;
-            $longitude = $address->longitude;
-            $addressId = $address->id;
-        }
-        // Approach 2: Direct coordinates selection (latitude/longitude or lat/lng)
-        elseif (! empty($data['latitude']) && ! empty($data['longitude'])) {
-            $latitude  = (float) $data['latitude'];
-            $longitude = (float) $data['longitude'];
-        } elseif (! empty($data['lat']) && ! empty($data['lng'])) {
-            $latitude  = (float) $data['lat'];
-            $longitude = (float) $data['lng'];
-        } else {
-            throw new \Exception(__('apis.location_required'));
-        }
-
-        // Find appropriate branch using polygon containment
-        $branch = null;
-        if ($latitude !== null && $longitude !== null) {
-            $branch = $this->findBranchByLocation($latitude, $longitude);
-
-            // If no branch found for the provided coordinates, throw error
-            // Gift orders and regular orders are treated the same when coordinates are provided
-            if (! $branch) {
-                throw new \Exception(__('apis.address_not_in_branch_area'));
+            if ($address) {
+                $latitude  = $address->latitude;
+                $longitude = $address->longitude;
+                $addressId = $address->id;
             }
         }
-
+        
         return [
             'latitude'   => $latitude,
             'longitude'  => $longitude,
-            'branch'     => $branch,
             'address_id' => $addressId,
         ];
     }
 
-    /**
-     * Find the appropriate branch based on location coordinates
-     *
-     * @param float $latitude
-     * @param float $longitude
-     * @return \App\Models\Branch|null
-     */
-    private function findBranchByLocation($latitude, $longitude)
-    {
-        $branches = \App\Models\Branch::where('status', 1)->get();
+    // Branch helper methods removed as requested
 
-        foreach ($branches as $branch) {
-            if ($this->isLocationInBranchPolygon($latitude, $longitude, $branch)) {
-                return $branch;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Check if location coordinates are within branch delivery polygon
-     *
-     * @param float $latitude
-     * @param float $longitude
-     * @param \App\Models\Branch $branch
-     * @return bool
-     */
-    private function isLocationInBranchPolygon($latitude, $longitude, $branch)
-    {
-        $polygon = json_decode($branch->polygon, true);
-
-        if (! is_array($polygon) || empty($polygon)) {
-            return false;
-        }
-
-        // Handle Leaflet polygon format (array of arrays)
-        $points = $polygon[0] ?? $polygon;
-
-        return $this->pointInPolygon([$latitude, $longitude], $points);
-    }
-
-    /**
-     * Calculate delivery details for a specific branch and location
-     *
-     * @param float $latitude
-     * @param float $longitude
-     * @param \App\Models\Branch $branch
-     * @return array
-     */
-    private function calculateDeliveryDetailsForBranch($latitude, $longitude, $branch, $deliveryType = 'immediate')
-    {
-        // Calculate distance to branch
-        $distance = $this->haversineDistance(
-            $latitude,
-            $longitude,
-            $branch->latitude,
-            $branch->longitude
-        );
-
-        // Calculate delivery fee based on distance and site settings
-        $fixedDeliveryFee          = (float) (
-            $deliveryType === 'scheduled'
-                ? getSiteSetting('scheduled_delivery_fee', 0)
-                : getSiteSetting('ordinary_delivery_fee', getSiteSetting('delivery_fee', 0))
-        );
-        $perKmDeliveryFee          = (float) getSiteSetting('delivery_per_km_fee', 0);
-        $deliveryDistanceThreshold = (float) getSiteSetting('delivery_distance_threshold', 0);
-
-        $deliveryFee = 0;
-        if ($distance <= $deliveryDistanceThreshold) {
-            $deliveryFee = $fixedDeliveryFee;
-        } else {
-            $deliveryFee = $fixedDeliveryFee + ($distance * $perKmDeliveryFee);
-        }
-
-        return [
-            'delivery_fee' => round($deliveryFee, 2),
-            'branch_id'    => $branch->id,
-            'distance'     => round($distance, 2),
-        ];
-    }
 
     /**
      * Validate cart and address for order creation
@@ -353,119 +185,38 @@ class OrderService
     }
 
     /**
-     * Calculate delivery details including fee, branch, and distance
-     * Enhanced to support both address_id and direct coordinates
+     * Calculate delivery details including fee
      *
      * @param \App\Models\User $user
      * @param array $data
      * @return array
-     * @throws \Exception
      */
     private function calculateDeliveryDetails($user, array $data)
     {
-        $deliveryFee = 0;
-        $branchId    = null;
-        $distance    = 0;
-        $deliveryType = $data['delivery_type'] ?? 'immediate';
-
-            $latitude  = null;
-            $longitude = null;
-            // If gift order, use gift coordinates or receiver address
-            if (! empty($data['order_type']) && $data['order_type'] === 'gift') {
-                // Try gift_latitude/gift_longitude first
-                if (! empty($data['gift_latitude']) && ! empty($data['gift_longitude'])) {
-                    $latitude  = (float) $data['gift_latitude'];
-                    $longitude = (float) $data['gift_longitude'];
-                }
-                // Try gift_lat/gift_lng as alternative
-                elseif (! empty($data['gift_lat']) && ! empty($data['gift_lng'])) {
-                    $latitude  = (float) $data['gift_lat'];
-                    $longitude = (float) $data['gift_lng'];
-                }
-
-                // If no gift coordinates, fallback to regular address or coordinates
-                if ($latitude === null || $longitude === null) {
-                    // Try address_id
-                    if (! empty($data['address_id'])) {
-                        $address = $user->addresses()->find($data['address_id']);
-                        if ($address) {
-                            $latitude  = $address->latitude;
-                            $longitude = $address->longitude;
-                        }
-                    }
-                    // Try latitude/longitude
-                    elseif (! empty($data['latitude']) && ! empty($data['longitude'])) {
-                        $latitude  = (float) $data['latitude'];
-                        $longitude = (float) $data['longitude'];
-                    }
-                    // Try lat/lng
-                    elseif (! empty($data['lat']) && ! empty($data['lng'])) {
-                        $latitude  = (float) $data['lat'];
-                        $longitude = (float) $data['lng'];
-                    }
-                }
-
-                // If still no coordinates, allow order to proceed without branch and zero fees.
-                if ($latitude === null || $longitude === null) {
-                    return [
-                        'delivery_fee' => 0,
-                        'branch_id'    => null,
-                        'distance'     => 0,
-                    ];
-                }
-            }
-            // Determine coordinates from address_id or direct lat/lng for ordinary orders
-            elseif (! empty($data['address_id'])) {
-                $address = $user->addresses()->find($data['address_id']);
-                if (! $address) {
-                    throw new \Exception(__('apis.invalid_branch_or_address'));
-                }
-                $latitude  = $address->latitude;
-                $longitude = $address->longitude;
-            } elseif (! empty($data['latitude']) && ! empty($data['longitude'])) {
-                $latitude  = (float) $data['latitude'];
-                $longitude = (float) $data['longitude'];
-            } elseif (! empty($data['lat']) && ! empty($data['lng'])) {
-                $latitude  = (float) $data['lat'];
-                $longitude = (float) $data['lng'];
-            } else {
-                throw new \Exception(__('apis.location_required'));
-            }
-
-            // Find appropriate branch using coordinates
-            $foundBranch = $this->findBranchByLocation($latitude, $longitude);
-
-            if (! $foundBranch) {
-                // If coordinates are provided but no branch found, throw error
-                // Gift orders and regular orders are treated the same when coordinates are provided
-                throw new \Exception(__('apis.address_not_in_branch_area'));
-            }
-
-            // Calculate delivery details for the found branch
-            $deliveryDetails = $this->calculateDeliveryDetailsForBranch($latitude, $longitude, $foundBranch, $deliveryType);
-
-            $branchId    = $foundBranch->id;
-            $deliveryFee = $deliveryDetails['delivery_fee'];
-            $distance    = $deliveryDetails['distance'];
-       
+        // Fixed delivery fee as requested
+        $deliveryFee = 15;
+        
+        // Or try to get from settings if needed, but user said "fixed 15 or get it directly from seettings"
+        // so I will prioritize settings if available, else 15.
+        // Actually user said "fixed 15 or get it directly from seettings" which implies I can choose.
+        // Let's use settings with fallback to 15.
+        $deliveryFee = (float) getSiteSetting('delivery_fee', 15);
 
         return [
             'delivery_fee' => $deliveryFee,
-            'branch_id'    => $branchId,
-            'distance'     => $distance,
+            'distance'     => 0,
         ];
     }
 
+
     /**
-     * Public helper: Resolve branch info by address_id or direct coordinates, similar to checkout.
+     * Public helper: Resolve location info by address_id or direct coordinates.
      * Accepts either data['address_id'] or data['latitude'] + data['longitude'] (also supports gift lat/lng).
-     * Returns branch details and delivery calculations when available.
+     * Returns delivery calculations when available.
      *
      * @param \App\Models\User $user
      * @param array $data ['address_id'| 'latitude','longitude' | 'gift_latitude','gift_longitude', 'order_type']
      * @return array [
-     *   'branch' => \App\Models\Branch|null,
-     *   'branch_id' => int|null,
      *   'address_id' => int|null,
      *   'latitude' => float|null,
      *   'longitude' => float|null,
@@ -477,52 +228,34 @@ class OrderService
     {
         try {
             // Reuse the same logic used during checkout
-            $locationData = $this->determineLocationAndBranch($user, $data);
+            $locationData = $this->determineLocation($user, $data);
 
-            $branch = $locationData['branch'] ?? null;
             $lat    = $locationData['latitude'] ?? null;
             $lng    = $locationData['longitude'] ?? null;
-            $deliveryType = $data['delivery_type'] ?? 'immediate';
+            
+            $deliveryFee = (float) getSiteSetting('delivery_fee', 15);
 
-            if ($branch && $lat !== null && $lng !== null) {
-                $deliveryDetails = $this->calculateDeliveryDetailsForBranch($lat, $lng, $branch, $deliveryType);
-                return [
-                    'branch'       => $branch,
-                    'branch_id'    => $branch->id,
-                    'address_id'   => $locationData['address_id'] ?? null,
-                    'latitude'     => $lat,
-                    'longitude'    => $lng,
-                    'distance'     => $deliveryDetails['distance'] ?? 0,
-                    'delivery_fee' => $deliveryDetails['delivery_fee'] ?? 0,
-                ];
-            }
-
-            // No branch found (allowed in some gift flows) => return coordinates with zero fees
             return [
-                'branch'       => null,
-                'branch_id'    => null,
                 'address_id'   => $locationData['address_id'] ?? null,
                 'latitude'     => $lat,
                 'longitude'    => $lng,
                 'distance'     => 0,
-                'delivery_fee' => 0,
+                'delivery_fee' => $deliveryFee,
             ];
+
         } catch (\Exception $e) {
-            // For ordinary orders (non-gift), determineLocationAndBranch throws when outside any branch polygon
-            // Expose a consistent shape with null branch
+            // For ordinary orders (non-gift), determineLocation throws when outside
+            // Expose a consistent shape
             return [
-                'branch'       => null,
-                'branch_id'    => null,
                 'address_id'   => $data['address_id'] ?? null,
                 'latitude'     => $data['latitude'] ?? $data['lat'] ?? $data['gift_latitude'] ?? $data['gift_lat'] ?? null,
                 'longitude'    => $data['longitude'] ?? $data['lng'] ?? $data['gift_longitude'] ?? $data['gift_lng'] ?? null,
                 'distance'     => 0,
                 'delivery_fee' => 0,
-                // Optionally, a message for callers that want to show errors
-                // 'message' => $e->getMessage(),
             ];
         }
     }
+
 
     /**
      * Validate branch-level stock for all cart items before creating the order
@@ -532,41 +265,7 @@ class OrderService
      * @param string|null $orderType
      * @throws \Exception
      */
-    private function validateBranchQuantities($cart, $branchId, $orderType = null)
-    {
-        // Skip branch stock validation for gift orders or when branch is not determined
-        if (($orderType === 'gift') || empty($branchId)) {
-            return;
-        }
 
-        $insufficient = [];
-        foreach ($cart->items as $item) {
-            if (! $item->product_id) {
-                continue;
-            }
-            $branchProduct = BranchProduct::where('branch_id', $branchId)
-                ->where('product_id', $item->product_id)
-                ->first();
-            $available = $branchProduct?->qty ?? 0;
-            if ($available < $item->quantity) {
-                $productName    = optional($item->product)->name ?? __('apis.product') . ' #' . $item->product_id;
-                $insufficient[] = sprintf(
-                    '%s (%s: %d, %s: %d)',
-                    $productName,
-                    __('apis.requested'),
-                    $item->quantity,
-                    __('apis.available'),
-                    $available
-                );
-            }
-        }
-
-        if (! empty($insufficient)) {
-            // Throw a clear message listing problematic items with details
-            $message = __('apis.insufficient_stock_in_branch') . ': ' . implode(' | ', $insufficient);
-            throw new \Exception($message);
-        }
-    }
 
     /**
      * Create order from cart data and delivery details
@@ -594,7 +293,6 @@ class OrderService
             'user_id'           => $user->id,
             'status'            => 'pending',
             'delivery_type'     => $data['delivery_type'] ?? null,
-            'branch_id'         => $deliveryDetails['branch_id'],
             'address_id'        => $data['address_id'] ?? $address->id ?? null,
             'payment_method_id' => $data['payment_method_id'] ?? null,
             'subtotal'          => $cart->subtotal,
@@ -818,143 +516,25 @@ class OrderService
     }
 
     /**
-     * Check if address is within branch polygon and calculate distance to branch location
+     * Calculate delivery fee based on settings (Fixed)
      *
-     * @param float $addressLat
-     * @param float $addressLng
-     * @param \App\Models\Branch $branch
-     * @return array ['in_polygon' => bool, 'distance_km' => float]
+     * @param mixed $address (Ignored/Optional)
+     * @param mixed $branch (Ignored/Optional)
+     * @param string $deliveryType
+     * @return array ['distance_km' => 0, 'delivery_fee' => float, 'in_polygon' => true]
      */
-    public function checkAddressWithinBranchAreaAndDistance($addressLat, $addressLng, $branch)
+    public function calculateDistanceAndDeliveryFee($address = null, $branch = null, $deliveryType = 'immediate')
     {
-        // 1. Check if address is within polygon
-        $polygon   = json_decode($branch->polygon, true);
-        $inPolygon = false;
-        if (is_array($polygon) && count($polygon) > 0) {
-            // Leaflet polygons are arrays of arrays (could be multi-polygon)
-            $points    = $polygon[0];
-            $inPolygon = $this->pointInPolygon([$addressLat, $addressLng], $points);
-        }
-
-        // 2. Calculate distance to branch location
-        $distance = $this->haversineDistance($addressLat, $addressLng, $branch->latitude, $branch->longitude);
+        // Ignore branch and address distance logic
+        $distance = 0;
+        
+        // Calculate delivery fee based on site settings (fixed)
+        $deliveryFee = (float) getSiteSetting('delivery_fee', 15);
 
         return [
-            'in_polygon'  => $inPolygon,
-            'distance_km' => $distance,
-        ];
-    }
-
-    /**
-     * Point in Polygon (Ray Casting algorithm)
-     * @param array $point [lat, lng]
-     * @param array $polygon [[lat, lng], ...]
-     * @return bool
-     */
-    private function pointInPolygon($point, $polygon)
-    {
-        // Defensive: ensure point has both lat and lng
-        if (! is_array($point) || ! array_key_exists(0, $point) || ! array_key_exists(1, $point)) {
-            return false;
-        }
-        $x      = (float) $point[1]; // lng
-        $y      = (float) $point[0]; // lat
-        $inside = false;
-        $n      = count($polygon);
-        // Remove duplicate last point if polygon is closed
-        if ($n > 1 && isset($polygon[0][0], $polygon[0][1], $polygon[$n - 1][0], $polygon[$n - 1][1]) && $polygon[0][0] === $polygon[$n - 1][0] && $polygon[0][1] === $polygon[$n - 1][1]) {
-            $n = $n - 1;
-        }
-        for ($i = 0, $j = $n - 1; $i < $n; $j = $i++) {
-            // Root-level validation: skip if either point is not a valid [lat, lng] array
-            if (! is_array($polygon[$i]) || count($polygon[$i]) < 2 || ! is_array($polygon[$j]) || count($polygon[$j]) < 2) {
-                continue;
-            }
-
-            $xi = $polygon[$i]['lng'];
-            $yi = $polygon[$i]['lat'];
-            $xj = $polygon[$j]['lng'];
-            $yj = $polygon[$j]['lat'];
-            // Ray-casting: check if the edge crosses the horizontal ray to the right of the point
-            $onEdge = (($y == $yi && $y == $yj) && ($x >= min($xi, $xj) && $x <= max($xi, $xj))) ||
-                (($x == $xi && $x == $xj) && ($y >= min($yi, $yj) && $y <= max($yi, $yj)));
-            if ($onEdge) {
-                return true; // Point is exactly on a polygon edge
-            }
-            if ((($yi > $y) != ($yj > $y)) &&
-                ($x < ($xj - $xi) * ($y - $yi) / (($yj - $yi) ?: 1e-10) + $xi)) {
-                $inside = ! $inside;
-            }
-        }
-        return $inside;
-    }
-
-    /**
-     * Haversine distance in kilometers
-     */
-    private function haversineDistance($lat1, $lng1, $lat2, $lng2)
-    {
-        $earthRadius = 6371; // km
-        $lat1        = deg2rad($lat1);
-        $lng1        = deg2rad($lng1);
-        $lat2        = deg2rad($lat2);
-        $lng2        = deg2rad($lng2);
-        $dlat        = $lat2 - $lat1;
-        $dlng        = $lng2 - $lng1;
-        $a           = sin($dlat / 2) * sin($dlat / 2) + cos($lat1) * cos($lat2) * sin($dlng / 2) * sin($dlng / 2);
-        $c           = 2 * atan2(sqrt($a), sqrt(1 - $a));
-        return $earthRadius * $c;
-    }
-
-    /**
-     * Calculate distance between address and branch and determine delivery fee
-     *
-     * @param \App\Models\Address $address
-     * @param \App\Models\Branch $branch
-     * @return array ['distance_km' => float, 'delivery_fee' => float, 'in_polygon' => bool]
-     */
-    public function calculateDistanceAndDeliveryFee($address, $branch, $deliveryType = 'immediate')
-    {
-        // Calculate distance using haversine formula
-        $distance = $this->haversineDistance(
-            $address->latitude,
-            $address->longitude,
-            $branch->latitude,
-            $branch->longitude
-        );
-
-        // Check if address is within branch polygon
-        $polygon   = json_decode($branch->polygon, true);
-        $inPolygon = false;
-        if (is_array($polygon) && count($polygon) > 0) {
-            $points    = $polygon[0];
-            $inPolygon = $this->pointInPolygon([$address->latitude, $address->longitude], $points);
-        }
-
-        // Calculate delivery fee based on distance and site settings
-        $deliveryFee = 0;
-
-        $fixedDeliveryFee          = (float) (
-            $deliveryType === 'scheduled'
-                ? getSiteSetting('scheduled_delivery_fee', 0)
-                : getSiteSetting('ordinary_delivery_fee', getSiteSetting('delivery_fee', 0))
-        );
-        $perKmDeliveryFee          = (float) getSiteSetting('delivery_per_km_fee', 0);
-        $deliveryDistanceThreshold = (float) getSiteSetting('delivery_distance_threshold', 0);
-
-        // Apply delivery fee calculation logic
-        if ($distance <= $deliveryDistanceThreshold) {
-            // Fixed delivery fee within threshold
-            $deliveryFee = $fixedDeliveryFee;
-        } else {
-            // Per kilometer delivery fee when distance exceeds threshold
-            $deliveryFee = $fixedDeliveryFee + ($distance * $perKmDeliveryFee);
-        }
-
-        return [
-            'distance_km'  => round($distance, 2),
-            'delivery_fee' => round($deliveryFee, 2),
-            'in_polygon'   => $inPolygon,
+            'distance_km'  => 0,
+            'delivery_fee' => $deliveryFee,
+            'in_polygon'   => true, // Always valid
         ];
     }
 
@@ -967,54 +547,20 @@ class OrderService
             if (! $orderItem->product_id) {
                 continue;
             }
-            // Prefer branch-level stock deduction when branch_id is present
-            if (! empty($order->branch_id)) {
-                $branchProduct = BranchProduct::where('branch_id', $order->branch_id)
-                    ->where('product_id', $orderItem->product_id)
-                    ->first();
 
-                if ($branchProduct) {
-                    if ($branchProduct->qty >= $orderItem->quantity) {
-                        $branchProduct->decrement('qty', $orderItem->quantity);
-                    } else {
-                        // Return detailed error message with product name and quantities
-                        $productName = optional($orderItem->product)->name ?? __('apis.product') . ' #' . $orderItem->product_id;
-                        $message     = sprintf(
-                            '%s: %s ',
-                            __('apis.insufficient_stock_in_branch'),
-                            $productName,
-
-                        );
-                        throw new \Exception($message);
-                    }
-                } else {
-                    // Return detailed error message when product not found in branch
-                    $productName = optional($orderItem->product)->name ?? __('apis.product') . ' #' . $orderItem->product_id;
-                    $message     = sprintf(
-                        '%s: %s ',
-                        __('apis.insufficient_stock_in_branch'),
-                        $productName,
-
-                    );
-                    throw new \Exception($message);
-                }
+            // Global product stock deduction
+            $product = \App\Models\Product::find($orderItem->product_id);
+            if ($product && $product->quantity >= $orderItem->quantity) {
+                $product->decrement('quantity', $orderItem->quantity);
             } else {
-                // Fallback: global product stock deduction
-                $product = \App\Models\Product::find($orderItem->product_id);
-                if ($product && $product->quantity >= $orderItem->quantity) {
-                    $product->decrement('quantity', $orderItem->quantity);
-                } else {
-                    // Return detailed error message for global stock
-                    $productName = optional($product)->name ?? __('apis.product') . ' #' . $orderItem->product_id;
-                    $available   = $product ? $product->quantity : 0;
-                    $message     = sprintf(
-                        '%s: %s',
-                        __('apis.insufficient_stock'),
-                        $productName,
-
-                    );
-                    throw new \Exception($message);
-                }
+                // Return detailed error message for global stock
+                $productName = optional($product)->name ?? __('apis.product') . ' #' . $orderItem->product_id;
+                $message     = sprintf(
+                    '%s: %s',
+                    __('apis.insufficient_stock'),
+                    $productName
+                );
+                throw new \Exception($message);
             }
         }
     }
@@ -1028,18 +574,9 @@ class OrderService
             if (! $orderItem->product_id) {
                 continue;
             }
-            if (! empty($order->branch_id)) {
-                $branchProduct = BranchProduct::where('branch_id', $order->branch_id)
-                    ->where('product_id', $orderItem->product_id)
-                    ->first();
-                if ($branchProduct) {
-                    $branchProduct->increment('qty', $orderItem->quantity);
-                }
-            } else {
-                $product = \App\Models\Product::find($orderItem->product_id);
-                if ($product) {
-                    $product->increment('quantity', $orderItem->quantity);
-                }
+            $product = \App\Models\Product::find($orderItem->product_id);
+            if ($product) {
+                $product->increment('quantity', $orderItem->quantity);
             }
         }
     }

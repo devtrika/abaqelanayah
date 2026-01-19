@@ -125,19 +125,6 @@ class OrderValidationService
     }
 
     /**
-     * Validate branch stock availability
-     *
-     * @param Cart $cart
-     * @param int|null $branchId
-     * @param string|null $orderType
-     * @throws \Exception
-     */
-    public function validateBranchStock(Cart $cart, ?int $branchId, ?string $orderType = null): void
-    {
-        $this->inventoryService->validateBranchStock($cart, $branchId, $orderType);
-    }
-
-    /**
      * Validate payment method
      *
      * @param array $data
@@ -190,10 +177,7 @@ class OrderValidationService
             throw new \Exception(__('apis.invalid_delivery_type'));
         }
 
-        // If pickup, branch_id is required
-        if ($deliveryType === 'pickup' && empty($data['branch_id'])) {
-            throw new \Exception(__('apis.branch_required_for_pickup'));
-        }
+    
     }
 
     /**

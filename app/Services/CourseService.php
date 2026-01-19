@@ -257,34 +257,32 @@ class CourseService
     private function processElectronicPayment(CourseEnrollment $enrollment, array $paymentData)
     {
         try {
-            $myfatoorahService = app(\App\Services\Myfatoorah\CoursePaymentService::class);
+            $paymentService = app(PaymentService::class);
 
             $user = $enrollment->user;
-            $course = $enrollment->course;
-
+            
             // Create payment invoice with MyFatoorah
-            $result = $myfatoorahService->createCoursePaymentInvoice(
+            $result = $paymentService->initializeCourseEnrollmentPayment(
                 $enrollment,
                 $user,
-                $course,
                 [
                     'gateway' => $paymentData['gateway'] ?? 'myfatoorah'
                 ]
             );
 
-            if ($result['success']) {
+            if (isset($result['status']) && $result['status'] === 'success') {
                 return [
                     'status_code' => 200,
                     'message' => 'Redirect to MyFatoorah payment gateway',
                     'data' => [
                         'enrollment_id' => $enrollment->id,
-                        'payment_url' => $result['invoice_url']
+                        'payment_url' => $result['invoiceURL']
                     ]
                 ];
             } else {
                 return [
                     'status_code' => 400,
-                    'message' => $result['message'],
+                    'message' => $result['message'] ?? 'Payment failed',
                     'data' => null
                 ];
             }

@@ -14,7 +14,6 @@ use App\Services\Order\DeliveryCalculationService;
 use App\Services\Order\InventoryService;
 use App\Services\OrderService;
 use App\Repositories\AddressRepository;
-use App\Repositories\BranchRepository;
 use App\Models\PaymentMethod;
 use App\Models\Address;
 use Illuminate\Support\Facades\Log;
@@ -27,8 +26,7 @@ class CheckoutController extends Controller
         protected DeliveryCalculationService $deliveryCalcService,
         protected InventoryService $inventoryService,
         protected OrderService $orderService,
-        protected AddressRepository $addressRepository,
-        protected BranchRepository $branchRepository
+        protected AddressRepository $addressRepository
     ) {}
 
     public function index()
@@ -69,7 +67,6 @@ class CheckoutController extends Controller
             'message' => $req->input('message'),
             'whatsapp' => $req->input('whatsapp'),
             'hide_sender' => $req->input('hide_sender'),
-            'branch_id' => $req->input('branch_id'),
         ];
         $sessionPayload = array_filter($sessionPayload, function($v){ return !is_null($v) && $v !== ''; });
         if (!empty($sessionPayload)) {
@@ -97,8 +94,7 @@ class CheckoutController extends Controller
         }
 
         $user = Auth::user();
-
-        // Check if branch has products in stock before proceeding
+        
         $latitude = $request->input('latitude') ?? $request->input('lat');
         $longitude = $request->input('longitude') ?? $request->input('lng');
         $giftLatitude = $request->input('gift_latitude') ?? $request->input('gift_lat');
@@ -109,42 +105,6 @@ class CheckoutController extends Controller
         $lat = ($orderType === 'gift') ? $giftLatitude : $latitude;
         $lng = ($orderType === 'gift') ? $giftLongitude : $longitude;
 
-        if ($lat && $lng) {
-            try {
-                // Get nearest branch using BranchLocationService
-                $branch = app(\App\Services\Order\BranchLocationService::class)->findBranchByLocation($lat, $lng);
-
-                if ($branch) {
-                    // Get user's cart
-                    $cart = $this->cartService->getCart($user);
-
-                    // Check if branch has all products in stock (only for ordinary orders)
-                    try {
-                        $this->inventoryService->validateBranchStock($cart, $branch->id, $orderType);
-                    } catch (\Exception $e) {
-                        return response()->json([
-                            'success' => false,
-                            'message' => $e->getMessage()
-                        ], 422);
-                    }
-                } else {
-                    // No branch found for this location
-                    return response()->json([
-                        'success' => false,
-                        'message' => __('apis.address_not_in_branch_area')
-                    ], 422);
-                }
-            } catch (\Exception $e) {
-                Log::error('checkout.prepare branch validation failed', [
-                    'user_id' => $user->id,
-                    'error' => $e->getMessage()
-                ]);
-                return response()->json([
-                    'success' => false,
-                    'message' => $e->getMessage()
-                ], 422);
-            }
-        }
 
         // Store all incoming data in session
         $sessionPayload = [
@@ -172,7 +132,6 @@ class CheckoutController extends Controller
             'message' => $request->input('message'),
             'whatsapp' => $request->input('whatsapp'),
             'hide_sender' => $request->input('hide_sender'),
-            'branch_id' => $request->input('branch_id'),
         ];
 
         // Remove null/empty values
@@ -453,11 +412,7 @@ class CheckoutController extends Controller
         }
         try {
 
-            // 1) Resolve branch by polygon check (always via coordinates/address)
-            $delivery = $this->deliveryCalcService->calculateDeliveryDetails($user, $data);
-            $branchId = $delivery['branch_id'];
-            $branch   = $this->branchRepository->find($branchId);
-
+        
             // 2) Build an Address model for distance/fee calc (existing address or ephemeral with given coords)
             $addressModel = null;
             if (!empty($data['address_id'])) {
@@ -475,12 +430,7 @@ class CheckoutController extends Controller
                 throw new \Exception(__('apis.location_required'));
             }
 
-            // 3) Use OrderService to calculate distance and delivery fee (as requested)
-            $calc = $this->orderService->calculateDistanceAndDeliveryFee($addressModel, $branch, $data['delivery_type'] ?? 'immediate');
-
-            // 4) Validate stock in the resolved branch
-            $this->inventoryService->validateBranchStock($cart, $branchId, $data['order_type'] ?? 'ordinary');
-
+       
             // 5) Totals assembly
             $subtotal        = (float) $cart->subtotal;
             $discount        = (float) ($cart->discount ?? 0);
@@ -488,19 +438,16 @@ class CheckoutController extends Controller
             $wallet          = (float) ($cart->wallet_deduction ?? 0);
             $vat             = (float) ($cart->vat_amount ?? 0);
             $beforeDelivery  = (float) $cart->total;
-            $deliveryFee     = (float) ($calc['delivery_fee'] ?? 0);
+            $deliveryFee     = (float) getSiteSetting('delivery_fee', 15);
             $giftFee         = (float) (($data['order_type'] ?? 'ordinary') === 'gift' ? getSiteSetting('gift_fee', 0) : 0);
             $final           = $beforeDelivery + $deliveryFee + $giftFee;
 
-            // Immediate info from branch settings
+            // Immediate info
             $today            = now()->format('Y/m/d');
-            $lastPickupTime   = $branch?->last_order_time ?: '20:00';
-            $expectedDuration = $branch?->expected_duration ?: '3-4 ساعات';
 
             return response()->json([
                 'success'      => true,
-                'branch_id'    => $branchId,
-                'distance'     => $calc['distance_km'] ?? null,
+                'distance'     => 0,
                 'delivery_fee' => $deliveryFee,
                 'gift_fee'     => $giftFee,
                 'totals'       => [
@@ -514,8 +461,8 @@ class CheckoutController extends Controller
                     'final'            => $final,
                 ],
                 'immediate' => [
-                    'last_pickup_string' => "اليوم - {$today} - {$lastPickupTime}",
-                    'expected_duration'  => $expectedDuration,
+                    'last_pickup_string' => "اليوم - {$today}",
+                    'expected_duration'  => '3-4 ساعات',
                 ],
             ]);
         } catch (\Throwable $e) {

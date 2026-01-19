@@ -2,19 +2,16 @@
 namespace App\Http\Controllers\Api\Client;
 
 use App\Http\Requests\Api\Order\ReportOrderProblemRequest;
-use App\Http\Resources\Api\Client\BranchResource;
 use App\Http\Resources\Api\Client\LoyalityPointResource;
 use App\Models\Order;
 use App\Models\Problem;
 use App\Models\Address;
-use App\Models\Branch;
 use App\Services\Responder;
 use App\Traits\ResponseTrait;
 use App\Services\OrderService;
 use App\Services\Order\OrderCheckoutService;
 use App\Services\Order\OrderQueryService;
 use App\Services\Order\OrderStatusService;
-use App\Services\Order\BranchLocationService;
 use App\Services\Order\DeliveryCalculationService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
@@ -37,7 +34,6 @@ class OrderController extends Controller
     protected $checkoutService;
     protected $queryService;
     protected $statusService;
-    protected $branchLocationService;
     protected $deliveryCalculationService;
 
     public function __construct(
@@ -45,14 +41,12 @@ class OrderController extends Controller
         OrderCheckoutService $checkoutService,
         OrderQueryService $queryService,
         OrderStatusService $statusService,
-        BranchLocationService $branchLocationService,
         DeliveryCalculationService $deliveryCalculationService
     ) {
         $this->orderService = $orderService;
         $this->checkoutService = $checkoutService;
         $this->queryService = $queryService;
         $this->statusService = $statusService;
-        $this->branchLocationService = $branchLocationService;
         $this->deliveryCalculationService = $deliveryCalculationService;
     }
 
@@ -137,7 +131,7 @@ class OrderController extends Controller
         try {
             $user = auth()->user();
 
-            // Pass origin for Paymob callback routing
+            // Pass origin for MyFatoorah callback routing
             $options = [
                 'origin' => 'api-order',
             ];
@@ -164,75 +158,7 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Resolve branch by address_id or coordinates and return info with delivery fee (for client apps)
-     */
-    public function resolveBranch(Request $request)
-    {
-        try {
-            $user = auth()->user();
-
-            // Accept either address_id OR latitude+longitude
-            $request->validate([
-                'address_id' => 'nullable|integer|exists:addresses,id',
-                'latitude' => 'nullable|numeric',
-                'longitude' => 'nullable|numeric',
-                'delivery_type' => 'nullable|in:immediate,scheduled',
-            ]);
-
-            if (!$request->filled('address_id') && !($request->filled('latitude') && $request->filled('longitude'))) {
-                return Responder::error(__('apis.location_required'), [], 422);
-            }
-
-            $lat = null;
-            $lng = null;
-
-            if ($request->filled('address_id')) {
-                // Ensure address belongs to this user, then use its lat/lng
-                $address = Address::where('id', $request->address_id)
-                    ->where('user_id', $user->id)
-                    ->first();
-                if (!$address) {
-                    return Responder::error(__('apis.invalid_branch_or_address'), [], 422);
-                }
-                $lat = $address->latitude;
-                $lng = $address->longitude;
-            } else {
-                $lat = (float) $request->latitude;
-                $lng = (float) $request->longitude;
-            }
-
-            // Use branch location service to find branch
-            $branch = $this->branchLocationService->findBranchByLocation($lat, $lng);
-
-            if (!$branch) {
-                // No branch found in polygon
-                return Responder::error(__('apis.address_not_in_branch_area'), [], 422);
-            }
-
-            // Calculate delivery fee using DeliveryCalculationService
-            $deliveryDetails = $this->deliveryCalculationService->calculateDeliveryDetails($user, [
-                'latitude' => $lat,
-                'longitude' => $lng,
-                'delivery_type' => $request->input('delivery_type') ?: 'immediate',
-            ]);
-
-            // Prepare response with branch details and delivery fee
-            $response = array_merge(
-                BranchResource::make($branch)->resolve(),
-                [
-                    'delivery_fee' => $deliveryDetails['delivery_fee'],
-                    'distance' => $deliveryDetails['distance'],
-                ]
-            );
-
-            return Responder::success($response);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return Responder::error(__('apis.validation_error'), $e->errors(), 422);
-        } catch (\Exception $e) {
-            return Responder::error($e->getMessage(), [], 422);
-        }
-    }
+   
 
     public function reportProblem(ReportOrderProblemRequest $request)
 {
@@ -370,7 +296,6 @@ class OrderController extends Controller
                 'final_total'       => (float) $order->total,
             ],
             'address'        => $order->address,
-            'branch'         => $order->branch,
 
             'payment_method' => $order->paymentMethod,
         ];
@@ -437,7 +362,7 @@ class OrderController extends Controller
 
 
     /**
-     * Calculate distance and delivery fee for address across all branches
+     * Calculate delivery fee
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -449,65 +374,16 @@ class OrderController extends Controller
                 'address_id' => 'required|exists:addresses,id',
             ]);
 
-            $user = auth()->user();
+            // Simplified delivery fee calculation (fixed or from settings)
+            $deliveryFee = (float) getSiteSetting('delivery_fee', 15);
 
-            // Get the address and ensure it belongs to the authenticated user
-            $address = Address::where('id', $request->address_id)
-                             ->where('user_id', $user->id)
-                             ->firstOrFail();
-
-            // Get all active branches
-            $branches = Branch::where('status', 'active')->get();
-
-            if ($branches->isEmpty()) {
-                return Responder::error(__('apis.no_branches_available'), [], 404);
-            }
-
-            $branchResults = [];
-            $nearestBranch = null;
-            $shortestDistance = PHP_FLOAT_MAX;
-
-            // Loop through all branches to calculate distance and check polygon
-            foreach ($branches as $branch) {
-                $result = $this->orderService->calculateDistanceAndDeliveryFee($address, $branch);
-
-                $branchData = [
-                    'branch_id' => $branch->id,
-                    'branch_name' => $branch->name,
-                    'distance_km' => $result['distance_km'],
-                    'delivery_fee' => $result['delivery_fee'],
-                    'in_polygon' => $result['in_polygon'],
-                ];
-
-                $branchResults[] = $branchData;
-
-                // Track the nearest branch (prioritize polygon match, then distance)
-                if ($result['in_polygon'] || $result['distance_km'] < $shortestDistance) {
-                    if ($nearestBranch === null ||
-                        $result['in_polygon'] ||
-                        (!$nearestBranch['in_polygon'] && $result['distance_km'] < $shortestDistance)) {
-                        $nearestBranch = $branchData;
-                        $shortestDistance = $result['distance_km'];
-                    }
-                }
-            }
-
-            // Sort results by polygon match first, then by distance
-            usort($branchResults, function($a, $b) {
-                if ($a['in_polygon'] && !$b['in_polygon']) return -1;
-                if (!$a['in_polygon'] && $b['in_polygon']) return 1;
-                return $a['distance_km'] <=> $b['distance_km'];
-            });
-
-            return Responder::success(
-                 $nearestBranch,
-
-            );
+            return Responder::success([
+                'delivery_fee' => $deliveryFee,
+                'distance_km' => 0,
+            ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return Responder::error(__('apis.validation_error'), $e->errors(), 422);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return Responder::error(__('apis.not_found'), [], 404);
         } catch (\Exception $e) {
             return Responder::error($e->getMessage(), [], 500);
         }

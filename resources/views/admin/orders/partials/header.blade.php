@@ -74,18 +74,6 @@
                                     'request_refund' => __('admin.request_refund'),
                                     'refunded' => __('admin.refunded'),
                                 ];
-
-                                // For branch managers: only allow specific statuses
-                                $admin = auth('admin')->user();
-                                if ($admin && (int) $admin->role_id === 2) {
-                                    // Branch managers can update to: new, confirmed, delivered, cancelled
-                                    $availablestatuses = [
-                                        'new' => __('admin.new'),
-                                        'confirmed' => __('admin.confirmed'),
-                                        'delivered' => __('admin.delivered'),
-                                        'cancelled' => __('admin.cancelled'),
-                                    ];
-                                }
                             @endphp
                             @foreach($availablestatuses as $status => $label)
                                 @if($status !== $order->status)

@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Api;
 use App\Facades\Responder;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Coupon\checkCouponRequest;
-use App\Http\Resources\Api\Client\BranchResource;
+use App\Http\Resources\Api\Client\PageResource;
+use App\Http\Resources\Api\Client\SettingResource;
 use App\Http\Resources\Api\ProblemResource;
 use App\Http\Resources\Api\Setting\CancelReaonResource;
 use App\Http\Resources\Api\Settings\CategoryResource;
@@ -25,10 +26,10 @@ use App\Http\Resources\Api\Settings\SocialResource;
 use App\Http\Resources\Api\VideoResource;
 use App\Http\Resources\RefundReasonResource;
 use App\Models\BlogCategory;
-use App\Models\Branch;
 use App\Models\CancelReason;
 use App\Models\Category;
 use App\Models\City;
+use App\Models\Page;
 use App\Models\Country;
 use App\Models\DeliveryPeriod;
 use App\Models\District;
@@ -305,12 +306,6 @@ class SettingController extends Controller
     {
         $videos = VideoResource::collection(ShortVideo::where('is_active', true)->get());
         return Responder::success($videos);
-    }
-    public function branches()
-    {
-        $branches = BranchResource::collection(Branch::where('status', 'active')->get());
-        return Responder::success($branches);
-
     }
 
 }

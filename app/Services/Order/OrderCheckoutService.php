@@ -28,7 +28,6 @@ class OrderCheckoutService
     protected $orderValidationService;
     protected $orderPaymentService;
     protected $deliveryCalculationService;
-    protected $branchLocationService;
     protected $inventoryService;
     protected $orderNotificationService;
 
@@ -42,7 +41,6 @@ class OrderCheckoutService
         OrderValidationService $orderValidationService,
         OrderPaymentService $orderPaymentService,
         DeliveryCalculationService $deliveryCalculationService,
-        BranchLocationService $branchLocationService,
         InventoryService $inventoryService,
         OrderNotificationService $orderNotificationService
     ) {
@@ -55,7 +53,6 @@ class OrderCheckoutService
         $this->orderValidationService = $orderValidationService;
         $this->orderPaymentService = $orderPaymentService;
         $this->deliveryCalculationService = $deliveryCalculationService;
-        $this->branchLocationService = $branchLocationService;
         $this->inventoryService = $inventoryService;
         $this->orderNotificationService = $orderNotificationService;
     }
@@ -82,13 +79,15 @@ class OrderCheckoutService
             $this->orderValidationService->validateDeliveryType($data);
 
             // Step 3: Calculate delivery details (branch, distance, fee)
-            $deliveryDetails = $this->deliveryCalculationService->calculateDeliveryDetails($user, $data);
-            $branchId = $deliveryDetails['branch_id'];
-            $deliveryFee = $deliveryDetails['delivery_fee'];
+            $deliveryFee = (float) getSiteSetting('delivery_fee', 15);
+            $deliveryDetails = [
+                'delivery_fee' => $deliveryFee,
+                'branch_id' => null,
+                'distance' => 0,
+            ];
 
             // Step 4: Validate branch stock availability
             $orderType = $data['order_type'] ?? 'regular';
-            $this->orderValidationService->validateBranchStock($cart, $branchId, $orderType);
 
             // Step 4.5: Create an address if not provided but coordinates exist (ordinary orders only)
             if ($orderType !== 'gift' && empty($data['address_id'])) {
@@ -144,7 +143,7 @@ class OrderCheckoutService
             ]);
 
             return [
-                'order' => $order->fresh(['items.product', 'address', 'branch']),
+                'order' => $order->fresh(['items.product', 'address']),
                 'payment_url' => $paymentResult['payment_url'],
             ];
         });
@@ -187,7 +186,6 @@ class OrderCheckoutService
             'payment_status' => 'pending',
             'delivery_type' => $deliveryType,
             'order_type' => $orderType,
-            'branch_id' => $deliveryDetails['branch_id'],
             'address_id' => $address?->id,
             'subtotal' => $subtotal,
             'discount_amount' => $discountAmount,

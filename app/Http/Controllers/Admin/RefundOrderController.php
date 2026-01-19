@@ -39,18 +39,6 @@ class RefundOrderController extends Controller
             ])
             ->whereIn('refund_status', ['request_refund', 'request_rejected', 'new', 'refunded']);
 
-            // If branch manager (role_id = 2), limit refund orders to their branch(es)
-            if ($admin && (int) $admin->role_id === 2) {
-                $branchIds = \App\Models\BranchManager::where('manager_id', $admin->id)->pluck('branch_id');
-
-                if ($branchIds && $branchIds->count() > 0) {
-                    $query->whereIn('branch_id', $branchIds);
-                } else {
-                    // No assigned branches => show no refund orders
-                    $query->whereRaw('1 = 0');
-                }
-            }
-
             $refundOrders = $query
                 ->orderBy('created_at', 'desc')
                 ->paginate(30);

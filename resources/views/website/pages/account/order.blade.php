@@ -291,12 +291,12 @@
                                 </span>
                             </li>
 
-                            <li class="order_info-item">
+                            {{-- <li class="order_info-item">
                                 <strong class="title"> {{ __('site.expected_preparation_duration') }} </strong>
                                 <span class="value">
                                     {{ optional($order->branch)->expected_duration ? optional($order->branch)->expected_duration . ' ' . __('site.minute') : '-' }}
                                 </span>
-                            </li>
+                            </li> --}}
 
                             
                         </ul>

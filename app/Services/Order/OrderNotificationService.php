@@ -306,36 +306,6 @@ class OrderNotificationService
     }
 
     /**
-     * Notify delivery person when added to a branch
-     *
-     * @param \App\Models\User $deliveryUser
-     * @param \App\Models\Branch $branch
-     */
-    public function notifyDeliveryOfBranchAssignment($deliveryUser, $branch): void
-    {
-        if (!$deliveryUser || $deliveryUser->type !== 'delivery') {
-            return;
-        }
-        // Respect delivery users' notification preference
-        if (!$deliveryUser->is_notify) {
-            return;
-        }
-
-        $deliveryUser->notify(new \App\Notifications\NotifyUser([
-            'title' => [
-                'ar' => 'تعيين في فرع',
-                'en' => 'Branch Assignment',
-            ],
-            'body' => [
-                'ar' => 'تم تعيينك في فرع: ' . $branch->name,
-                'en' => 'You have been assigned to branch: ' . $branch->name,
-            ],
-            'type' => 'branch_assignment',
-            'branch_id' => $branch->id,
-        ]));
-    }
-
-    /**
      * Determine order type for notifications based on refund state.
      * Returns 'refund' when the order is a refund flow (is_refund=true, refundable=true, or has refund_number).
      */

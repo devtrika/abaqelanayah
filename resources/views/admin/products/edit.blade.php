@@ -66,52 +66,6 @@
                                     </div>
 
 
-                                    @php($isBranchManager = auth('admin')->check() && auth('admin')->user()->role_id == 2)
-
-                                    @if($isBranchManager)
-                                        <div class="col-12">
-                                            <div class="alert alert-info" role="alert" style="margin-top:10px;">
-                                                {{ __('admin.note') }}: سيتم تعديل كمية المنتج على مستوى الفرع فقط، ولن يتم تعديل بيانات المنتج الأساسية.
-                                            </div>
-                                        </div>
-
-                                        @php($branches = isset($managerBranches) && $managerBranches ? $managerBranches : collect())
-                                        @if($branches->count() === 1)
-                                            <input type="hidden" name="branch_id" id="branch_id_select" value="{{ $branches->first()->id }}">
-                                        @endif
-
-                                        {{-- <div class="col-md-6 col-12">
-                                            <div class="form-group">
-                                                <label for="branch_id_select">{{ __('admin.branch') }}</label>
-                                                <div class="controls">
-                                                    @php($branches = isset($managerBranches) && $managerBranches ? $managerBranches : collect())
-                                                    @if($branches->count() > 1)
-                                                        <select id="branch_id_select" name="branch_id" class="select2 form-control">
-                                                            @foreach($branches as $b)
-                                                                <option value="{{ $b->id }}" {{ $loop->first ? 'selected' : '' }}>{{ $b->name }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    @elseif($branches->count() === 1)
-                                                        <input type="hidden" name="branch_id" id="branch_id_select" value="{{ $branches->first()->id }}">
-                                                        <input type="text" class="form-control" value="{{ $branches->first()->name }}" disabled>
-                                                    @else
-                                                        <div class="text-danger small">لا يوجد فروع مرتبطة بك.</div>
-                                                    @endif
-                                                </div>
-
-                                            </div>
-                                        </div> --}}
-
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group">
-                                                <label for="branch_qty_input">{{ __('admin.quantity') }}</label>
-                                                <div class="controls">
-                                                    <input type="number" min="0" name="qty" id="branch_qty_input" class="form-control" placeholder="{{ __('admin.quantity') }}" value="{{ (isset($managerBranches) && $managerBranches && $managerBranches->count() === 1) ? ($branchQtys->get($managerBranches->first()->id) ?? 0) : 0 }}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif
-
                                     <div class="col-12">
                                         <div class="col-12">
                                             <ul class="nav nav-tabs mb-3">
@@ -320,65 +274,5 @@
 
     @include('admin.shared.categoryDependentJs')
     @include('admin.shared.submitEditForm')
-
-    
-
-    @php($isBranchManagerJs = auth('admin')->check() && auth('admin')->user()->role_id == 2)
-    @if($isBranchManagerJs)
-    <script>
-        (function() {
-            var $form = $('form.store');
-            var branchQtys = @json(($branchQtys ?? collect())->toArray());
-
-            // Disable all inputs except qty, branch_id, csrf/method, and submit button
-            $form.find('input, select, textarea, button').each(function() {
-                var $el = $(this);
-                var name = $el.attr('name');
-                if (name === '_token' || name === '_method' || name === 'qty' || name === 'branch_id') {
-                    return; // keep enabled
-                }
-                if ($el.hasClass('submit_button')) {
-                    return; // keep submit enabled
-                }
-                $el.prop('disabled', true);
-            });
-
-            $('.mp-remove').hide();
-            $('.mp-input').prop('disabled', true);
-            $('.mp-add, .mp-dropzone').css({ 'pointer-events': 'none', 'opacity': .5 });
-
-            // Update submit button text and ensure it's enabled
-            $('.submit_button').text('حفظ كمية الفرع').prop('disabled', false).removeClass('disabled');
-
-            function getSelectedBranchId() {
-                var $select = $('#branch_id_select');
-                if ($select.is('select')) {
-                    return $select.val();
-                } else {
-                    // It's a hidden input
-                    return $select.val();
-                }
-            }
-
-            function setQtyForBranch(branchId) {
-                var qty = 0;
-                if (branchId && branchQtys && branchQtys[branchId] !== undefined) {
-                    qty = branchQtys[branchId] || 0;
-                }
-                $('#branch_qty_input').val(qty);
-            }
-
-            var initialBranchId = getSelectedBranchId();
-            setQtyForBranch(initialBranchId);
-
-            $('#branch_id_select').on('change', function() {
-                setQtyForBranch($(this).val());
-            });
-
-            // Remove the click handler that was causing issues
-            // The form will submit normally via the submitEditForm.blade.php handler
-        })();
-    </script>
-    @endif
 
 @endsection

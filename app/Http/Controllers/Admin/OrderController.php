@@ -85,18 +85,6 @@ class OrderController extends Controller
 
             $query = Order::with(['user', 'address', 'paymentMethod']);
 
-            // If branch manager (role_id = 2), limit orders to his branch(es)
-            if ($admin && (int) $admin->role_id === 2) {
-                $branchIds = \App\Models\BranchManager::where('manager_id', $admin->id)->pluck('branch_id');
-
-                if ($branchIds && $branchIds->count() > 0) {
-                    $query->whereIn('branch_id', $branchIds);
-                } else {
-                    // No assigned branches => show no orders
-                    $query->whereRaw('1 = 0');
-                }
-            }
-
             $orders = $query
                 ->search(request()->searchArray)
                 ->paginate(30);
@@ -124,18 +112,6 @@ class OrderController extends Controller
             $query = Order::with(['user', 'address', 'paymentMethod'])
                 ->where('status', $status);
 
-            // If branch manager (role_id = 2), limit orders to his branch(es)
-            if ($admin && (int) $admin->role_id === 2) {
-                $branchIds = \App\Models\BranchManager::where('manager_id', $admin->id)->pluck('branch_id');
-
-                if ($branchIds && $branchIds->count() > 0) {
-                    $query->whereIn('branch_id', $branchIds);
-                } else {
-                    // No assigned branches => show no orders
-                    $query->whereRaw('1 = 0');
-                }
-            }
-
             $orders = $query
                 ->search(request()->searchArray)
                 ->paginate(30);
@@ -154,18 +130,6 @@ class OrderController extends Controller
         $admin = auth()->guard('admin')->user();
 
         $query = Order::query();
-
-        // If branch manager (role_id = 2), limit orders to his branch(es)
-        if ($admin && (int) $admin->role_id === 2) {
-            $branchIds = \App\Models\BranchManager::where('manager_id', $admin->id)->pluck('branch_id');
-
-            if ($branchIds && $branchIds->count() > 0) {
-                $query->whereIn('branch_id', $branchIds);
-            } else {
-                // No assigned branches => show no orders
-                $query->whereRaw('1 = 0');
-            }
-        }
 
         return response()->json([
             'all_orders' => (clone $query)->count(),
@@ -223,13 +187,9 @@ class OrderController extends Controller
 
         // Get payment method details
     $paymentMethod = \App\Models\PaymentMethod::find($order->payment_method_id);
-    // Branch may be null for gift orders (no assigned branch yet). Guard access.
-    // Only include delivery users who accept orders
-    $deliveryUsers = collect();
-    if ($order->branch) {
-        // deliveries relation expected to be a HasMany to User model
-        $deliveryUsers = $order->branch->deliveries()->where('accept_orders', true)->get();
-    }
+    
+    // Get all delivery users
+    $deliveryUsers = \App\Models\User::where('type', 'delivery')->where('accept_orders', true)->get();
 
     // Get cost_details from resource and expose to admin view
         $orderResource = new \App\Http\Resources\Api\Client\OrderDetailsResource($order);
@@ -308,18 +268,6 @@ class OrderController extends Controller
 
             // Get current admin
             $admin = auth()->guard('admin')->user();
-
-            // Check permissions based on role
-            // Branch managers (role_id = 2) can update to: new, confirmed, delivered, cancelled
-            if ($admin && (int) $admin->role_id === 2) {
-                $branchManagerAllowedStatuses = ['new', 'confirmed', 'delivered', 'cancelled'];
-                if (!in_array($newStatus, $branchManagerAllowedStatuses)) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Branch managers can only update to: new, confirmed, delivered, or cancelled status'
-                    ], 403);
-                }
-            }
 
             // Start transaction
             DB::beginTransaction();

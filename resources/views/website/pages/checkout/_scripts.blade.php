@@ -108,7 +108,6 @@
       headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
     }).done(function(res){
       if(!res || !res.success){ toastr && toastr.error((res && res.message) || '{{ __('site.calculation_failed') }}'); return; }
-      $('input[name="branch_id"]').val(res.branch_id || '');
       renderTotalsFromCalc(res.totals || {}, res.delivery_fee || 0);
       if(typeof res.gift_fee !== 'undefined'){
         var gf = parseFloat(res.gift_fee || 0).toFixed(2);

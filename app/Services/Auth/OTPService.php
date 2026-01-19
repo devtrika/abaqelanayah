@@ -33,7 +33,7 @@ class OTPService
         ]);
         
         // Send OTP via SMS
-        $user->sendCodeAtSms($code);
+$user->sendEmail(__('admin.verification_code'), $code);
         
         return [
             'code' => $code,

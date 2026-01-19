@@ -93,7 +93,7 @@ class ReportController extends Controller
                 'final_total'       => (float) $order->total,
             ],
             'address'        => $order->address,
-            'branch'         => $order->branch,
+            // 'branch'         => $order->branch,
 
             'payment_method' => $order->paymentMethod,
         ];

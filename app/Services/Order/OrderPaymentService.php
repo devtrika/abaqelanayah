@@ -6,7 +6,8 @@ use App\Models\Order;
 use App\Models\User;
 use App\Repositories\OrderRepository;
 use App\Services\TransactionService;
-use App\Services\Paymob\PaymobService;
+use App\Services\PaymentService;
+use App\Enums\PaymentMethod;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -19,13 +20,16 @@ class OrderPaymentService
 {
     protected $orderRepository;
     protected $transactionService;
+    protected $paymentService;
 
     public function __construct(
         OrderRepository $orderRepository,
-        TransactionService $transactionService
+        TransactionService $transactionService,
+        PaymentService $paymentService
     ) {
         $this->orderRepository = $orderRepository;
         $this->transactionService = $transactionService;
+        $this->paymentService = $paymentService;
     }
 
     /**
@@ -46,9 +50,9 @@ class OrderPaymentService
             return $this->processCashPayment($order);
         }
 
-        // Payment Method: Electronic Payment (Paymob)
+        // Payment Method: Electronic Payment (MyFatoorah)
         if ($paymentMethodId != 5) {
-            return $this->processElectronicPayment($order, $options);
+            return $this->processElectronicPayment($order, $data, $options);
         }
 
         throw new \Exception(__('apis.invalid_payment_method'));
@@ -88,20 +92,40 @@ class OrderPaymentService
     }
 
     /**
-     * Process electronic payment via Paymob
+     * Process electronic payment via MyFatoorah
      *
      * @param Order $order
+     * @param array $data
      * @param array $options - Optional parameters like callback_url and error_url for API
      * @return array
      * @throws \Exception
      */
-    private function processElectronicPayment(Order $order, array $options = []): array
+    private function processElectronicPayment(Order $order, array $data, array $options = []): array
     {
         try {
-            $paymentUrl = $this->initiatePaymobPayment($order, $options);
+            $paymentMethod = PaymentMethod::tryFrom($data['payment_method_id'] ?? 0);
+            
+            // Default to VISA if not found, or handle error
+            if (!$paymentMethod) {
+                 // Try to guess or default
+                 $paymentMethod = PaymentMethod::VISA;
+            }
+
+            $gateway = $this->paymentService->getPaymentGateway($paymentMethod, $data);
+            
+            $paymentResult = $this->paymentService->initializeMyFatoorahPayment($order, $order->user, array_merge($options, [
+                'gateway' => $gateway,
+            ]));
+
+            if (isset($paymentResult['status']) && $paymentResult['status'] === 'error') {
+                 throw new \Exception($paymentResult['message']);
+            }
+
+            $paymentUrl = $paymentResult['invoiceURL'];
 
             $this->orderRepository->update($order, [
                 'payment_status' => 'pending',
+                'payment_url' => $paymentUrl
             ]);
 
             // IMPORTANT: For electronic payments, wallet was already deducted in CartService
@@ -124,7 +148,7 @@ class OrderPaymentService
                 'payment_status' => 'pending',
             ];
         } catch (\Exception $e) {
-            Log::error('Paymob payment initiation failed', [
+            Log::error('MyFatoorah payment initiation failed', [
                 'order_id' => $order->id,
                 'error' => $e->getMessage(),
             ]);
@@ -132,6 +156,7 @@ class OrderPaymentService
             throw new \Exception(__('apis.payment_gateway_error'));
         }
     }
+
 
     /**
      * Process wallet payment
@@ -178,58 +203,6 @@ class OrderPaymentService
             'payment_url' => null,
             'payment_status' => 'paid',
         ];
-    }
-
-    /**
-     * Initiate Paymob payment and get payment URL
-     *
-     * @param Order $order
-     * @param array $options - Optional parameters like callback_url and error_url for API
-     * @return string Payment URL
-     * @throws \Exception
-     */
-    private function initiatePaymobPayment(Order $order, array $options = []): string
-    {
-        try {
-            $paymobService = app(PaymobService::class);
-
-            // Prepare order data for payment
-            $orderData = [
-                'amount' => (float) $order->total,
-                'order_number' => $order->order_number,
-                'customer_name' => $order->user->name ?? 'Customer',
-                'customer_phone' => $order->user->phone ?? '',
-                'customer_email' => $order->user->email ?? 'noemail@example.com',
-            ];
-
-            // Origin to control callback redirection
-            $origin = (string) ($options['origin'] ?? 'website-checkout');
-
-            $result = $paymobService->createOrderPayment($order, $origin);
-
-            // Update order with payment reference (merchant order id and URL)
-            $this->orderRepository->update($order, [
-                'payment_reference' => $result['merchant_order_id'],
-                'payment_url' => $result['payment_url'],
-            ]);
-
-            Log::info('Paymob payment initiated successfully', [
-                'order_id' => $order->id,
-                'order_number' => $order->order_number,
-                'merchant_order_id' => $result['merchant_order_id'],
-                'payment_url' => $result['payment_url'],
-            ]);
-
-            return $result['payment_url'];
-        } catch (\Exception $e) {
-            Log::error('Paymob payment initiation failed', [
-                'order_id' => $order->id,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-
-            throw new \Exception('Failed to initiate payment: ' . $e->getMessage());
-        }
     }
 
     /**

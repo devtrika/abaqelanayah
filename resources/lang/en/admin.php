@@ -21,7 +21,7 @@ return [
 'inactive' => 'Inactive',
 'manager_required' => 'Manager required',
 'deliveries_required' => 'Deliveries required',
-
+'verification_code' => 'Verification Code',
 'home_delivery' => 'Home delivery',
     "show_refund_orders_page" => "show refund page",
 

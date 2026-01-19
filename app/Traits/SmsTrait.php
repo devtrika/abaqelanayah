@@ -110,13 +110,13 @@ trait SmsTrait {
     $password = $data->password;
     $sender   = $data->sender_name;
 
-    $ch = curl_init();
+    $ch = \curl_init();
 
-    curl_setopt($ch, CURLOPT_URL, "https://www.msegat.com/gw/sendsms.php");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_HEADER, TRUE);
+    \curl_setopt($ch, CURLOPT_URL, "https://www.msegat.com/gw/sendsms.php");
+    \curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    \curl_setopt($ch, CURLOPT_HEADER, TRUE);
 
-    curl_setopt($ch, CURLOPT_POST, TRUE);
+    \curl_setopt($ch, CURLOPT_POST, TRUE);
 
     $fields = <<<EOT
         {
@@ -127,15 +127,15 @@ trait SmsTrait {
         "msg": "$msg"
         }
         EOT;
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+    \curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
 
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    \curl_setopt($ch, CURLOPT_HTTPHEADER, array(
       "Content-Type: application/json",
     ));
 
-    $response = curl_exec($ch);
-    $info     = curl_getinfo($ch);
-    curl_close($ch);
+    $response = \curl_exec($ch);
+    $info     = \curl_getinfo($ch);
+    \curl_close($ch);
 
     return true;
 
@@ -196,13 +196,13 @@ trait SmsTrait {
     $link = "https://www.zain.im/index.php/api/sendsms/?user=$username&pass=$password&to=$to&message=$text&sender=$sender";
 
     if (function_exists('curl_init')) {
-      $curl = @curl_init($link);
-      @curl_setopt($curl, CURLOPT_HEADER, FALSE);
-      @curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-      @curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
-      @curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-      $source = @curl_exec($curl);
-      @curl_close($curl);
+      $curl = @\curl_init($link);
+      @\curl_setopt($curl, CURLOPT_HEADER, FALSE);
+      @\curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+      @\curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
+      @\curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+      $source = @\curl_exec($curl);
+      @\curl_close($curl);
       if ($source) {
         return $source;
       } else {
@@ -237,8 +237,8 @@ trait SmsTrait {
 
     $fields_string = json_encode($fields);
 
-    $ch = curl_init($url);
-    curl_setopt_array($ch, array(
+    $ch = \curl_init($url);
+    \curl_setopt_array($ch, array(
       CURLOPT_POST           => TRUE,
       CURLOPT_RETURNTRANSFER => TRUE,
       CURLOPT_HTTPHEADER     => array(
@@ -246,8 +246,8 @@ trait SmsTrait {
       ),
       CURLOPT_POSTFIELDS     => $fields_string,
     ));
-    $result = curl_exec($ch);
-    curl_close($ch);
+    $result = \curl_exec($ch);
+    \curl_close($ch);
 
   }
 

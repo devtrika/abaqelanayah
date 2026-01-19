@@ -55,7 +55,6 @@ Route::group([
         |--------------------------------------------------------------------------
         */
         Route::apiResource('addresses', AddressController::class);
-        Route::get('branches', [SettingController::class, 'branches'])->name('branches');
 
         /*
         |--------------------------------------------------------------------------
@@ -134,8 +133,6 @@ Route::group([
             Route::get('/', [OrderController::class, 'getRefundableOrders'])->name('list');
             Route::get('{id}', [OrderController::class, 'getRefundableOrder'])->name('show');
         });
-
-         Route::post('get-branch', [OrderController::class, 'resolveBranch'])->name('get-branch');
 
         /*
         |--------------------------------------------------------------------------

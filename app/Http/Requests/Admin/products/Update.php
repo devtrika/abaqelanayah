@@ -17,14 +17,14 @@ class Update extends FormRequest
 
         // If the authenticated admin is a branch manager, relax validation:
         // we only allow branch-level quantity edits in the controller and skip all other field validations here.
-        $admin = auth()->guard('admin')->user();
-        if ($admin && (int) $admin->role_id === 2) {
-            return [
-                // Optional: allow qty and branch_id to pass through if provided; controller will validate strictly
-                'quantity' => 'nullable|integer|min:0',
-                // 'branch_id' => 'nullable|integer|exists:branches,id',
-            ];
-        }
+        // $admin = auth()->guard('admin')->user();
+        // if ($admin && (int) $admin->role_id === 2) {
+        //     return [
+        //         // Optional: allow qty and branch_id to pass through if provided; controller will validate strictly
+        //         'quantity' => 'nullable|integer|min:0',
+        //         // 'branch_id' => 'nullable|integer|exists:branches,id',
+        //     ];
+        // }
 
         return [
             'name'                  => 'required|array',

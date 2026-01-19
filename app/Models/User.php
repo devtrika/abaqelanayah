@@ -185,8 +185,8 @@ class User extends  Authenticatable implements HasMedia
             'code_expire' => Carbon::now()->addMinute(),
         ]);
 
-        $this->sendCodeAtSms($this->code);
-        // $this->sendEmail($this->code);
+        // $this->sendCodeAtSms($this->code);
+        $this->sendEmail($this->code);
 
         return ['user' => new UserResource($this->refresh())];
     }
@@ -210,11 +210,18 @@ class User extends  Authenticatable implements HasMedia
         (new WhatsAppOtpService())->sendToPhone($phone, $code);
     }
 
-    public function sendEmail($code, $full_phone = null){
-        $msg = __('apis.activeCode');
-        $data = ['title' => __('admin.reset_password'), 'message' => $msg.$code];
-        dispatch(new SendEmailJob($this->email, $data));
-    }
+   public function sendEmail($title, $code, $full_phone = null)
+{
+    $msg = __('apis.activeCode');
+
+    $data = [
+        'title' => $title,
+        'message' => $msg . $code
+    ];
+
+    \Mail::to($this->email)->send(new \App\Mail\SendMail($data));
+}
+
 
     public function consultationMessages()
     {
@@ -339,9 +346,4 @@ class User extends  Authenticatable implements HasMedia
     {
         return $this->favorites();
     }
-
-    public function branches()
-  {
-      return $this->belongsToMany(Branch::class, 'branch_deliveries', 'delivery_id', 'branch_id');
-  }
 }

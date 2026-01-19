@@ -23,7 +23,6 @@ class RefundOrderController extends Controller
                 },
                 'address',
                 'paymentMethod',
-                'branch',
             ])
             ->where('user_id', $user->id)
             ->where('refundable', true)

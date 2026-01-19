@@ -62,7 +62,6 @@ class RefundOrderController extends Controller
                 'address.city',
                 'address.district',
                 'city',  // For gift orders without address
-                'branch',
                 'delivery',
                 'refundReason'
             ])

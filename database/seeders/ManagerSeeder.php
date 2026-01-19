@@ -24,8 +24,8 @@ class ManagerSeeder extends Seeder
         
         $managerRole = Role::create([
             'name' => [
-                'en' => 'Branch Manager',
-                'ar' => 'مدير فرع'
+                'en' => 'Manager',
+                'ar' => 'مدير'
             ],
         ]);
 

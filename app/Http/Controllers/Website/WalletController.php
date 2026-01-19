@@ -6,15 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Transaction;
 use App\Services\TransactionService;
 use App\Services\Paymob\PaymobService;
+use App\Services\WalletRechargeService;
 use App\Http\Requests\CreateWithdrawRequest;
 use App\Http\Requests\CreateWalletRechargeRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class WalletController extends Controller
 {
     public function __construct(
         protected TransactionService $transactionService,
-        protected PaymobService $paymobService
+        protected PaymobService $paymobService,
+        protected WalletRechargeService $walletRechargeService
     ) {}
 
     /**
@@ -91,7 +94,7 @@ class WalletController extends Controller
     }
 
     /**
-     * Create wallet recharge request with Paymob
+     * Create wallet recharge request with MyFatoorah
      */
     public function createRechargeRequest(CreateWalletRechargeRequest $request)
     {
@@ -99,22 +102,26 @@ class WalletController extends Controller
         $user = Auth::guard('web')->user();
 
         try {
-            // Create pending transaction
-            $transaction = Transaction::create([
-                'user_id' => $user->id,
-                'amount' => $data['amount'],
-                'type' => 'wallet-addons',
-                'status' => 'pending',
-                'reference' => 'pending',
-                'note' => json_encode(value: ['ar' => 'شحن محفظة', 'en' => 'Wallet Recharge']),
-            ]);
+            $options = [
+                'origin' => 'website-wallet',
+            ];
 
-            $result = $this->paymobService->createWalletRechargePayment($transaction, 'wallet-deposit');
+            $result = $this->walletRechargeService->initializeWalletRecharge(
+                $user,
+                $data['amount'],
+                $data['gateway'] ?? 'card',
+                $options
+            );
 
-            // Update transaction reference and redirect
-            $transaction->update(['reference' => $result['merchant_order_id']]);
-            return redirect($result['payment_url']);
+            if ($result['success']) {
+                return redirect($result['payment_url']);
+            }
+
+            return redirect()->route('website.wallet.index')
+                ->with('error', $result['message']);
+
         } catch (\Exception $e) {
+            Log::error('Wallet recharge failed', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return redirect()->route('website.wallet.index')
                 ->with('error', 'حدث خطأ أثناء تهيئة الدفع. يرجى المحاولة مرة أخرى');
         }

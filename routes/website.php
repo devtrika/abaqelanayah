@@ -10,10 +10,10 @@ use App\Http\Controllers\Website\ProductController;
 use App\Http\Controllers\Website\CheckoutController;
 use App\Http\Controllers\Website\AddressController;
 use App\Http\Controllers\Website\WalletController;
-use App\Http\Controllers\Website\PaymentController;
+// use App\Http\Controllers\Website\PaymentController;
 use App\Http\Controllers\Website\RefundOrderController;
 use App\Http\Controllers\Website\StaticPageController;
-use App\Http\Controllers\Payments\PaymobController;
+use App\Http\Controllers\Payments\PaymentController as MyFatoorahPaymentController;
 
 Route::group(['middleware' => ['web', 'HtmlMinifier']], function () {
 
@@ -150,13 +150,15 @@ Route::group(['middleware' => ['web', 'HtmlMinifier']], function () {
         Route::post('/account/device-token', [AccountController::class, 'storeDeviceToken'])->name('website.device-token.store');
     });
 
-    // Unified Paymob payment routes (webhook + callback + success/error views)
-    Route::any('/payments/paymob/webhook', [PaymobController::class, 'webhook'])
+    // Unified Payment routes (MyFatoorah)
+    Route::any('/payments/webhook', [MyFatoorahPaymentController::class, 'webhook'])
         ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
-        ->name('payments.paymob.webhook');
-    Route::get('/payments/paymob/callback', [PaymobController::class, 'callback'])->name('payments.paymob.callback');
-    Route::view('/payment/success', 'payment.success')->name('payment.success');
-    Route::view('/payment/error', 'payment.fail')->name('payment.error');
+        ->name('payments.webhook');
+    
+    Route::get('/payments/callback', [MyFatoorahPaymentController::class, 'callback'])->name('payment.success'); // MyFatoorah calls this on success/error
+    
+    Route::view('/error/callback', 'payment.fail')->name('payment.error');
+    Route::view('/success/callback', 'payment.success')->name('payment.success.view'); 
 
     // Static pages routes (accessible to all)
     Route::get('/about', [StaticPageController::class, 'about'])->name('website.about');

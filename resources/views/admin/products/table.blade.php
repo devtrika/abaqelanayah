@@ -71,19 +71,10 @@
                     </td>
                     <td>{{number_format($product->final_price, 2)}} {{__('admin.sar')}}</td>
                     {{-- <td>
-                        @php
-                            $displayQty = 0;
-                            if (isset($isBranchManager) && $isBranchManager && isset($managerBranchIds) && $managerBranchIds->count() > 0) {
-                                // For branch managers, show sum of quantities from their branches
-                                $displayQty = \App\Models\BranchProduct::where('product_id', $product->id)
-                                    ->whereIn('branch_id', $managerBranchIds)
-                                    ->sum('qty');
-                            } else {
-                                // For super admin, show total quantity
-                                $displayQty = $product->qty ?? 0;
-                            }
-                        @endphp
-                        <span class="badge badge-{{ $displayQty > 0 ? 'success' : 'danger' }}">{{ $displayQty }}</span>
+                        {{-- @php
+                            $displayQty = $product->qty ?? 0;
+                        @endphp --}}
+                        <span class="badge badge-{{ $product->qty > 0 ? 'success' : 'danger' }}">{{ $product->qty }}</span>
                     </td> --}}
                     {{-- <td>
                         @if($product->options->count() > 0)

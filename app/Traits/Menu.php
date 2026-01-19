@@ -23,14 +23,6 @@ trait Menu {
         'icon'  => 'icon-truck',
         'url'   => url('admin/users?type=delivery'),
     ],
-   
-     
-      [ 
-        'name'  => __('admin.branches'),
-        'count' => \App\Models\Branch::count(),
-        'icon'  => 'icon-users',
-        'url'   => url('admin/branches'),
-      ],
 
 
       

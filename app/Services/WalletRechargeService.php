@@ -7,19 +7,21 @@ use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Services\Paymob\PaymobService;
+use App\Services\PaymentService;
 
 class WalletRechargeService
 {
     protected $transactionService;
+    protected $paymentService;
 
-    public function __construct(TransactionService $transactionService)
+    public function __construct(TransactionService $transactionService, PaymentService $paymentService)
     {
         $this->transactionService = $transactionService;
+        $this->paymentService = $paymentService;
     }
 
     /**
-     * Initialize Paymob payment for wallet recharge
+     * Initialize MyFatoorah payment for wallet recharge
      */
     public function initializeWalletRecharge(User $user, float $amount, string $gateway = 'card', array $options = [])
     {
@@ -27,31 +29,28 @@ class WalletRechargeService
             // Create pending transaction first
             $transaction = $this->createPendingTransaction($user, $amount);
 
-            $paymobService = app(PaymobService::class);
-
-            $origin = (string) ($options['origin'] ?? 'wallet-deposit');
-
             Log::info('Wallet recharge initialization', [
                 'user_id' => $user->id,
                 'amount' => $amount,
                 'transaction_id' => $transaction->id,
             ]);
 
-            $result = $paymobService->createWalletRechargePayment($transaction, $origin);
+            $paymentResult = $this->paymentService->initializeTransactionPayment($transaction, $user, array_merge($options, [
+                'gateway' => $gateway
+            ]));
 
-            // Update transaction with payment information
-            $transaction->update([
-                'reference' => $result['merchant_order_id'],
-            ]);
+            if (isset($paymentResult['status']) && $paymentResult['status'] === 'error') {
+                 throw new Exception($paymentResult['message']);
+            }
 
             return [
                 'success' => true,
-                'payment_url' => $result['payment_url'],
+                'payment_url' => $paymentResult['invoiceURL'],
                 'transaction_id' => $transaction->id,
             ];
 
         } catch (Exception $e) {
-            Log::error('Paymob wallet recharge creation failed', [
+            Log::error('Wallet recharge creation failed', [
                 'user_id' => $user->id,
                 'amount' => $amount,
                 'error' => $e->getMessage(),
@@ -64,6 +63,7 @@ class WalletRechargeService
             ];
         }
     }
+
 
     /**
      * Create a pending transaction for wallet recharge

@@ -60,7 +60,6 @@ class OrderController extends Controller
             'address.city',
             'address.district',
             'paymentMethod',
-            'branch',
             'city',
             'giftCity',
             'giftDistrict',
@@ -193,7 +192,6 @@ class OrderController extends Controller
                 'final_total' => (float) $order->total,
             ],
             'address' => $order->address,
-            'branch' => $order->branch,
             'payment_method' => $order->paymentMethod,
         ];
 

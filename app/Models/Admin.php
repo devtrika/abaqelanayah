@@ -126,12 +126,6 @@ class Admin extends Authenticatable {
     return $this->morphMany(Transaction::class, 'transactionable')->latest();
   }
 
-
-  public function branches()
-  {
-      return $this->belongsToMany(Branch::class, 'branch_managers', 'manager_id', 'branch_id');
-  }
-
   public function sendVerificationCode(){
       $this->update([
           'code'        => $this->activationCode(),

@@ -186,12 +186,6 @@
     @include('admin.orders.partials.basic-info')
 
 
-    <!-- Branch Information -->
-
-
-     @include('admin.orders.partials.branch-info')
-
-
      @include('admin.orders.partials.cost_details')
 
 

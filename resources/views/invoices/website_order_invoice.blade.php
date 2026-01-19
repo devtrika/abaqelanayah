@@ -123,9 +123,6 @@
                 <div class="item"><span class="label">تاريخ ووقت الدفع:</span>
                     <span class="value">{{ optional($order->payment_date)->format('Y/m/d - H:i') ?? '-' }}</span>
                 </div>
-                <div class="item"><span class="label">زمن تجهيز الطلب المتوقع:</span>
-                    <span class="value">{{ optional($order->branch)->expected_duration ? optional($order->branch)->expected_duration . ' دقيقة' : '-' }}</span>
-                </div>
             </div>
         </div>
     </div>

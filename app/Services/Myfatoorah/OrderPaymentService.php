@@ -8,7 +8,7 @@ use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Services\Myfatoorah\PaymentMyfatoorahApiV2;
+use App\Services\Myfatoorah\MyFatoorahService;
 
 class OrderPaymentService
 {
@@ -19,11 +19,7 @@ class OrderPaymentService
     public function __construct(OrderService $orderService = null)
     {
         $this->config = config('myfatoorah');
-        $this->myfatoorahApi = new PaymentMyfatoorahApiV2(
-            $this->config['api_key'],
-            $this->config['test_mode'],
-            $this->config['log_enabled'] ? $this->config['log_file'] : null
-        );
+        $this->myfatoorahApi = new MyFatoorahService();
         $this->orderService = $orderService ?? app(OrderService::class);
     }
 
@@ -84,7 +80,13 @@ class OrderPaymentService
             }
 
             // Create invoice
-            $result = $this->myfatoorahApi->getInvoiceURL($postFields, $gateway, $order->id);
+            if ($gateway !== 'myfatoorah') {
+                $postFields['PaymentMethodId'] = $gateway;
+                $result = $this->myfatoorahApi->executePayment($postFields);
+            } else {
+                $result = $this->myfatoorahApi->sendPayment($postFields);
+            }
+
             // Update order with payment reference
             $order->update([
                 'payment_reference' => $result['invoiceId'],
@@ -267,8 +269,37 @@ class OrderPaymentService
         try {
             $responseData = $this->myfatoorahApi->getPaymentStatus($paymentId, 'PaymentId');
 
-            // Convert to array for easier handling
-            $responseArray = json_decode(json_encode($responseData), true);
+            if (!$responseData) {
+                throw new Exception('No payment data found');
+            }
+
+            // Calculate focusTransaction (mimic old library behavior)
+            $transactions = $responseData['InvoiceTransactions'] ?? [];
+            $focusTransaction = null;
+            
+            // 1. Try to find by PaymentId
+            foreach ($transactions as $t) {
+                if (isset($t['PaymentId']) && $t['PaymentId'] == $paymentId) {
+                    $focusTransaction = $t;
+                    break;
+                }
+            }
+            
+            // 2. Fallback to last transaction
+            if (!$focusTransaction && !empty($transactions)) {
+                // Sort by date if needed, but usually API returns ordered or we assume last
+                $focusTransaction = end($transactions);
+            }
+
+            $responseData['focusTransaction'] = $focusTransaction;
+            
+            // Map InvoiceStatus to focusTransaction if not present
+            if ($focusTransaction && !isset($responseData['InvoiceStatus'])) {
+                 $responseData['InvoiceStatus'] = $focusTransaction['TransactionStatus'] ?? 'Unknown';
+            }
+
+            // Convert to array for easier handling (already array from MyFatoorahService)
+            $responseArray = $responseData;
 
             // Verify this is an order payment
             $userDefinedField = $responseArray['UserDefinedField'] ?? '';
@@ -514,15 +545,20 @@ class OrderPaymentService
 
             // Find the matching payment method from available gateways
             foreach ($paymentMethods as $method) {
-                if (isset($method->PaymentMethodCode) && $method->PaymentMethodCode === $targetCode) {
+                // Handle both array and object response
+                $methodCode = is_array($method) ? ($method['PaymentMethodCode'] ?? '') : ($method->PaymentMethodCode ?? '');
+                $methodId = is_array($method) ? ($method['PaymentMethodId'] ?? '') : ($method->PaymentMethodId ?? '');
+                $methodName = is_array($method) ? ($method['PaymentMethodEn'] ?? '') : ($method->PaymentMethodEn ?? '');
+
+                if ($methodCode === $targetCode) {
                     Log::info('Resolved PaymentMethodId', [
                         'gateway' => $gateway,
                         'target_code' => $targetCode,
-                        'payment_method_id' => $method->PaymentMethodId,
-                        'payment_method_name' => $method->PaymentMethodEn
+                        'payment_method_id' => $methodId,
+                        'payment_method_name' => $methodName
                     ]);
 
-                    return $method->PaymentMethodId;
+                    return $methodId;
                 }
             }
 
@@ -578,7 +614,8 @@ class OrderPaymentService
 
             // Filter to only order-supported gateways
             $supportedGateways = collect($gateways)->filter(function ($gateway) {
-                return in_array($gateway->PaymentMethodCode, $this->config['course_gateways']); // Reuse same gateways
+                $code = is_array($gateway) ? ($gateway['PaymentMethodCode'] ?? '') : ($gateway->PaymentMethodCode ?? '');
+                return in_array($code, $this->config['course_gateways']); // Reuse same gateways
             });
 
             return [

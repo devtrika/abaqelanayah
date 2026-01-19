@@ -10,9 +10,6 @@ use App\Models\Provider;
 use Illuminate\Http\Request;
 use App\Models\ProductOption;
 use App\Models\ProductCategory;
-use App\Models\BranchProduct;
-use App\Models\BranchManager;
-use App\Models\Branch;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\products\Store;
 use App\Http\Requests\Admin\products\Update;
@@ -27,16 +24,7 @@ class ProductController extends Controller
                 ->search(request()->searchArray)
                 ->paginate(30);
 
-            // Get admin info for branch manager
-            $admin = auth()->guard('admin')->user();
-            $isBranchManager = $admin && (int) $admin->role_id === 2;
-            $managerBranchIds = collect();
-
-            if ($isBranchManager) {
-                $managerBranchIds = BranchManager::where('manager_id', $admin->id)->pluck('branch_id');
-            }
-
-            $html = view('admin.products.table', compact('products', 'isBranchManager', 'managerBranchIds'))->render();
+            $html = view('admin.products.table', compact('products'))->render();
             return response()->json(['html' => $html]);
         }
         return view('admin.products.index');
@@ -77,21 +65,7 @@ class ProductController extends Controller
         $categories = Category::all();
         $brands = Brand::all();
 
-        // If branch manager, prepare branch list and branch-specific qtys
-        $admin = auth()->guard('admin')->user();
-        $managerBranches = collect();
-        $branchQtys = collect();
-        if ($admin && (int) $admin->role_id === 2) {
-            $branchIds = BranchManager::where('manager_id', $admin->id)->pluck('branch_id');
-            if ($branchIds->count() > 0) {
-                $managerBranches = Branch::whereIn('id', $branchIds)->get(['id','name']);
-                $branchQtys = BranchProduct::where('product_id', $id)
-                    ->whereIn('branch_id', $branchIds)
-                    ->pluck('qty', 'branch_id');
-            }
-        }
-
-        return view('admin.products.edit', compact('product', 'categories','brands', 'managerBranches', 'branchQtys'));
+        return view('admin.products.edit', compact('product', 'categories','brands'));
     }
     
 
@@ -102,71 +76,6 @@ class ProductController extends Controller
 
         // Get current admin
         $admin = auth()->guard('admin')->user();
-
-        // If branch manager (role_id = 2), only allow updating branch-level quantity via branch_products
-        if ($admin && (int) $admin->role_id === 2) {
-            // Determine manager branches
-            $managerBranchIds = BranchManager::where('manager_id', $admin->id)->pluck('branch_id');
-            if ($managerBranchIds->isEmpty()) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'لم يتم ربطك بأي فرع.'
-                ], 403);
-            }
-
-            // Get qty from request: prefer 'qty', fallback to 'quantity' field from the form
-            $qty = $request->input('qty');
-            if ($qty === null) {
-                $qty = $request->input('quantity');
-            }
-
-            if ($qty === null || !is_numeric($qty) || (int) $qty < 0) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'يرجى إدخال كمية الفرع بشكل صحيح.'
-                ], 422);
-            }
-
-            // Determine branch_id:
-            // - If provided and valid (belongs to manager), use it
-            // - If missing (or invalid), auto-pick the first branch linked to this manager (no prompt)
-            $branchId = $request->input('branch_id');
-
-            // If branch_id is provided but doesn't belong to this manager => forbid
-            if ($branchId && !$managerBranchIds->contains((int) $branchId)) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'ليس لديك صلاحية على هذا الفرع.'
-                ], 403);
-            }
-
-            // If not provided, auto-pick the first available branch for this manager
-            if (!$branchId) {
-                $branchId = $managerBranchIds->first();
-            }
-
-            // Safety: if still empty for any reason, treat as no-branch-linked
-            if (!$branchId) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'لم يتم ربطك بأي فرع.'
-                ], 403);
-            }
-
-            // Upsert branch-level quantity record
-            BranchProduct::updateOrCreate(
-                [
-                    'branch_id'  => (int) $branchId,
-                    'product_id' => $product->id,
-                ],
-                [
-                    'qty' => (int) $qty,
-                ]
-            );
-
-            Report::addToLog('تعديل كمية منتج على مستوى الفرع');
-            return response()->json(['url' => route('admin.products.index')]);
-        }
 
         // For other admin roles: proceed with normal product update
         $product->update($request->validated());

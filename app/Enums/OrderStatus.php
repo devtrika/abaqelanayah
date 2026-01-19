@@ -142,9 +142,9 @@ enum OrderStatus: string
     }
 
     /**
-     * Check if branch manager can update to this status
+     * Check if manager can update to this status
      */
-    public function canBeSetByBranchManager(): bool
+    public function canBeSetByManager(): bool
     {
         return in_array($this, [
             self::NEW,

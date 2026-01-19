@@ -191,7 +191,6 @@ class OrderRepository
                 'items.cuttingOption',
                 'items.packagingOption',
                 'address',
-                'branch',
                 'problem',
                 'coupon',
                 'cancelReason',
@@ -224,7 +223,6 @@ class OrderRepository
                 'address.city',
                 'address.district',
                 'city',  // For gift orders
-                'branch',
                 'delivery',
                 'refundReason',
                 'user'
@@ -298,7 +296,6 @@ class OrderRepository
                 'address.city',
                 'address.district',
                 'city', // For gift orders without address
-                'branch'
             ])
             ->whereIn('status', ['pending', 'new', 'delivered', 'confirmed', 'problem'])
             ->where('delivery_id', $deliveryUserId)
@@ -394,17 +391,6 @@ class OrderRepository
     public function getByUserId(int $userId): Collection
     {
         return Order::where('user_id', $userId)->get();
-    }
-
-    /**
-     * Get orders by branch ID
-     *
-     * @param int $branchId
-     * @return Collection
-     */
-    public function getByBranchId(int $branchId): Collection
-    {
-        return Order::where('branch_id', $branchId)->get();
     }
 }
 

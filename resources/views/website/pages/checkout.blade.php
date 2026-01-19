@@ -19,7 +19,6 @@
   <input type="hidden" name="address_id" value="{{ $checkoutData['address_id'] ?? '' }}" />
   <input type="hidden" name="latitude" value="{{ $checkoutData['latitude'] ?? $checkoutData['lat'] ?? '' }}" />
   <input type="hidden" name="longitude" value="{{ $checkoutData['longitude'] ?? $checkoutData['lng'] ?? '' }}" />
-  <input type="hidden" name="branch_id" value="{{ $checkoutData['branch_id'] ?? '' }}" />
   <!-- Gift fields -->
   <input type="hidden" name="reciver_name" value="{{ $checkoutData['reciver_name'] ?? '' }}" />
   <input type="hidden" name="reciver_phone" value="{{ $checkoutData['reciver_phone'] ?? '' }}" />

@@ -1036,64 +1036,6 @@ Route::post('products/delete-image/{media}', [
     //     ]);
     // /*------------ end Of rates ----------*/
 
-    /*------------ start Of branches ----------*/
-        Route::get('branches', [
-            'uses'      => 'BranchController@index',
-            'as'        => 'branches.index',
-            'title'     => 'branches',
-            'icon'  => '<i class="feather icon-alert-circle"></i>',
-        ]);
-
-        # branches store
-        Route::get('branches/create', [
-            'uses'  => 'BranchController@create',
-            'as'    => 'branches.create',
-            'title' => 'add_branch_page'
-        ]);
-
-
-        # branches store
-        Route::post('branches/store', [
-            'uses'  => 'BranchController@store',
-            'as'    => 'branches.store',
-            'title' => 'add_branch'
-        ]);
-
-        # branches update
-        Route::get('branches/{id}/edit', [
-            'uses'  => 'BranchController@edit',
-            'as'    => 'branches.edit',
-            'title' => 'update_branch_page'
-        ]);
-
-        # branches update
-        Route::put('branches/{id}', [
-            'uses'  => 'BranchController@update',
-            'as'    => 'branches.update',
-            'title' => 'update_branch'
-        ]);
-
-        # branches show
-        Route::get('branches/{id}/Show', [
-            'uses'  => 'BranchController@show',
-            'as'    => 'branches.show',
-            'title' => 'show_branch_page'
-        ]);
-
-        # branches delete
-        Route::delete('branches/{id}', [
-            'uses'  => 'BranchController@destroy',
-            'as'    => 'branches.delete',
-            'title' => 'delete_branch'
-        ]);
-        #delete all branches
-        Route::post('delete-all-branches', [
-            'uses'  => 'BranchController@destroyAll',
-            'as'    => 'branches.deleteAll',
-            'title' => 'delete_group_of_branches'
-        ]);
-    /*------------ end Of branches ----------*/
-
     /*------------ start Of problems ----------*/
         Route::get('problems', [
             'uses'      => 'ProblemController@index',

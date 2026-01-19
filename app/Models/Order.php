@@ -75,7 +75,6 @@ class Order extends BaseModel implements HasMedia
         'bank_account_id',
         'cancel_reason_id',
         'time'  ,
-        'branch_id',
         'refund_status',
         'problem_id',
         'notes',
@@ -195,11 +194,6 @@ class Order extends BaseModel implements HasMedia
     public function giftDistrict()
     {
         return $this->belongsTo(\App\Models\District::class, 'gift_districts_id');
-    }
-
-       public function branch()
-    {
-        return $this->belongsTo(Branch::class);
     }
 
     /**

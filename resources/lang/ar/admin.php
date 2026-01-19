@@ -29,7 +29,7 @@ return [
 'select_location_on_map' => 'اختر الموقع من الخريطة',
 'active' => 'نشط',
 'inactive' => 'غير نشط',
-
+'verification_code' => 'كود التحقق',
     "dis_active_users"                                       => "  المستخدمين الغير نشطين ",
     "Prohibited_users"                                       => "المستخدمين المحظورين",
     "Unspoken_users"                                         => "  المستخدمين الغير محظورين ",

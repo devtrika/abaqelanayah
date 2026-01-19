@@ -236,7 +236,7 @@
             @endif
         </div>
 
-        <div class="info-box">
+        {{-- <div class="info-box">
             <h3>معلومات الفرع</h3>
             @if($branch)
                 <div class="info-item"><span class="info-label">اسم الفرع:</span> <span class="info-value">{{ $branch->name }}</span></div>
@@ -244,7 +244,7 @@
             @else
                 <div class="info-item"><span class="info-value">لا يوجد عنوان محدد</span></div>
             @endif
-        </div>
+        </div> --}}
     </div>
 
     <!-- Order Items -->

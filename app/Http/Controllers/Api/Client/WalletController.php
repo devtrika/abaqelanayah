@@ -49,7 +49,7 @@ class WalletController extends Controller
     }
 
     /**
-     * Create wallet recharge request with Paymob
+     * Create wallet recharge request with MyFatoorah
      */
     public function createRechargeRequest(CreateWalletRechargeRequest $request)
     {

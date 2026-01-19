@@ -128,7 +128,7 @@ class CourseController extends Controller
         try {
             $course = Course::findOrFail($id);
             $gateways = [
-                ['code' => 'card', 'name' => 'Paymob Card'],
+                ['code' => 'card', 'name' => 'Credit Card (MyFatoorah)'],
             ];
             return Responder::success([
                 'course_id' => $course->id,

@@ -78,8 +78,6 @@ class CreateOrderRequest extends BaseApiRequest
             'payment_method_id.required' => __('apis.payment_method_required'),
             'payment_method_id.exists' => 'Selected payment method is invalid.',
             'delivery_type.enum' => 'Delivery type is invalid.',
-            'branch_id.required_if' => 'Branch is required for branch pickup.',
-            'branch_id.exists' => 'Selected branch is invalid.',
             'latitude.required_without' => __('apis.latitude_required_without_address'),
             'latitude.numeric' => 'Latitude must be a valid number.',
             'latitude.between' => 'Latitude must be between -90 and 90 degrees.',
