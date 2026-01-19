@@ -4532,16 +4532,17 @@ body:has(.product-page) footer {
   }
 }
 .about-content .about-img {
-  width: 100%;
-  max-width: 553px;
-  aspect-ratio: 553/450;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 25px;
-  background-color: #000000;
-  margin: 8px auto;
-  overflow: hidden;
+    /* width: 100%; */
+    height: 180px;
+    /* max-width: 553px; */
+    /* aspect-ratio: 553 / 450; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
+    /* background-color: #000000; */
+    margin: 8px auto;
+    overflow: hidden;
 }
 @media (max-width: 767px) {
   .about-content .about-img {
