@@ -1348,7 +1348,7 @@ html[dir=ltr] .date-content .form-control {
   transition: all 0.3s ease-in-out;
 }
 .auth-header .log-link a:focus {
-  color: inherit;
+  color: #ffdd04;
 }
 .auth-header .log-link a:hover {
   color: #ffdd04;
