@@ -860,7 +860,7 @@ html[dir=ltr] .select2-container.select2-container--disabled .select2-selection-
   content: "";
   width: 10px;
   height: 10px;
-  background-color: #ffdd04;
+  background-color: #000000;
   border-radius: 50%;
   display: block;
   visibility: hidden;
