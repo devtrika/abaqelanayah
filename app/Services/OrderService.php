@@ -194,13 +194,12 @@ class OrderService
     private function calculateDeliveryDetails($user, array $data)
     {
         // Fixed delivery fee as requested
-        $deliveryFee = 15;
-        
-        // Or try to get from settings if needed, but user said "fixed 15 or get it directly from seettings"
-        // so I will prioritize settings if available, else 15.
-        // Actually user said "fixed 15 or get it directly from seettings" which implies I can choose.
-        // Let's use settings with fallback to 15.
-        $deliveryFee = (float) getSiteSetting('delivery_fee', 15);
+        // If order type is pickup, delivery fee is 0
+        if (($data['order_type'] ?? '') === 'pickup') {
+            $deliveryFee = 0;
+        } else {
+            $deliveryFee = (float) getSiteSetting('delivery_fee', 15);
+        }
 
         return [
             'delivery_fee' => $deliveryFee,
@@ -233,7 +232,7 @@ class OrderService
             $lat    = $locationData['latitude'] ?? null;
             $lng    = $locationData['longitude'] ?? null;
             
-            $deliveryFee = (float) getSiteSetting('delivery_fee', 15);
+            $deliveryFee = (($data['order_type'] ?? '') === 'pickup') ? 0 : (float) getSiteSetting('delivery_fee', 15);
 
             return [
                 'address_id'   => $locationData['address_id'] ?? null,

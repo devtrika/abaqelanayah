@@ -79,7 +79,9 @@ class OrderCheckoutService
             $this->orderValidationService->validateDeliveryType($data);
 
             // Step 3: Calculate delivery details (branch, distance, fee)
-            $deliveryFee = (float) getSiteSetting('delivery_fee', 15);
+            $orderType = $data['order_type'] ?? 'regular';
+            $deliveryFee = ($orderType === 'pickup') ? 0 : (float) getSiteSetting('delivery_fee', 15);
+
             $deliveryDetails = [
                 'delivery_fee' => $deliveryFee,
                 'branch_id' => null,

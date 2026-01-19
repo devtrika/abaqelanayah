@@ -438,8 +438,9 @@ class CheckoutController extends Controller
             $wallet          = (float) ($cart->wallet_deduction ?? 0);
             $vat             = (float) ($cart->vat_amount ?? 0);
             $beforeDelivery  = (float) $cart->total;
-            $deliveryFee     = (float) getSiteSetting('delivery_fee', 15);
-            $giftFee         = (float) (($data['order_type'] ?? 'ordinary') === 'gift' ? getSiteSetting('gift_fee', 0) : 0);
+            $orderType       = $data['order_type'] ?? 'ordinary';
+            $deliveryFee     = ($orderType === 'pickup') ? 0 : (float) getSiteSetting('delivery_fee', 15);
+            $giftFee         = (float) ($orderType === 'gift' ? getSiteSetting('gift_fee', 0) : 0);
             $final           = $beforeDelivery + $deliveryFee + $giftFee;
 
             // Immediate info

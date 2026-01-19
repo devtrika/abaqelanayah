@@ -170,7 +170,6 @@ class OrderController extends Controller
             'address.city',
             'address.district',
             'paymentMethod',
-            'branch',
             'city',
             'giftCity',
             'giftDistrict',
