@@ -1,7 +1,9 @@
 @extends('website.auth.layouts.master')
 
 @section('title', __('site.register_title'))
-
+@php
+  $currentLocale = app()->getLocale();
+@endphp
 @push('styles')
 <link rel="stylesheet" href="{{ asset('website/css/intlTelInput.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('website/css/select2.min.css') }}" />

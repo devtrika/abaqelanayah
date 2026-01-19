@@ -1,6 +1,8 @@
 @extends('website.auth.layouts.master')
-
-@section('title', 'Lia | ' . __('site.login_title'))
+@php
+  $currentLocale = app()->getLocale();
+@endphp
+@section('title', __('site.login_title'))
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('website/css/intlTelInput.min.css') }}" />
