@@ -72,7 +72,7 @@ return [
     'fqs'                     => 'FAQs',
     'contact'                 => 'Contact Us',
     'contact_information'     => 'Contact Information',
-    'default_meta_description'=> 'Find great products and offers on Lia.',
+    'default_meta_description'=> 'Find great products and offers on Abaqelanayah.',
     'commission'              => 'Website commission account',
     'choose_bank'             => 'Send commission',
     'help'                    => 'Help',
@@ -475,7 +475,7 @@ return [
 
     // Home page translations
     'home_page_title' => 'Home Page',
-    'home_meta_description' => 'Lia - Your complete online store for flowers, gifts and accessories',
+    'home_meta_description' => 'Your complete online store for flowers, gifts and accessories',
 
     // Product count
     'product_count' => 'Product count',
@@ -595,7 +595,7 @@ return [
     'terms_and_conditions' => 'Terms and Conditions',
     'must_agree_terms' => 'You must agree to the terms and conditions',
     'register' => 'Register',
-    'terms_content' => 'Please read the following terms and conditions carefully before using the "Lia" application or website, as your use of the service means your agreement to abide by them: Products: All products displayed are subject to availability and may vary from region to region depending on inventory. We reserve the right to modify or cancel any order in the event of a technical error or shortage in available quantity. Prices and Payment: All prices include Value Added Tax (if any). Payment is made electronically through our approved payment methods, and the order is not confirmed until payment is completed. Account Registration: You must provide correct and complete information when creating an account, and you are responsible for maintaining the confidentiality of your login information. Intellectual Property Rights: All images, texts, logos, and designs are the property of Lia Store, and any unauthorized use is a legal violation. Amendments: These terms may be updated from time to time, and users will be notified of any material changes.',
+    'terms_content' => 'Please read the following terms and conditions carefully before using the "Abaqelanayah" application or website, as your use of the service means your agreement to abide by them: Products: All products displayed are subject to availability and may vary from region to region depending on inventory. We reserve the right to modify or cancel any order in the event of a technical error or shortage in available quantity. Prices and Payment: All prices include Value Added Tax (if any). Payment is made electronically through our approved payment methods, and the order is not confirmed until payment is completed. Account Registration: You must provide correct and complete information when creating an account, and you are responsible for maintaining the confidentiality of your login information. Intellectual Property Rights: All images, texts, logos, and designs are the property of Abaqelanayah Store, and any unauthorized use is a legal violation. Amendments: These terms may be updated from time to time, and users will be notified of any material changes.',
 
     // Login page
     'phone_required' => 'Phone number is required',
