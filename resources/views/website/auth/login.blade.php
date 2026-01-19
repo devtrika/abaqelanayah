@@ -70,7 +70,7 @@
               </div>
             </form>
           </div>
-          <p class="auth_form-copyrights">{{ __('site.copyright') }}</p>
+          <p class="auth_form-copyrights">{{ __('site.copyright').$settings['name_'.$currentLocale] }}</p>
         </div>
       </div>
 <!--      <div class="auth_form-img">
