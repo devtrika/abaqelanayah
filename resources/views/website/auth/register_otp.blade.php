@@ -1,6 +1,6 @@
 @extends('website.auth.layouts.master')
 
-@section('title', 'Lia | ' . __('site.register_otp_title'))
+@section('title',  __('site.register_otp_title'))
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('website/css/auth.css') }}" />
