@@ -1,6 +1,6 @@
 @extends('website.layouts.app')
 
-@section('title', __('site.myAccount') . ' - Lia')
+@section('title', __('site.myAccount') )
 @push('styles')
 <link rel="stylesheet" href="{{ asset('website/css/auth.css') }}" />
 @endpush

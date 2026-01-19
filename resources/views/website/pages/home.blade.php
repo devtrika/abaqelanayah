@@ -1,6 +1,6 @@
 @extends('website.layouts.app')
 
-@section('title', __('site.home_page_title') . ' - Lia')
+@section('title', __('site.home_page_title') )
 
 @section('meta_description', __('site.home_meta_description'))
 @section('content')
