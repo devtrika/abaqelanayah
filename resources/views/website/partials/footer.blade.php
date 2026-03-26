@@ -120,17 +120,7 @@
           class="img-contain"
         />
       </div>
-      <p class="copyrights tasawk">
-        {{ __('site.developed_by') }}
-        <a
-          href="https://tasawk.com.sa"
-          target="_blank"
-          aria-label="tasawk link"
-        >
-          <img loading="lazy" src="{{ asset('website/images/icons/tasawk.svg') }}" alt="tasawk" />
-          {{ __('site.tasawk_it') }}
-        </a>
-      </p>
+      
     </div>
   </div>
 </footer>
