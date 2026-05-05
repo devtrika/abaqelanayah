@@ -80,7 +80,7 @@ Route::group(['middleware' => ['web', 'HtmlMinifier']], function () {
     });
 
     // Authenticated routes
-    Route::group(['middleware' => 'auth:web'], function () {
+    Route::group(['middleware' => 'website.guest'], function () {
         // Logout route
         Route::post('/logout', [AuthController::class, 'logout'])->name('website.logout');
 
