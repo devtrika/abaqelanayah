@@ -10,16 +10,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
+class CartController extends Controller {
 
-class CartController extends Controller
-{
     public function __construct(
-        protected CartService $cartService,
-        protected AddressRepository $addressRepository
-    ) {}
+            protected CartService $cartService,
+            protected AddressRepository $addressRepository
+    ) {
+        
+    }
 
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         if (!Auth::check()) {
             return redirect()->route('website.login');
         }
@@ -37,14 +37,12 @@ class CartController extends Controller
         ]);
     }
 
-    public function add(Request $request)
-    {
+    public function add(Request $request) {
         $validated = $request->validate([
             'product_id' => 'required|integer|exists:products,id',
             'quantity' => 'nullable|integer|min:1|max:999',
-           
         ]);
-        $validated['quantity'] = (int)($validated['quantity'] ?? 1);
+        $validated['quantity'] = (int) ($validated['quantity'] ?? 1);
 
         if (!Auth::check()) {
             return response()->json(['success' => false, 'message' => __('الرجاء تسجيل الدخول لإضافة إلى السلة')], 401);
@@ -54,16 +52,15 @@ class CartController extends Controller
         $data = $this->transformDbCart($cart);
 
         return response()->json([
-            'success' => true,
-            'message' => __('تمت إضافة المنتج إلى السلة'),
-            'count' => $data['count'],
-            'total' => $data['total'],
-            'html' => View::make('website.partials.cart_items_list', ['cartData' => $data])->render(),
+                    'success' => true,
+                    'message' => __('تمت إضافة المنتج إلى السلة'),
+                    'count' => $data['count'],
+                    'total' => $data['total'],
+                    'html' => View::make('website.partials.cart_items_list', ['cartData' => $data])->render(),
         ]);
     }
 
-    public function update(Request $request)
-    {
+    public function update(Request $request) {
         $validated = $request->validate([
             'cart_item_id' => 'nullable|integer',
             'cart_item_key' => 'nullable|string',
@@ -81,16 +78,15 @@ class CartController extends Controller
         $data = $this->transformDbCart($cart);
 
         return response()->json([
-            'success' => true,
-            'message' => __('تم تحديث السلة'),
-            'count' => $data['count'],
-            'total' => $data['total'],
-            'html' => View::make('website.partials.cart_items_list', ['cartData' => $data])->render(),
+                    'success' => true,
+                    'message' => __('تم تحديث السلة'),
+                    'count' => $data['count'],
+                    'total' => $data['total'],
+                    'html' => View::make('website.partials.cart_items_list', ['cartData' => $data])->render(),
         ]);
     }
 
-    public function remove(Request $request)
-    {
+    public function remove(Request $request) {
         $validated = $request->validate([
             'product_id' => 'nullable|integer',
             'cart_item_key' => 'nullable|string',
@@ -104,16 +100,15 @@ class CartController extends Controller
         $data = $this->transformDbCart($cart);
 
         return response()->json([
-            'success' => true,
-            'message' => __('تم حذف المنتج من السلة'),
-            'count' => $data['count'],
-            'total' => $data['total'],
-            'html' => View::make('website.partials.cart_items_list', ['cartData' => $data])->render(),
+                    'success' => true,
+                    'message' => __('تم حذف المنتج من السلة'),
+                    'count' => $data['count'],
+                    'total' => $data['total'],
+                    'html' => View::make('website.partials.cart_items_list', ['cartData' => $data])->render(),
         ]);
     }
 
-    public function summary()
-    {
+    public function summary() {
         if (!Auth::check()) {
             return response()->json(['count' => 0, 'total' => 0, 'gift_fee' => 0]);
         }
@@ -122,14 +117,13 @@ class CartController extends Controller
         $data = $this->transformDbCart($cart);
 
         return response()->json([
-            'count' => $data['count'],
-            'total' => $data['total'],
-            'gift_fee' => ((session('checkout.temp.order_type') === 'gift') ? (float) (\App\Models\SiteSetting::where('key','gift_fee')->value('value') ?? 0) : 0),
+                    'count' => $data['count'],
+                    'total' => $data['total'],
+                    'gift_fee' => ((session('checkout.temp.order_type') === 'gift') ? (float) (\App\Models\SiteSetting::where('key', 'gift_fee')->value('value') ?? 0) : 0),
         ]);
     }
 
-    private function transformDbCart($cart): array
-    {
+    private function transformDbCart($cart): array {
         $items = [];
         foreach ($cart->items as $item) {
             $items[] = [
@@ -154,4 +148,3 @@ class CartController extends Controller
         ];
     }
 }
-
