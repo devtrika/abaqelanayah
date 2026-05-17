@@ -185,6 +185,10 @@
         if(req('message')) payload.message = req('message');
         payload.whatsapp = $('input[name="whatsapp"]').is(':checked') ? '1' : '0';
         payload.hide_sender = $('input[name="hide_sender"]').is(':checked') ? '1' : '0';
+        if ($('input[name="gift_email"]').length) {
+          if (!req('gift_email')) errors.push("{{ __('site.please_enter_email') }}");
+          else payload.gift_email = req('gift_email');
+        }
       }
     } else {
       var addActive = $('#add').hasClass('active') && $('#add').hasClass('show');
@@ -213,6 +217,10 @@
           if(req('description')) payload.description = req('description');
           payload.latitude = req('lat');
           payload.longitude = req('lng');
+          if ($('input[name="email"]').length) {
+            if (!req('email')) errors.push("{{ __('site.please_enter_email') }}");
+            else payload.email = req('email');
+          }
         }
       } else {
         var chosen = $('input[name="address_id"]:checked').val();

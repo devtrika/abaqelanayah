@@ -37,7 +37,7 @@ class OrderValidationService
      * @return array ['cart' => Cart, 'address' => Address|null]
      * @throws \Exception
      */
-    public function validateCartAndAddress(User $user, array $data): array
+    public function validateCartAndAddress(?User $user, array $data): array
     {
         // Get user cart
         $cart = $this->cartRepository->getCart($user);
@@ -94,11 +94,11 @@ class OrderValidationService
      * @return \App\Models\Address|null
      * @throws \Exception
      */
-    private function validateAddress(User $user, array $data)
+    private function validateAddress(?User $user, array $data)
     {
         // If address_id is provided, validate it
         if (!empty($data['address_id'])) {
-            $address = $this->addressRepository->getUserAddress($user, $data['address_id']);
+            $address = $user ? $this->addressRepository->getUserAddress($user, $data['address_id']) : $this->addressRepository->find($data['address_id']);
 
             if (!$address) {
                 throw new \Exception(__('apis.invalid_address'));

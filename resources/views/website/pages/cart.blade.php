@@ -121,6 +121,12 @@
                                 <label class="form-label">{{ __('site.phone_number') }}</label>
                                 <input type="tel" class="form-control" name="reciver_phone" intlTelInput />
                             </div>
+                            @guest('web')
+                            <div class="form-group">
+                                <label class="form-label">{{ __('site.buyer_email') }}</label>
+                                <input type="email" class="form-control" name="gift_email" required />
+                            </div>
+                            @endguest
                             <div class="form-group">
                                 <label class="form-label">{{ __('site.city') }}</label>
                                 <select class="form-control js-gift-city" name="gift_city_id">
@@ -171,10 +177,12 @@
                     <div class="address-content">
                         <h3 class="cart_info-title">{{ __('site.delivery_address') }}</h3>
                         <div class="nav cart_address-tabs">
+                            @auth('web')
                             <button type="button" data-bs-toggle="tab" data-bs-target="#choose">
                                 <i class="fal fa-address-book"></i>
                                 {{ __('site.choose_from_address_book') }}
                             </button>
+                            @endauth
                             <button type="button" class="active" data-bs-toggle="tab" data-bs-target="#add">
                                 <i class="fal fa-plus"></i>
                                 {{ __('site.add_new_address') }}
@@ -222,6 +230,12 @@
                                         <label for="phone" class="form-label">{{ __('site.phone_number') }}</label>
                                         <input type="tel" class="form-control" name="phone" intlTelInput />
                                     </div>
+                                    @guest('web')
+                                    <div class="form-group">
+                                        <label for="email" class="form-label">{{ __('site.email') }}</label>
+                                        <input type="email" class="form-control" name="email" required />
+                                    </div>
+                                    @endguest
                                     <div class="form-group">
                                         <label for="address_map" class="form-label">
                                             {{ __('site.location_on_map') }}
@@ -239,6 +253,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @auth('web')
                             <div class="tab-pane fade" id="choose">
                                 <div class="cart_radio-list">
                                     @forelse(($addresses ?? collect()) as $address)
@@ -276,6 +291,7 @@
                                     @endforelse
                                 </div>
                             </div>
+                            @endauth
                         </div>
                     </div>
                 </div>

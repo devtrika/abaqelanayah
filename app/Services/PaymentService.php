@@ -28,26 +28,39 @@ class PaymentService
     /**
      * Initialize MyFatoorah payment for an order
      */
-    public function initializeMyFatoorahPayment(Order $order, User $user, array $options = [])
+    public function initializeMyFatoorahPayment(Order $order, ?User $user, array $options = [])
     {
         try {
             // Calculate final total and format items
             $items = $this->formatOrderItems($order);
             $finalTotal = (float) $order->total;
 
+            $customerName = $user?->name
+                ?? optional($order->address)->recipient_name
+                ?? $order->recipient_name
+                ?? $order->reciver_name
+                ?? 'Guest';
+            $customerMobile = $user?->phone
+                ?? optional($order->address)->phone
+                ?? $order->reciver_phone
+                ?? null;
+            $customerEmail = $user?->email
+                ?? $order->email
+                ?? data_get(config('mail.from'), 'address');
+
             $postFields = [
                 'NotificationOption' => $this->config['notification_option'],
                 'InvoiceValue'       => $finalTotal,
-                'CustomerName'       => $user->name,
+                'CustomerName'       => $customerName,
                 'DisplayCurrencyIso' => $this->config['currency'],
                 'MobileCountryCode'  => $this->config['country_code'],
-                'CustomerMobile'     => ltrim($user->phone, '0'),
+                'CustomerMobile'     => $customerMobile ? ltrim((string) $customerMobile, '0') : '',
                 'CallBackUrl'        => route('payment.success', ['origin' => $options['origin'] ?? 'website']),
                 'ErrorUrl'           => route('payment.error', ['origin' => $options['origin'] ?? 'website']),
                 'Language'           => $this->config['language'],
                 'CustomerReference'  => $order->id,
                 'UserDefinedField'   => 'order_payment',
-                'CustomerEmail'      => $user->email,
+                'CustomerEmail'      => $customerEmail ?: '',
                 'InvoiceItems'       => $items,
             ];
 
@@ -469,7 +482,9 @@ class PaymentService
     {
         // Clear cart
         $cartService = app(CartService::class);
-        $cartService->clearCart($order->user);
+        if ($order->user) {
+            $cartService->clearCart($order->user);
+        }
     }
 
     /**

@@ -26,14 +26,27 @@
                     <span class="badge badge-info">{{ $order->order_number ?? $order->order_num }}</span>
                 </td>
                 <td>
-                    @if($order->user)
-                        <div>
-                            <strong>{{ $order->user->name }}</strong><br>
-                            <small class="text-muted">{{ $order->user->phone }}</small>
-                        </div>
-                    @else
-                        <span class="text-muted">-</span>
-                    @endif
+                    @php
+                        $customerName = $order->user->name
+                            ?? $order->address->recipient_name
+                            ?? $order->recipient_name
+                            ?? $order->reciver_name
+                            ?? __('admin.guest');
+                        $customerPhone = $order->user->phone
+                            ?? $order->address->phone
+                            ?? $order->reciver_phone
+                            ?? '-';
+                        $isGuestOrder = (bool) ($order->is_guest ?? empty($order->user_id));
+                    @endphp
+                    <div>
+                        <strong>
+                            {{ $customerName }}
+                            @if($isGuestOrder)
+                                <span class="badge badge-secondary" style="font-size: 0.7rem;">{{ __('admin.guest') }}</span>
+                            @endif
+                        </strong><br>
+                        <small class="text-muted">{{ $customerPhone }}</small>
+                    </div>
                 </td>
 
                 <td>

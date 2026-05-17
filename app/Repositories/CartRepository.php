@@ -13,14 +13,31 @@ use Illuminate\Support\Facades\DB;
 class CartRepository
 {
     /**
-     * Get or create a cart for a user
+     * Get or create a cart for a user or session
      *
-     * @param User $user
+     * @param User|null $user
      * @return Cart
      */
-    public function getCart($user)
+    public function getCart($user = null)
     {
-        return Cart::firstOrCreate(['user_id' => $user->id]);
+        if ($user) {
+            $cart = Cart::where('user_id', $user->id)->first();
+            if (!$cart) {
+                // If user just logged in and had a session cart, migrate it
+                $sessionCart = Cart::where('session_id', session()->getId())->whereNull('user_id')->first();
+                if ($sessionCart) {
+                    $sessionCart->update(['user_id' => $user->id, 'session_id' => null]);
+                    return $sessionCart;
+                }
+                return Cart::create(['user_id' => $user->id]);
+            }
+            return $cart;
+        }
+
+        // Guest cart
+        return Cart::firstOrCreate(
+            ['session_id' => session()->getId(), 'user_id' => null]
+        );
     }
 
     /**

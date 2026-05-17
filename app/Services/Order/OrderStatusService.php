@@ -89,9 +89,8 @@ class OrderStatusService
             $this->handleStatusSideEffects($order, $oldStatus, $newStatus);
 
             // Send notification if enabled
-            if ($options['notify'] ?? true) {
                 $this->notificationService->notifyUserOfStatusChange($order, $newStatus);
-            }
+            
 
             Log::info('Order status updated', [
                 'order_id' => $order->id,

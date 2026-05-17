@@ -27,7 +27,7 @@ class Order extends BaseModel implements HasMedia
     protected $fillable = [
         'order_number',
         'user_id',
-
+        'session_id',
         'address_id',
         'city_id',
         'delivery_id',
@@ -102,6 +102,8 @@ class Order extends BaseModel implements HasMedia
         'refund_rejected_at',
         'refund_approved_by',
         'refund_rejected_by',
+        'is_guest',
+        'email',
     ];
 
     protected $casts = [

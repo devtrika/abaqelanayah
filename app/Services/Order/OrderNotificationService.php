@@ -48,6 +48,22 @@ class OrderNotificationService
     {
         $user = $order->user;
 
+        $recipientEmail = $user ? $user->email : $order->email;
+        
+        if ($recipientEmail) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($recipientEmail)->send(new \App\Mail\OrderStatusMail($order));
+            } catch (\Throwable $e) {
+                \Log::warning('Failed to send order status email', [
+                    'order_id' => $order->id,
+                    'order_number' => $order->order_number,
+                    'recipient_email' => $recipientEmail,
+                    'new_status' => $newStatus,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
         if (!$user) {
             return;
         }
@@ -88,6 +104,21 @@ class OrderNotificationService
     public function notifyUserOfCancellation(Order $order, ?string $reason = null): void
     {
         $user = $order->user;
+
+        $recipientEmail = $user ? $user->email : $order->email;
+        if ($recipientEmail) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($recipientEmail)->send(new \App\Mail\OrderStatusMail($order));
+            } catch (\Throwable $e) {
+                \Log::warning('Failed to send order cancellation email', [
+                    'order_id' => $order->id,
+                    'order_number' => $order->order_number,
+                    'recipient_email' => $recipientEmail,
+                    'reason' => $reason,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
 
         if (!$user) {
             return;

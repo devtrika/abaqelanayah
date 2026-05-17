@@ -335,13 +335,11 @@
           });
       });
 
-      // Sync badge from DB on load (auth only)
-      @auth('web')
+      // Sync badge from DB on load
       $(function(){
         $.ajax({ url: "{{ route('website.cart.summary') }}", method: 'GET', headers: {'X-Requested-With':'XMLHttpRequest'} })
           .done(function(res){ if (res && typeof res.count !== 'undefined') { updateCartBadge(res.count); } });
       });
-      @endauth
 
       // Global Quantity Handler for read-only inputs (Home, Category List, etc.)
       $(document).on('click', '.quantity-btn', function(e){

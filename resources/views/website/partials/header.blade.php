@@ -66,17 +66,18 @@
 
 
 
-                    {{-- Cart --}}
-                    <a href="{{ route('website.cart.index') }}" class="header-icon cart-icon">
-                        <i class="fal fa-shopping-cart"></i>
-                        <span class="badge" id="cart-badge">{{ $headerCartCount ?? 0 }}</span>
-                    </a>
                     @else
                     {{-- Guest User - Show Login/Register --}}
                     <a href="{{ route('website.login') }}" class="header-icon user-icon">
                         <i class="fal fa-user"></i>
                     </a>
                     @endauth
+
+                    {{-- Cart --}}
+                    <a href="{{ route('website.cart.index') }}" class="header-icon cart-icon">
+                        <i class="fal fa-shopping-cart"></i>
+                        <span class="badge" id="cart-badge">{{ $headerCartCount ?? 0 }}</span>
+                    </a>
                 </div>
 
                 {{-- Language Switcher --}}
@@ -144,6 +145,9 @@
                 @endif
                 <li>
                     <a href="{{ route('website.about') }}">{{ __('site.about') }}</a>
+                </li>
+                <li>
+                    <a href="{{ route('website.track-order.index') }}">{{ __('site.track_order') }}</a>
                 </li>
                 <li>
                     <a href="{{ route('website.contact') }}">{{ __('site.contact_us') }}</a>

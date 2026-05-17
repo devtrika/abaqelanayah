@@ -180,6 +180,10 @@ class OrderController extends Controller
         $order = Order::with([
             'user',
             'items.item',
+            'address.city',
+            'address.district',
+            'paymentMethod',
+            'statusChanges',
             'coupon',
             'rate',
             'rates',

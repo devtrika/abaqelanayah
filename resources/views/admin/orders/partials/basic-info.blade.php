@@ -85,31 +85,55 @@
                 </h5>
             </div>
             <div class="card-body p-3">
-                @if($order->user)
+                @if($order->user || $order->address || $order->email || $order->recipient_name || $order->reciver_name || $order->reciver_phone)
+                @php
+                    $customerName = $order->address->recipient_name
+                        ?? ($order->user->name ?? null)
+                        ?? ($order->recipient_name ?? null)
+                        ?? ($order->reciver_name ?? null)
+                        ?? '-';
+                    $customerPhone = $order->address->phone
+                        ?? ($order->user->phone ?? null)
+                        ?? ($order->reciver_phone ?? null)
+                        ?? '-';
+                    $customerEmail = $order->user->email
+                        ?? ($order->email ?? null)
+                        ?? '-';
+                    $isGuestOrder = (bool) ($order->is_guest ?? empty($order->user_id));
+                @endphp
                 <table class="table table-borderless mb-0">
                     <tr>
                         <th width="40%">{{ __('admin.name') }}:</th>
-                        <td>{{ $order->user->name }}</td>
+                        <td>
+                            {{ $customerName }}
+                            @if($isGuestOrder)
+                                <span class="badge badge-warning ml-2">{{ __('admin.guest') }}</span>
+                            @endif
+                        </td>
                     </tr>
                     <tr>
                         <th>{{ __('admin.phone') }}:</th>
-                        <td>{{ $order->user->phone }}</td>
+                        <td>{{ $customerPhone }}</td>
                     </tr>
                     <tr>
                         <th>{{ __('admin.email') }}:</th>
-                        <td>{{ $order->user->email ?? '-' }}</td>
+                        <td>{{ $customerEmail }}</td>
                     </tr>
-                    @if($order->user->wallet_balance)
+                    @if($order->user && $order->user->wallet_balance)
                     <tr>
                         <th>{{ __('admin.wallet_balance') }}:</th>
                         <td>{{ number_format($order->user->wallet_balance, 2) }} {{ __('admin.sar') }}</td>
                     </tr>
                     @endif
-                    @if($order->user->lat && $order->user->lng)
+                    @if(($order->user && $order->user->lat && $order->user->lng) || ($order->address && $order->address->latitude && $order->address->longitude))
+                    @php
+                        $lat = $order->address->latitude ?? $order->user->lat;
+                        $lng = $order->address->longitude ?? $order->user->lng;
+                    @endphp
                     <tr>
                         <th>{{ __('admin.user_location') }}:</th>
                         <td>
-                            <a href="https://maps.google.com/?q={{ $order->user->lat }},{{ $order->user->lng }}"
+                            <a href="https://maps.google.com/?q={{ $lat }},{{ $lng }}"
                                target="_blank" class="btn btn-sm btn-outline-primary">
                                 <i class="feather icon-map-pin"></i> {{ __('admin.view_on_map') }}
                             </a>

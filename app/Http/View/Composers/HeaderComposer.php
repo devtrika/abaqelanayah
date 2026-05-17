@@ -27,14 +27,23 @@ class HeaderComposer
 
         $cartCount = 0;
         $notificationsUnreadCount = 0;
-        if (Auth::check()) {
-            try {
-                $cart = $this->cartService->getCart(Auth::user())->load('items');
-                $cartCount = (int) $cart->items->sum('quantity');
-            } catch (\Throwable $e) {
-                $cartCount = 0;
+
+        try {
+            $user = Auth::check() ? Auth::user() : null;
+            if ($user) {
+                $cart = \App\Models\Cart::where('user_id', $user->id)->first();
+            } else {
+                $cart = \App\Models\Cart::where('session_id', session()->getId())->whereNull('user_id')->first();
             }
 
+            if ($cart) {
+                $cartCount = (int) $cart->items()->sum('quantity');
+            }
+        } catch (\Throwable $e) {
+            $cartCount = 0;
+        }
+
+        if (Auth::check()) {
             try {
                 $notificationsUnreadCount = (int) Auth::user()->unreadNotifications()->count();
             } catch (\Throwable $e) {

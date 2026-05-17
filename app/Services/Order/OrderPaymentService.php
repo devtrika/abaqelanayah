@@ -133,11 +133,13 @@ class OrderPaymentService
             // and will deduct again when webhook confirms payment
             if ($order->wallet_deduction > 0) {
                 $user = $order->user;
-                $this->orderRepository->incrementUserWallet($user, $order->wallet_deduction);
+                if ($user) {
+                    $this->orderRepository->incrementUserWallet($user, $order->wallet_deduction);
+                }
 
                 Log::info('Wallet deduction refunded for electronic payment (will be deducted on webhook confirmation)', [
                     'order_id' => $order->id,
-                    'user_id' => $user->id,
+                    'user_id' => $user?->id,
                     'wallet_deduction' => $order->wallet_deduction,
                     'payment_method' => $order->payment_method_id,
                 ]);

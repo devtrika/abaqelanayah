@@ -21,7 +21,9 @@
            {{ __('site.order_confirmation_email_note') }}
           </p>
         
-          <a href="{{ route('website.orders') }}" class="submit-btn"> {{ __('site.my_orders') }} </a>
+          @auth
+            <a href="{{ route('website.orders') }}" class="submit-btn"> {{ __('site.my_orders') }} </a>
+          @endauth
           <a href="{{ route('website.home') }}" class="submit-btn second-btn"> {{ __('site.continue_shopping') }} </a>
         </div>
       </div>

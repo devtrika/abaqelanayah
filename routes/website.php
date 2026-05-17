@@ -13,13 +13,14 @@ use App\Http\Controllers\Website\WalletController;
 // use App\Http\Controllers\Website\PaymentController;
 use App\Http\Controllers\Website\RefundOrderController;
 use App\Http\Controllers\Website\StaticPageController;
+use App\Http\Controllers\Website\TrackOrderController;
 use App\Http\Controllers\Payments\PaymentController as MyFatoorahPaymentController;
 
 Route::group(['middleware' => ['web', 'HtmlMinifier']], function () {
 
     // Website home route
     Route::get('/home', [HomeController::class, 'index'])->name('website.home');
-   Route::get('/', [HomeController::class, 'index'])->name('website.main');
+    Route::get('/', [HomeController::class, 'index'])->name('website.main');
     // Product routes
     Route::get('/offers', [ProductController::class, 'offers'])->name('website.offers');
     Route::get('/latest-products', [ProductController::class, 'latest'])->name('website.latest');
@@ -34,8 +35,8 @@ Route::group(['middleware' => ['web', 'HtmlMinifier']], function () {
     Route::group(['middleware' => 'website.guest'], function () {
         // Login routes
 
-        
-//  Route::get('/', function () {
+
+        //  Route::get('/', function () {
 //            return redirect()->route('website.home');
 //});
         Route::get('/login', function () {
@@ -79,29 +80,38 @@ Route::group(['middleware' => ['web', 'HtmlMinifier']], function () {
         Route::post('/password-reset', [AuthController::class, 'resetPassword'])->name('website.password_reset.submit');
     });
 
+    // Cart routes (website) - Supports guests and users
+    Route::get('/cart', [CartController::class, 'index'])->name('website.cart.index');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('website.cart.add');
+    Route::put('/cart/update', [CartController::class, 'update'])->name('website.cart.update');
+    Route::delete('/cart/remove', [CartController::class, 'remove'])->name('website.cart.remove');
+    Route::get('/cart/summary', [CartController::class, 'summary'])->name('website.cart.summary');
+
+    // Checkout routes (website) - Supports guests and users
+    Route::post('/checkout/prepare', [CheckoutController::class, 'prepare'])->name('website.checkout.prepare');
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('website.checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('website.checkout.store');
+    Route::post('/checkout/calculate', [CheckoutController::class, 'calculate'])->name('website.checkout.calculate');
+    Route::get('/checkout/success/{orderNumber}', [CheckoutController::class, 'success'])->name('website.checkout.success');
+    Route::post('/checkout/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('website.checkout.apply-coupon');
+    Route::post('/checkout/remove-coupon', [CheckoutController::class, 'removeCoupon'])->name('website.checkout.remove-coupon');
+    Route::post('/checkout/apply-wallet-deduction', [CheckoutController::class, 'applyWalletDeduction'])->name('website.checkout.apply-wallet-deduction');
+    Route::post('/checkout/remove-wallet-deduction', [CheckoutController::class, 'removeWalletDeduction'])->name('website.checkout.remove-wallet-deduction');
+
+    // Track Order routes (website) - public
+    Route::get('/track-order', [TrackOrderController::class, 'index'])->name('website.track-order.index');
+    Route::get('/track-order/{orderNumber}', [TrackOrderController::class, 'show'])->name('website.track-order.show');
+    Route::post('/track-order', [TrackOrderController::class, 'track'])->name('website.track-order.track');
+
+    Route::get('/orders/{orderNumber}/invoice', [OrderController::class, 'downloadInvoicePublic'])
+        ->name('website.orders.invoice.public')
+        ->middleware('signed');
+
     // Authenticated routes
     Route::group(['middleware' => 'auth:web'], function () {
         // Logout route
         Route::post('/logout', [AuthController::class, 'logout'])->name('website.logout');
 
-        // Cart routes (website) - DB only, requires auth
-        Route::get('/cart', [CartController::class, 'index'])->name('website.cart.index');
-        Route::post('/cart/add', [CartController::class, 'add'])->name('website.cart.add');
-        Route::put('/cart/update', [CartController::class, 'update'])->name('website.cart.update');
-        Route::delete('/cart/remove', [CartController::class, 'remove'])->name('website.cart.remove');
-        Route::get('/cart/summary', [CartController::class, 'summary'])->name('website.cart.summary');
-
-        // Checkout routes
-        Route::post('/checkout/prepare', [CheckoutController::class, 'prepare'])->name('website.checkout.prepare');
-        Route::get('/checkout', [CheckoutController::class, 'index'])->name('website.checkout');
-        Route::post('/checkout', [CheckoutController::class, 'store'])->name('website.checkout.store');
-        Route::post('/checkout/calculate', [CheckoutController::class, 'calculate'])->name('website.checkout.calculate');
-        Route::get('/checkout/success/{orderNumber}', [CheckoutController::class, 'success'])->name('website.checkout.success');
-        // Apply coupon and wallet deduction (website)
-        Route::post('/checkout/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('website.checkout.apply-coupon');
-        Route::post('/checkout/remove-coupon', [CheckoutController::class, 'removeCoupon'])->name('website.checkout.remove-coupon');
-        Route::post('/checkout/apply-wallet-deduction', [CheckoutController::class, 'applyWalletDeduction'])->name('website.checkout.apply-wallet-deduction');
-        Route::post('/checkout/remove-wallet-deduction', [CheckoutController::class, 'removeWalletDeduction'])->name('website.checkout.remove-wallet-deduction');
         // Account routes
         Route::get('/account', [AccountController::class, 'index'])->name('website.account');
         Route::post('/account', [AccountController::class, 'update'])->name('website.account.update');
@@ -117,7 +127,7 @@ Route::group(['middleware' => ['web', 'HtmlMinifier']], function () {
         Route::delete('/account/favourits/{product}', [OrderController::class, 'removeFavourite'])->name('website.favourites.remove');
         Route::get('/account/favourits/ids', [OrderController::class, 'favouritesIds'])->name('website.favourites.ids');
 
-        Route::get('/account/orders' ,[OrderController::class , 'index'])->name('website.orders');
+        Route::get('/account/orders', [OrderController::class, 'index'])->name('website.orders');
         Route::get('/account/orders/{order}', [OrderController::class, 'show'])->name('website.orders.show');
         Route::post('/account/orders/{order}/report', [OrderController::class, 'report'])->name('website.orders.report');
         Route::post('/account/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('website.orders.cancel');
@@ -154,11 +164,11 @@ Route::group(['middleware' => ['web', 'HtmlMinifier']], function () {
     Route::any('/payments/webhook', [MyFatoorahPaymentController::class, 'webhook'])
         ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
         ->name('payments.webhook');
-    
+
     Route::get('/payments/callback', [MyFatoorahPaymentController::class, 'callback'])->name('payment.success'); // MyFatoorah calls this on success/error
-    
+
     Route::view('/error/callback', 'payment.fail')->name('payment.error');
-    Route::view('/success/callback', 'payment.success')->name('payment.success.view'); 
+    Route::view('/success/callback', 'payment.success')->name('payment.success.view');
 
     // Static pages routes (accessible to all)
     Route::get('/about', [StaticPageController::class, 'about'])->name('website.about');

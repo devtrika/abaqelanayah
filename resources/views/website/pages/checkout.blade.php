@@ -30,11 +30,13 @@
   <input type="hidden" name="message" value="{{ $checkoutData['message'] ?? '' }}" />
   <input type="hidden" name="whatsapp" value="{{ $checkoutData['whatsapp'] ?? '' }}" />
   <input type="hidden" name="hide_sender" value="{{ $checkoutData['hide_sender'] ?? '' }}" />
+  <input type="hidden" name="gift_email" value="{{ $checkoutData['gift_email'] ?? '' }}" />
 
   <!-- Carry-over ordinary address fields from cart (when no address_id) -->
   <input type="hidden" name="address_name" value="{{ $checkoutData['address_name'] ?? '' }}" />
   <input type="hidden" name="recipient_name" value="{{ $checkoutData['recipient_name'] ?? '' }}" />
   <input type="hidden" name="phone" value="{{ $checkoutData['phone'] ?? '' }}" />
+  <input type="hidden" name="email" value="{{ $checkoutData['email'] ?? '' }}" />
   <input type="hidden" name="country_code" value="{{ $checkoutData['country_code'] ?? '' }}" />
   <input type="hidden" name="city_id" value="{{ $checkoutData['city_id'] ?? '' }}" />
   <input type="hidden" name="districts_id" value="{{ $checkoutData['districts_id'] ?? '' }}" />
@@ -154,11 +156,12 @@
                 <button type="button" class="coupon-btn js-remove-coupon" style="display:{{ !empty($cartData['coupon_code']) ? 'flex' : 'none' }}; background-color: #dc3545;">{{ __('site.remove_coupon') }}</button>
               </div>
             </div>
+            @auth
             <div class="cart-info">
               <h3 class="cart_info-title">
                 {{ __('site.current_wallet_balance') }}
                 <span>
-                  <span class="js-wallet-balance">{{ number_format(Auth::user()->wallet_balance ?? 0, 2) }}</span>
+                  <span class="js-wallet-balance">{{ number_format(Auth::user()?->wallet_balance ?? 0, 2) }}</span>
                   <i>
                     <img
                       loading="lazy"
@@ -186,6 +189,7 @@
                 <button type="button" class="coupon-btn js-remove-wallet" style="display:{{ $cartData['wallet_deduction'] > 0 ? 'flex' : 'none' }}; background-color: #dc3545;">{{ __('site.remove_deduction') }}</button>
               </div>
             </div>
+            @endauth
                   <div class="cart-info">
               <h3 class="cart_info-title">{{ __('site.payment_method') }}</h3>
               <div class="cart_radio-list">

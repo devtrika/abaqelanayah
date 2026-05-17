@@ -9,7 +9,7 @@ class CreateOrderRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->check();
+        return true;
     }
 
     protected function prepareForValidation(): void
@@ -47,9 +47,9 @@ class CreateOrderRequest extends FormRequest
         if (!empty($session)) {
             $keys = [
                 // EXCLUDE 'order_type' to avoid stale gift flag affecting ordinary orders
-                'delivery_type','address_id','address_name','recipient_name','phone',
+                'delivery_type','address_id','address_name','recipient_name','phone','email',
                 'country_code','city_id','districts_id','description','latitude','longitude','lat','lng',
-                'reciver_name','reciver_phone','gift_city_id','gift_districts_id','gift_address_name','gift_latitude','gift_longitude',
+                'reciver_name','reciver_phone','gift_email','gift_city_id','gift_districts_id','gift_address_name','gift_latitude','gift_longitude',
                 'message','whatsapp','hide_sender','branch_id'
             ];
             $merge = [];
@@ -79,6 +79,7 @@ class CreateOrderRequest extends FormRequest
     
             // Ordinary order: relax requirements; only coordinates are mandatory when no address_id
             'phone' => ['nullable','phone:SA','exclude_if:order_type,gift'],
+            'email' => ['nullable','email','exclude_if:order_type,gift'],
             'address_name' => ['nullable','exclude_if:order_type,gift','min:3','regex:/[\p{L}]/u','regex:/^[\p{L}\p{N} ]+$/u'],
             'recipient_name' => ['nullable','exclude_if:order_type,gift','min:3','regex:/[\p{L}]/u','regex:/^[\p{L}\p{N} ]+$/u'],
             'city_id' => ['nullable','exclude_if:order_type,gift','exists:cities,id'],
@@ -89,6 +90,7 @@ class CreateOrderRequest extends FormRequest
 
             // Gift fields
             'reciver_name' => ['exclude_unless:order_type,gift','required_if:order_type,gift','min:3','regex:/[\p{L}]/u','regex:/^[\p{L}\p{N} ]+$/u'],
+            'gift_email' => ['exclude_unless:order_type,gift','nullable','email'],
             'reciver_phone' => ['exclude_unless:order_type,gift','required_if:order_type,gift','phone:SA'],
             'gift_city_id' => ['exclude_unless:order_type,gift','required_if:order_type,gift','exists:cities,id'],
             'gift_districts_id' => ['exclude_unless:order_type,gift','required_if:order_type,gift','exists:districts,id'],

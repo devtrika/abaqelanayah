@@ -66,7 +66,7 @@ class OrderCheckoutService
      * @return array ['order' => Order, 'payment_url' => string|null]
      * @throws \Exception
      */
-    public function createOrderFromCart(User $user, array $data, array $options = []): array
+    public function createOrderFromCart(?User $user, array $data, array $options = []): array
     {
         return DB::transaction(function () use ($user, $data, $options) {
             // Step 1: Validate cart and address
@@ -97,15 +97,16 @@ class OrderCheckoutService
                 $lng = $data['longitude'] ?? $data['lng'] ?? null;
                 if ($lat !== null && $lng !== null) {
                     $address = $this->addressRepository->create([
-                        'user_id' => $user->id,
+                        'user_id' => $user?->id,
+                        'session_id' => $user ? null : session()->getId(),
                         'address_name' => $data['address_name'] ?? null,
-                        'recipient_name' => $data['recipient_name'] ?? $user->name,
+                        'recipient_name' => $data['recipient_name'] ?? $user?->name ?? 'Guest',
                         'city_id' => $data['city_id'] ?? null,
                         'districts_id' => $data['districts_id'] ?? null,
                         'latitude' => (float) $lat,
                         'longitude' => (float) $lng,
-                        'phone' => $data['phone'] ?? $user->phone,
-                        'country_code' => $data['country_code'] ?? $user->country_code,
+                        'phone' => $data['phone'] ?? $user?->phone,
+                        'country_code' => $data['country_code'] ?? $user?->country_code ?? '966',
                         'description' => $data['description'] ?? null,
                         'is_default' => false,
                     ]);
@@ -140,7 +141,7 @@ class OrderCheckoutService
             Log::info('Order created successfully', [
                 'order_id' => $order->id,
                 'order_number' => $order->order_number,
-                'user_id' => $user->id,
+                'user_id' => $user?->id,
                 'total' => $order->total,
             ]);
 
@@ -161,7 +162,7 @@ class OrderCheckoutService
      * @param \App\Models\Address|null $address
      * @return array
      */
-    private function prepareOrderData(User $user, $cart, array $data, array $deliveryDetails, $address): array
+    private function prepareOrderData(?User $user, $cart, array $data, array $deliveryDetails, $address): array
     {
         $orderType = $data['order_type'] ?? 'regular';
         $deliveryType = $data['delivery_type'] ?? 'immediate';
@@ -181,9 +182,12 @@ class OrderCheckoutService
         $total = $cart->total + $deliveryFee + $giftFee;
 
         $orderData = [
-            'user_id' => $user->id,
+            'user_id' => $user?->id,
+            'session_id' => $user ? null : session()->getId(),
             'order_number' => $this->generateOrderNumber(),
             'status' => 'pending',
+            'is_guest' => $data['is_guest'] ?? (!$user),
+            'email' => $data['email'] ?? null,
             'payment_method_id' => $data['payment_method_id'],
             'payment_status' => 'pending',
             'delivery_type' => $deliveryType,
@@ -271,7 +275,7 @@ class OrderCheckoutService
      *
      * @param User $user
      */
-    private function clearUserCart(User $user): void
+    private function clearUserCart(?User $user): void
     {
         $cart = $this->cartRepository->getCart($user);
 
@@ -282,7 +286,7 @@ class OrderCheckoutService
             $this->cartRepository->clearCart($cart);
 
             Log::info('Cart cleared after order creation', [
-                'user_id' => $user->id,
+                'user_id' => $user?->id,
             ]);
         }
     }

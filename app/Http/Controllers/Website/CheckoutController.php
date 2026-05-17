@@ -31,17 +31,17 @@ class CheckoutController extends Controller
 
     public function index()
     {
-        if (!Auth::check()) {
-            return redirect()->route('website.login');
-        }
-
-        $user = Auth::user();
+        $user = Auth::check() ? Auth::user() : null;
         $cart = $this->cartService->getCart($user)->load('items.product');
         $cartData = $this->transformDbCart($cart);
 
-        $addresses = $this->addressRepository->getUserAddresses($user);
-        $paymentMethods = PaymentMethod::where('is_active', 1)->get();
-
+        $addresses = $user ? $this->addressRepository->getUserAddresses($user) : collect();
+        $paymentMethodsQuery = PaymentMethod::where('is_active', 1);
+        if (!$user) {
+            // Exclude Wallet payment method for guests
+            $paymentMethodsQuery->where('id', '!=', 6);
+        }
+        $paymentMethods = $paymentMethodsQuery->get();
         // Cache incoming cart address/gift payload into session for seamless checkout
         $req = request();
         $sessionPayload = [
@@ -89,11 +89,7 @@ class CheckoutController extends Controller
      */
     public function prepare(Request $request)
     {
-        if (!Auth::check()) {
-            return response()->json(['success' => false, 'message' => 'الرجاء تسجيل الدخول'], 401);
-        }
-
-        $user = Auth::user();
+        $user = Auth::check() ? Auth::user() : null;
         
         $latitude = $request->input('latitude') ?? $request->input('lat');
         $longitude = $request->input('longitude') ?? $request->input('lng');
@@ -118,6 +114,8 @@ class CheckoutController extends Controller
             'city_id' => $request->input('city_id'),
             'districts_id' => $request->input('districts_id'),
             'description' => $request->input('description'),
+            'email' => $request->input('email'),
+            'gift_email' => $request->input('gift_email'),
             'latitude' => $request->input('latitude') ?? $request->input('lat'),
             'longitude' => $request->input('longitude') ?? $request->input('lng'),
             'lat' => $request->input('lat') ?? $request->input('latitude'),
@@ -141,7 +139,7 @@ class CheckoutController extends Controller
         session()->put('checkout.temp', $sessionPayload);
 
         Log::info('checkout.prepare session stored', [
-            'user_id' => Auth::id(),
+            'user_id' => $user ? $user->id : null,
             'payload' => $sessionPayload,
         ]);
 
@@ -154,8 +152,18 @@ class CheckoutController extends Controller
 
     public function store(CreateOrderRequest $request)
     {
+        $isGuestOrder = !$request->user();
         $user = $request->user();
         $validated = $request->validated();
+        
+        // For guest orders, just ensure we have basic contact info
+        if (!$user) {
+            $phone = $request->input('phone') ?? $request->input('reciver_phone') ?? null;
+            if (!$phone) {
+                return back()->withErrors(['checkout' => __('site.phone_number_required')])->withInput();
+            }
+        }
+        
         // Create an address if not provided but coordinates exist (ordinary orders only)
         if (
             ($validated['order_type'] ?? 'ordinary') !== 'gift'
@@ -164,15 +172,16 @@ class CheckoutController extends Controller
             && (!empty($validated['longitude']) || !empty($validated['lng']))
         ) {
             $address = $this->addressRepository->create([
-                'user_id' => $user->id,
+                'user_id' => $user?->id,
+                'session_id' => $user ? null : session()->getId(),
                 'address_name' => $validated['address_name'] ?? null,
-                'recipient_name' => $validated['recipient_name'] ?? $user->name,
+                'recipient_name' => $validated['recipient_name'] ?? $user?->name ?? 'Guest',
                 'city_id' => $validated['city_id'] ?? null,
                 'districts_id' => $validated['districts_id'] ?? null,
                 'latitude' => isset($validated['latitude']) ? (float) $validated['latitude'] : (float) ($validated['lat'] ?? 0),
                 'longitude' => isset($validated['longitude']) ? (float) $validated['longitude'] : (float) ($validated['lng'] ?? 0),
-                'phone' => $validated['phone'] ?? $user->phone,
-                'country_code' => $validated['country_code'] ?? $user->country_code,
+                'phone' => $validated['phone'] ?? $user?->phone,
+                'country_code' => $validated['country_code'] ?? $user?->country_code ?? '966',
                 'description' => $validated['description'] ?? null,
                 'is_default' => false,
             ]);
@@ -216,12 +225,34 @@ class CheckoutController extends Controller
             'hide_sender' => $validated['hide_sender'] ?? null,
             'payment_method_id' => (int) $validated['payment_method_id'],
             'notes' => $validated['notes'] ?? null,
+            'recipient_name' => $validated['recipient_name'] ?? null,
+            'phone' => $validated['phone'] ?? null,
+            'country_code' => $validated['country_code'] ?? null,
+            'email' => $request->input('email') ?? $request->input('gift_email'),
         ];
 
         try {
+            $payload['is_guest'] = $isGuestOrder;
             $result = $this->checkoutService->createOrderFromCart($user, $payload, ['origin' => 'website-checkout']);
             $order = $result['order'];
             $paymentUrl = $result['payment_url'] ?? null;
+
+            $email = $request->input('email') ?? $request->input('gift_email');
+            try {
+                if ($isGuestOrder && $email) {
+                    \Illuminate\Support\Facades\Mail::to($email)->send(new \App\Mail\OrderConfirmationMail($order));
+                } elseif (!$isGuestOrder && $user && $user->email) {
+                    \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\OrderConfirmationMail($order));
+                }
+            } catch (\Throwable $e) {
+                Log::warning('Failed to send order confirmation email', [
+                    'order_id' => $order->id,
+                    'order_number' => $order->order_number,
+                    'is_guest' => (bool) $isGuestOrder,
+                    'recipient_email' => $isGuestOrder ? $email : ($user?->email),
+                    'error' => $e->getMessage(),
+                ]);
+            }
 
             return $paymentUrl
                 ? Redirect::to($paymentUrl)
@@ -251,7 +282,7 @@ class CheckoutController extends Controller
     // Apply coupon to current cart (website checkout)
     public function applyCoupon(Request $request)
     {
-        $user = $request->user();
+        $user = Auth::check() ? $request->user() : null;
         $data = $request->validate([
             'coupon_code' => 'required|string|exists:coupons,coupon_num',
         ]);
@@ -259,7 +290,7 @@ class CheckoutController extends Controller
         try {
             $cart = $this->cartService->applyCoupon($user, $data['coupon_code']);
             Log::info('checkout.applyCoupon success', [
-                'user_id' => $user->id,
+                'user_id' => $user ? $user->id : null,
                 'coupon_code' => $data['coupon_code'],
                 'cart_id' => $cart->id,
             ]);
@@ -272,7 +303,7 @@ class CheckoutController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::warning('checkout.applyCoupon failed', [
-                'user_id' => $user->id,
+                'user_id' => $user ? $user->id : null,
                 'coupon_code' => $data['coupon_code'] ?? null,
                 'error' => $e->getMessage(),
             ]);
@@ -286,12 +317,12 @@ class CheckoutController extends Controller
     // Remove coupon from current cart (website checkout)
     public function removeCoupon(Request $request)
     {
-        $user = $request->user();
+        $user = Auth::check() ? $request->user() : null;
 
         try {
             $cart = $this->cartService->removeCoupon($user);
             Log::info('checkout.removeCoupon success', [
-                'user_id' => $user->id,
+                'user_id' => $user ? $user->id : null,
                 'cart_id' => $cart->id,
             ]);
 
@@ -303,7 +334,7 @@ class CheckoutController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::warning('checkout.removeCoupon failed', [
-                'user_id' => $user->id,
+                'user_id' => $user ? $user->id : null,
                 'error' => $e->getMessage(),
             ]);
             return response()->json([
@@ -316,7 +347,10 @@ class CheckoutController extends Controller
     // Apply wallet deduction to current cart (website checkout)
     public function applyWalletDeduction(Request $request)
     {
-        $user = $request->user();
+        $user = Auth::check() ? $request->user() : null;
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => __('الرجاء تسجيل الدخول لاستخدام المحفظة')], 401);
+        }
         $data = $request->validate([
             'amount' => 'required|integer|min:1',
         ]);
@@ -355,7 +389,10 @@ class CheckoutController extends Controller
     // Remove wallet deduction from current cart (website checkout)
     public function removeWalletDeduction(Request $request)
     {
-        $user = $request->user();
+        $user = Auth::check() ? $request->user() : null;
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => __('الرجاء تسجيل الدخول لاستخدام المحفظة')], 401);
+        }
 
         try {
             $cart = $this->cartService->removeWalletDeduction($user);
@@ -388,7 +425,7 @@ class CheckoutController extends Controller
 
     public function calculate(Request $request)
     {
-        $user = $request->user();
+        $user = Auth::check() ? $request->user() : null;
         $cart = $this->cartService->getCart($user)->load('items.product');
 
         $data = [
@@ -415,7 +452,7 @@ class CheckoutController extends Controller
         
             // 2) Build an Address model for distance/fee calc (existing address or ephemeral with given coords)
             $addressModel = null;
-            if (!empty($data['address_id'])) {
+            if (!empty($data['address_id']) && $user) {
                 $addressModel = $this->addressRepository->getUserAddress($user, (int) $data['address_id']);
             }
             if (!$addressModel) {

@@ -20,14 +20,12 @@ class CartController extends Controller {
     }
 
     public function index(Request $request) {
-        if (!Auth::check()) {
-            return redirect()->route('website.login');
-        }
+        $user = Auth::check() ? Auth::user() : null;
 
-        $cart = $this->cartService->getCart(Auth::user())->load('items.product');
+        $cart = $this->cartService->getCart($user)->load('items.product');
         $data = $this->transformDbCart($cart);
 
-        $addresses = $this->addressRepository->getUserAddresses(Auth::user());
+        $addresses = $user ? $this->addressRepository->getUserAddresses($user) : collect();
         $cities = City::orderBy('name')->get();
 
         return view('website.pages.cart', [
@@ -44,11 +42,9 @@ class CartController extends Controller {
         ]);
         $validated['quantity'] = (int) ($validated['quantity'] ?? 1);
 
-        if (!Auth::check()) {
-            return response()->json(['success' => false, 'message' => __('الرجاء تسجيل الدخول لإضافة إلى السلة')], 401);
-        }
+        $user = Auth::check() ? Auth::user() : null;
 
-        $cart = $this->cartService->addToCart(Auth::user(), $validated);
+        $cart = $this->cartService->addToCart($user, $validated);
         $data = $this->transformDbCart($cart);
 
         return response()->json([
@@ -67,11 +63,9 @@ class CartController extends Controller {
             'quantity' => 'required|integer|min:1|max:999',
         ]);
 
-        if (!Auth::check()) {
-            return response()->json(['success' => false, 'message' => __('الرجاء تسجيل الدخول')], 401);
-        }
+        $user = Auth::check() ? Auth::user() : null;
 
-        $cart = $this->cartService->updateCartItem(Auth::user(), [
+        $cart = $this->cartService->updateCartItem($user, [
             'cart_item_id' => $validated['cart_item_id'],
             'quantity' => $validated['quantity'],
         ]);
@@ -92,11 +86,9 @@ class CartController extends Controller {
             'cart_item_key' => 'nullable|string',
         ]);
 
-        if (!Auth::check()) {
-            return response()->json(['success' => false, 'message' => __('الرجاء تسجيل الدخول')], 401);
-        }
+        $user = Auth::check() ? Auth::user() : null;
 
-        $cart = $this->cartService->removeFromCart(Auth::user(), (int) $validated['product_id']);
+        $cart = $this->cartService->removeFromCart($user, (int) $validated['product_id']);
         $data = $this->transformDbCart($cart);
 
         return response()->json([
@@ -109,11 +101,9 @@ class CartController extends Controller {
     }
 
     public function summary() {
-        if (!Auth::check()) {
-            return response()->json(['count' => 0, 'total' => 0, 'gift_fee' => 0]);
-        }
+        $user = Auth::check() ? Auth::user() : null;
 
-        $cart = $this->cartService->getCart(Auth::user())->load('items.product');
+        $cart = $this->cartService->getCart($user)->load('items.product');
         $data = $this->transformDbCart($cart);
 
         return response()->json([

@@ -131,7 +131,7 @@ class CartService
      * @param string $code
      * @return Cart
      */
-    public function applyCoupon(User $user, $code)
+    public function applyCoupon(?User $user, $code)
     {
         $cart = $this->getCart($user);
         $this->updateCartItemsTotals($cart); // important before calculating subtotal
@@ -149,13 +149,16 @@ class CartService
         $coupon = $this->repository->findCouponByCode($code);
 
         // Enforce one-time use per client (allow reuse only if previous order was cancelled/request_cancel)
-        $alreadyUsedByUser = \App\Models\Order::where('user_id', $user->id)
-            ->where(function ($q) use ($coupon) {
-                $q->where('coupon_id', $coupon->id)
-                  ->orWhere('discount_code', $coupon->coupon_num);
-            })
-            ->whereNotIn('status', [\App\Enums\OrderStatus::CANCELLED->value, \App\Enums\OrderStatus::REQUEST_CANCEL->value])
-            ->exists();
+        $alreadyUsedByUser = false;
+        if ($user) {
+            $alreadyUsedByUser = \App\Models\Order::where('user_id', $user->id)
+                ->where(function ($q) use ($coupon) {
+                    $q->where('coupon_id', $coupon->id)
+                      ->orWhere('discount_code', $coupon->coupon_num);
+                })
+                ->whereNotIn('status', [\App\Enums\OrderStatus::CANCELLED->value, \App\Enums\OrderStatus::REQUEST_CANCEL->value])
+                ->exists();
+        }
 
         if ($alreadyUsedByUser) {
             throw new \Exception(__('cart.coupon_already_used'));

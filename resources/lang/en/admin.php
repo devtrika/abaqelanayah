@@ -1780,6 +1780,9 @@ return [
     'pending_verification' => 'Pending Verification',
     'request_cancel' => 'Cancel Requested',
     'new' => 'New',
+    'assigned_to_delivery' => 'Assigned to Delivery',
+    'out_for_delivery' => 'Out for Delivery',
+    'out-for-delivery' => 'Out for Delivery',
 
     // Payment Statuses
     'paid' => 'Paid',
@@ -2214,11 +2217,11 @@ return [
 'related_order' => 'Related order',
 'cancel_request_rejected_successfully' => 'Cancel request rejected successfully',
 'view_delivery' => 'View delivery',
-    'transaction_rejected' => 'تم رفض المعاملة',
-    'transaction_accepted' => 'تم قبول المعاملة',
-    'your_transaction_has_been_accepted' => 'تم قبول معاملتك',
-    'your_transaction_has_been_rejected' => 'تم رفض معاملتك',
-
+    'transaction_rejected' => 'Transaction Rejected',
+    'transaction_accepted' => 'Transaction Accepted',
+    'your_transaction_has_been_accepted' => 'Your transaction has been accepted',
+    'your_transaction_has_been_rejected' => 'Your transaction has been rejected',
+    'guest' => 'Guest',
 
 
 ];

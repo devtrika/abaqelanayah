@@ -119,8 +119,19 @@
 
             <div class="order-information">
                 <div class="section-title">بيانات الطلب</div>
-                <div>العميل: {{ $order->user?->name ?? '-' }}</div>
-                <div>الهاتف: {{ $order->user?->phone ?? '-' }}</div>
+                @php
+                    $customerName = $order->user?->name
+                        ?? $order->address?->recipient_name
+                        ?? $order->recipient_name
+                        ?? $order->reciver_name
+                        ?? '-';
+                    $customerPhone = $order->user?->phone
+                        ?? $order->address?->phone
+                        ?? $order->reciver_phone
+                        ?? '-';
+                @endphp
+                <div>العميل: {{ $customerName }}</div>
+                <div>الهاتف: {{ $customerPhone }}</div>
                 <div>نوع التوصيل: {{ $order->delivery_type_label ?? $order->deliveryTypeLabel ?? $order->delivery_type ?? '-' }}</div>
                 <div>مدة التحضير المتوقعة: {{ $order->expected_preparation_duration ?? '-' }}</div>
                 <div>الكوبون: {{ $order->coupon_code ?? '-' }}</div>

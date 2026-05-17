@@ -200,6 +200,28 @@ class OrderController extends Controller
         ]);
     }
 
+    public function downloadInvoicePublic(Request $request, string $orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)->firstOrFail();
+
+        $order->load([
+            'user',
+            'items.item',
+            'address.city',
+            'address.district',
+            'paymentMethod',
+            'city',
+            'giftCity',
+            'giftDistrict',
+            'cancelReason',
+            'problem',
+        ]);
+
+        return view('invoices.website_order_invoice_print', [
+            'order' => $order,
+        ]);
+    }
+
     public function favourits(\Illuminate\Http\Request $request)
     {
         $user = $request->user();

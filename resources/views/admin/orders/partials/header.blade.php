@@ -65,14 +65,12 @@
                             @php
                                 // Define available statuses based on workflow
                                 $availablestatuses = [
-                                    'pending' => __('admin.pending'),
-                                    'new' => __('admin.new'),
                                     'confirmed' => __('admin.confirmed'),
+                                    'new' => __('admin.assigned_to_delivery'),
+                                    'out-for-delivery' => __('admin.out_for_delivery'),
                                     'delivered' => __('admin.delivered'),
-                                    'problem' => __('admin.problem'),
                                     'cancelled' => __('admin.cancelled'),
-                                    'request_refund' => __('admin.request_refund'),
-                                    'refunded' => __('admin.refunded'),
+                                    'problem' => __('admin.problem'),
                                 ];
                             @endphp
                             @foreach($availablestatuses as $status => $label)
